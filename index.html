@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan PAI - Perkembangan Murid Pendidikan Islam</title>
+  <meta name="description" content="Satu laman perkembangan pembelajaran yang membantu ibu bapa melihat perjalanan akademik dan pencapaian Pendidikan Islam anak dengan lebih jelas.">
+  <meta name="keywords" content="Pendidikan Islam, Rekod PBD, Laporan Perkembangan Murid, Pentaksiran Berasaskan Sekolah, Sekolah Rendah">
+  <meta name="author" content="Laman Perkembangan Pendidikan Islam">
+  
+  <!-- Google Fonts: Plus Jakarta Sans (Main UI) & Amiri (Arabic/Header touch) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Background Decorative Shapes -->
+  <div class="bg-shape bg-shape-1" aria-hidden="true"></div>
+  <div class="bg-shape bg-shape-2" aria-hidden="true"></div>
+
+  <!-- Announcement / School Header Bar -->
+  <aside class="announcement-bar" id="announcement-bar">
+    <div class="container announcement-content">
+      <span class="badge badge-confirm"><i data-lucide="help-circle"></i> To confirm</span>
+      <span class="announcement-text">
+        <i data-lucide="building"></i> Sekolah: <strong>SK Permata Perdana</strong> (To confirm) &bull; Sesi Akademik: <strong>2026 / 2027</strong>
+      </span>
+      <button class="announcement-close" aria-label="Tutup pemberitahuan" onclick="document.getElementById('announcement-bar').style.display='none'">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Navbar -->
+  <header class="navbar-header" id="header">
+    <div class="container navbar-container">
+      <a href="#hero" class="brand-logo">
+        <div class="logo-icon">
+          <i data-lucide="book-open-check"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">Laporan PAI</span>
+          <span class="brand-subtitle">Pendidikan Islam</span>
+        </div>
+      </a>
+
+      <nav class="nav-menu" id="nav-menu">
+        <a href="#profil" class="nav-link"><i data-lucide="user"></i> Profil Murid</a>
+        <a href="#pbd-rekod" class="nav-link"><i data-lucide="award"></i> Rekod PBD</a>
+        <a href="#perkembangan" class="nav-link"><i data-lucide="trending-up"></i> Perkembangan</a>
+        <a href="#ulasan-guru" class="nav-link"><i data-lucide="message-square"></i> Ulasan Guru</a>
+        <a href="#galeri" class="nav-link"><i data-lucide="image"></i> Galeri Hasil Kerja</a>
+        <a href="#faq" class="nav-link"><i data-lucide="help-circle"></i> FAQ</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="btn btn-outline btn-print" onclick="window.print()" title="Cetak laporan perkembangan">
+          <i data-lucide="printer"></i>
+          <span>Cetak Laporan</span>
+        </button>
+        <a href="#hubungi" class="btn btn-primary">
+          <i data-lucide="send"></i>
+          <span>Hubungi Guru</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- SECTION 1: HERO -->
+    <section class="hero-section" id="hero">
+      <div class="container hero-grid">
+        <div class="hero-content reveal">
+          <div class="hero-badge">
+            <span class="pulse-dot"></span> Laporan Pentaksiran PBD Terkini
+          </div>
+          <h1 class="hero-title">
+            Perkembangan Pembelajaran <span class="text-highlight">Anak Saya</span>
+          </h1>
+          <p class="hero-description">
+            Pantau perkembangan pembelajaran Pendidikan Islam anak melalui rekod pencapaian Pentaksiran Berasaskan Darjah (PBD), amalan aktiviti, ulasan guru dan galeri hasil kerja secara tersusun.
+          </p>
+
+          <div class="hero-quick-stats">
+            <div class="stat-pill">
+              <i data-lucide="check-circle-2" class="text-green"></i>
+              <div>
+                <span class="stat-value">TP 5</span>
+                <span class="stat-label">Purata Tahap Penguasaan</span>
+              </div>
+            </div>
+            <div class="stat-pill">
+              <i data-lucide="book-marked" class="text-red"></i>
+              <div>
+                <span class="stat-value">6 Bidang</span>
+                <span class="stat-label">Komponen Diuji</span>
+              </div>
+            </div>
+            <div class="stat-pill">
+              <i data-lucide="calendar" class="text-amber"></i>
+              <div>
+                <span class="stat-value">Penggal 2</span>
+                <span class="stat-label">Sesi 2026/2027</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-buttons">
+            <a href="#pbd-rekod" class="btn btn-primary btn-lg">
+              <i data-lucide="award"></i> Semak Rekod PBD
+            </a>
+            <a href="#perkembangan" class="btn btn-secondary btn-lg">
+              <i data-lucide="bar-chart-2"></i> Lihat Kemajuan
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-card-container reveal">
+          <div class="student-summary-card">
+            <div class="card-header-pattern"></div>
+            <div class="student-avatar-wrapper">
+              <div class="avatar-circle">
+                <span class="avatar-initials">AZ</span>
+              </div>
+              <span class="status-badge"><i data-lucide="check"></i> Aktif</span>
+            </div>
+            <div class="student-card-body">
+              <span class="badge badge-confirm mb-2"><i data-lucide="help-circle"></i> To confirm</span>
+              <h2 class="student-name">Ahmad Ziyad bin Mohd Ridzuan</h2>
+              <p class="student-meta"><i data-lucide="graduation-cap"></i> Tahun 4 Ibnu Sina</p>
+              
+              <div class="progress-highlights-box">
+                <div class="highlight-item">
+                  <span class="hl-title">Kehadiran</span>
+                  <span class="hl-val">98%</span>
+                </div>
+                <div class="highlight-item">
+                  <span class="hl-title">Amalan Adab</span>
+                  <span class="hl-val text-green">Cemerlang</span>
+                </div>
+                <div class="highlight-item">
+                  <span class="hl-title">Hafazan Surah</span>
+                  <span class="hl-val text-red">Lancar</span>
+                </div>
+              </div>
+
+              <div class="card-action-footer">
+                <button class="btn btn-outline btn-full" onclick="document.getElementById('pbd-rekod').scrollIntoView({behavior:'smooth'})">
+                  <i data-lucide="eye"></i> Papar Laporan Penuh
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: PROFIL MURID -->
+    <section class="section profile-section" id="profil">
+      <div class="container">
+        <div class="section-header text-center reveal">
+          <span class="section-tag">Maklumat Am</span>
+          <h2 class="section-title">Profil Murid & Maklumat Laporan</h2>
+          <p class="section-subtitle">Ringkasan butiran murid, maklumat pengajar, dan pendaftaran sekolah.</p>
+        </div>
+
+        <div class="profile-grid reveal" id="profile-grid-container">
+          <!-- Rendered dynamically by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: REKOD PBD -->
+    <section class="section pbd-section" id="pbd-rekod">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="header-content">
+            <span class="section-tag">Pentaksiran Berasaskan Darjah</span>
+            <h2 class="section-title">Rekod Tahap Penguasaan (TP) PBD</h2>
+            <p class="section-subtitle">Tekan mana-mana kad bidang di bawah untuk membaca perincian deskriptor pencapaian murid.</p>
+          </div>
+          <div class="pbd-filter-bar">
+            <button class="filter-btn active" data-filter="all">Semua Bidang</button>
+            <button class="filter-btn" data-filter="Al-Quran">Al-Quran</button>
+            <button class="filter-btn" data-filter="Akidah">Akidah</button>
+            <button class="filter-btn" data-filter="Ibadah">Ibadah</button>
+            <button class="filter-btn" data-filter="Sirah">Sirah</button>
+            <button class="filter-btn" data-filter="Adab">Adab</button>
+            <button class="filter-btn" data-filter="Jawi">Jawi</button>
+          </div>
+        </div>
+
+        <div class="pbd-cards-grid" id="pbd-cards-container">
+          <!-- Rendered dynamically by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: PERKEMBANGAN PEMBELAJARAN -->
+    <section class="section timeline-section" id="perkembangan">
+      <div class="container">
+        <div class="section-header text-center reveal">
+          <span class="section-tag">Carta Kemajuan</span>
+          <h2 class="section-title">Perkembangan Pembelajaran Mengikut Penggal</h2>
+          <p class="section-subtitle">Penilaian graf peningkatan dan pencapaian milestone Pendidikan Islam sepanjang sesi akademik.</p>
+        </div>
+
+        <div class="term-switcher-container reveal">
+          <div class="term-tabs" role="tablist">
+            <button class="term-tab" data-term="term1" role="tab" aria-selected="false">
+              <i data-lucide="calendar"></i> Penggal 1 (Mac - Mei)
+            </button>
+            <button class="term-tab active" data-term="term2" role="tab" aria-selected="true">
+              <i data-lucide="calendar-check"></i> Penggal 2 (Jun - Ogos) <span class="badge-active-term">Semasa</span>
+            </button>
+            <button class="term-tab" data-term="term3" role="tab" aria-selected="false">
+              <i data-lucide="clock"></i> Penggal 3 (Sep - Nov)
+            </button>
+          </div>
+        </div>
+
+        <div class="timeline-content-card reveal" id="term-detail-container">
+          <!-- Rendered dynamically by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: LAPORAN / ULASAN GURU -->
+    <section class="section report-section" id="ulasan-guru">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">Bimbingan & Maklum Balas</span>
+          <h2 class="section-title">Laporan & Ulasan Guru Pendidikan Islam</h2>
+          <p class="section-subtitle">Ulasan menyeluruh mengenai sahsiah, kekuatan akademik dan cadangan ruang penambahbaikan.</p>
+        </div>
+
+        <div class="teacher-report-wrapper reveal" id="teacher-report-container">
+          <!-- Rendered dynamically by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: GALERI HASIL KERJA -->
+    <section class="section gallery-section" id="galeri">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="header-content">
+            <span class="section-tag">Hasil Pembelajaran</span>
+            <h2 class="section-title">Galeri Hasil Kerja Murid</h2>
+            <p class="section-subtitle">Hasil tugasan, tulisan Jawi, nota adab dan carta hafazan Pendidikan Islam Ahmad Ziyad.</p>
+          </div>
+          <div class="gallery-category-bar" id="gallery-filter-bar">
+            <button class="g-filter-btn active" data-gfilter="all">Semua</button>
+            <button class="g-filter-btn" data-gfilter="Jawi">Tulisan Jawi</button>
+            <button class="g-filter-btn" data-gfilter="Hafazan">Hafazan Al-Quran</button>
+            <button class="g-filter-btn" data-gfilter="Adab">Projek Adab</button>
+            <button class="g-filter-btn" data-gfilter="Ibadah">Praktikal Ibadah</button>
+          </div>
+        </div>
+
+        <div class="gallery-grid" id="gallery-grid-container">
+          <!-- Rendered dynamically by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: HUBUNGI GURU & MAKLUM BALAS -->
+    <section class="section contact-section" id="hubungi">
+      <div class="container">
+        <div class="contact-card-wrapper reveal">
+          <div class="contact-info-side">
+            <span class="section-tag light">Komunikasi Ibu Bapa</span>
+            <h2>Hubungi Ustaz / Ustazah</h2>
+            <p>Ingin bertanyakan soalan khusus mengenai perkembangan Pendidikan Islam anak anda? Hantarkan maklum balas terus kepada guru mata pelajaran.</p>
+            
+            <div class="contact-details-list">
+              <div class="contact-item">
+                <i data-lucide="user-check"></i>
+                <div>
+                  <span class="badge badge-confirm inline-badge">To confirm</span>
+                  <strong>Ustaz Ahmad Fairuz bin Ramli</strong>
+                  <p>Guru Pendidikan Islam Tahun 4</p>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i data-lucide="clock"></i>
+                <div>
+                  <strong>Waktu Konsultasi</strong>
+                  <p>Isnin - Khamis (2:00 PM - 3:30 PM)</p>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i data-lucide="mail"></i>
+                <div>
+                  <strong>E-mel Pertanyaan</strong>
+                  <p>ustaz.fairuz@skpermata.edu.my <span class="text-xs text-muted">(To confirm)</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-form-side">
+            <form id="contact-form" onsubmit="handleFormSubmit(event)">
+              <h3>Hantar Maklum Balas Ibu Bapa</h3>
+              
+              <div class="form-group">
+                <label for="parentName">Nama Ibu Bapa / Penjaga</label>
+                <input type="text" id="parentName" class="form-control" placeholder="Contoh: Mohd Ridzuan bin Hassan" required>
+              </div>
+
+              <div class="form-group">
+                <label for="parentPhone">Nombor Telefon untuk Dihubungi</label>
+                <input type="tel" id="parentPhone" class="form-control" placeholder="Contoh: 012-345 6789" required>
+              </div>
+
+              <div class="form-group">
+                <label for="topic">Topik Perbincangan</label>
+                <select id="topic" class="form-control" required>
+                  <option value="">-- Pilih Topik --</option>
+                  <option value="bacaan">Bacaan Al-Quran / Hafazan</option>
+                  <option value="jawi">Penguasaan Tulisan Jawi</option>
+                  <option value="ibadah">Praktikal Solat & Wuduk</option>
+                  <option value="am">Sokongan Pembelajaran di Rumah</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="message">Mesej / Catatan Penjaga</label>
+                <textarea id="message" class="form-control" rows="4" placeholder="Tuliskan soalan atau maklum balas anda di sini..." required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-full btn-lg">
+                <i data-lucide="send"></i> Hantar Mesej Kepada Guru
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8: FAQ -->
+    <section class="section faq-section" id="faq">
+      <div class="container">
+        <div class="section-header text-center reveal">
+          <span class="section-tag">Panduan Ibu Bapa</span>
+          <h2 class="section-title">Soalan Lazim Mengenai PBD</h2>
+          <p class="section-subtitle">Memahami skala Tahap Penguasaan (TP1 - TP6) dan peranan ibu bapa di rumah.</p>
+        </div>
+
+        <div class="faq-accordion reveal" id="faq-accordion-container">
+          <!-- Rendered dynamically by JS -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- PRINTABLE REPORT WRAPPER (Shown only during window.print()) -->
+  <div id="printable-report" class="print-only-container">
+    <div class="print-header">
+      <div class="print-logo-box">
+        <div class="print-emblem">PBI</div>
+        <div>
+          <h1 class="print-school-name">SEKOLAH KEBANGSAAN PERMATA PERDANA</h1>
+          <p class="print-school-sub">Laporan Pentaksiran Berasaskan Darjah (PBD) Pendidikan Islam</p>
+          <p class="print-school-meta">Sesi Akademik 2026/2027 &bull; [Terkini: Penggal 2]</p>
+        </div>
+      </div>
+      <div class="print-badge-to-confirm">DISAHKAN / TO CONFIRM</div>
+    </div>
+
+    <div class="print-divider"></div>
+
+    <div class="print-section">
+      <h3 class="print-sec-title">1. MAKLUMAT MURID & GURU</h3>
+      <table class="print-table">
+        <tr>
+          <th>Nama Murid:</th>
+          <td>Ahmad Ziyad bin Mohd Ridzuan</td>
+          <th>No. MyKid:</th>
+          <td>160412-10-XXXX (To confirm)</td>
+        </tr>
+        <tr>
+          <th>Kelas:</th>
+          <td>Tahun 4 Ibnu Sina</td>
+          <th>Kehadiran:</th>
+          <td>98%</td>
+        </tr>
+        <tr>
+          <th>Guru Kelas:</th>
+          <td>Ustazah Siti Nurhaliza binti Ishak (To confirm)</td>
+          <th>Guru Pendidikan Islam:</th>
+          <td>Ustaz Ahmad Fairuz bin Ramli (To confirm)</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="print-section">
+      <h3 class="print-sec-title">2. REKOD TAHAP PENGUASAAN (TP) PENDIDIKAN ISLAM</h3>
+      <table class="print-table print-table-bordered">
+        <thead>
+          <tr>
+            <th>Bidang</th>
+            <th>Kemahiran / Penguasaan</th>
+            <th>Tahap Penguasaan (TP)</th>
+            <th>Ulasan Guru / Deskriptor</th>
+          </tr>
+        </thead>
+        <tbody id="print-pbd-tbody">
+          <!-- Dynamic insertion -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="print-section">
+      <h3 class="print-sec-title">3. LAPORAN & ULASAN KESELURAHAN GURU</h3>
+      <div class="print-comment-box" id="print-teacher-comment">
+        <!-- Dynamic insertion -->
+      </div>
+    </div>
+
+    <div class="print-signatures-row">
+      <div class="sig-box">
+        <p>Disediakan Oleh:</p>
+        <div class="sig-line"></div>
+        <p><strong>Ustaz Ahmad Fairuz bin Ramli</strong></p>
+        <p class="text-xs">Guru Pendidikan Islam (To confirm)</p>
+      </div>
+      <div class="sig-box">
+        <p>Disahkan Oleh Penjaga:</p>
+        <div class="sig-line"></div>
+        <p><strong>( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; )</strong></p>
+        <p class="text-xs">Tandatangan Ibu Bapa / Penjaga</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PBD MODAL DIALOG -->
+  <div class="modal-backdrop" id="pbd-modal" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-close-btn" onclick="closePbdModal()" aria-label="Tutup Dialog">
+        <i data-lucide="x"></i>
+      </button>
+      <div class="modal-header-banner" id="modal-header-banner">
+        <span class="modal-badge-tp" id="modal-badge-tp">TP 5</span>
+        <h3 id="modal-domain-title">Bidang Al-Quran</h3>
+      </div>
+      <div class="modal-body-content">
+        <div class="modal-info-row">
+          <div>
+            <span class="modal-label">Tahap Penguasaan:</span>
+            <strong id="modal-tp-desc">Sangat Baik</strong>
+          </div>
+          <div>
+            <span class="modal-label">Tarikh Penilaian:</span>
+            <span id="modal-eval-date">15 Jun 2026</span>
+          </div>
+        </div>
+
+        <div class="modal-section-block">
+          <h4><i data-lucide="target"></i> Standard Pembelajaran / Deskriptor</h4>
+          <p id="modal-descriptor-text">Menguasai bacaan ayat dengan tajwid asas dan tajwid makhraj huruf yang betul.</p>
+        </div>
+
+        <div class="modal-section-block">
+          <h4><i data-lucide="check-square"></i> Kekuatan Yang Ditunjukkan</h4>
+          <ul class="modal-bullets-list" id="modal-strengths-list">
+            <!-- Dynamic bullets -->
+          </ul>
+        </div>
+
+        <div class="modal-section-block highlight-bg">
+          <h4><i data-lucide="home"></i> Bimbingan Ibu Bapa di Rumah</h4>
+          <p id="modal-home-guidance">Mendengar bacaan surah al-Mulk anak 10 minit sebelum tidur.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closePbdModal()">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALLERY LIGHTBOX MODAL -->
+  <div class="modal-backdrop" id="gallery-modal" aria-hidden="true">
+    <div class="modal-card gallery-modal-card">
+      <button class="modal-close-btn" onclick="closeGalleryModal()" aria-label="Tutup Galeri">
+        <i data-lucide="x"></i>
+      </button>
+      <div class="gallery-modal-body">
+        <div class="gmodal-image-container">
+          <img id="gmodal-img" src="" alt="Hasil Kerja Murid">
+        </div>
+        <div class="gmodal-info-container">
+          <span class="badge badge-primary mb-2" id="gmodal-tag">Tulisan Jawi</span>
+          <h3 id="gmodal-title">Latihan Ejaan Jawi</h3>
+          <span class="gmodal-date" id="gmodal-date">12 Mei 2026</span>
+          <p class="gmodal-desc" id="gmodal-desc">Kertas latihan ejaan kata pinjaman Bahasa Melayu dalam tulisan Jawi.</p>
+
+          <div class="gmodal-feedback-box">
+            <h4><i data-lucide="message-square"></i> Catatan Guru:</h4>
+            <p id="gmodal-feedback">"Tahniah Ziyad, ejaan sangat kemas dan tepat!"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <div class="logo-icon small">
+          <i data-lucide="book-open-check"></i>
+        </div>
+        <div>
+          <h3>Laporan PAI &bull; Pendidikan Islam</h3>
+          <p>Satu platform mesra ibu bapa dan murid untuk memantau pembelajaran Pendidikan Islam.</p>
+        </div>
+      </div>
+
+      <div class="footer-disclaimer">
+        <span class="badge badge-confirm"><i data-lucide="info"></i> Penafian Data</span>
+        <p>Laman ini menggunakan data sampel sementara. Semua maklumat bertanda <strong>"To confirm"</strong> belum disahkan dan sedia untuk dikemas kini berpandukan rekod rasmi sekolah.</p>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Laman Laporan Perkembangan Murid. Hak Cipta Terpelihara.</p>
+        <button class="btn-top" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+          Ke Atas <i data-lucide="arrow-up"></i>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS Scripts -->
+  <script src="js/studentData.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
