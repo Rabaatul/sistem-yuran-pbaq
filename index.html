@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Laporan PAI - Perkembangan Murid Pendidikan Islam</title>
-  <meta name="description" content="Satu laman perkembangan pembelajaran yang membantu ibu bapa melihat perjalanan akademik dan pencapaian Pendidikan Islam anak dengan lebih jelas.">
-  <meta name="keywords" content="Pendidikan Islam, Rekod PBD, Laporan Perkembangan Murid, Pentaksiran Berasaskan Sekolah, Sekolah Rendah">
-  <meta name="author" content="Laman Perkembangan Pendidikan Islam">
+  <title>KELAS MENGAJI – JOM MENGAJI | Kuala Lumpur</title>
+  <meta name="description" content="Belajar mengaji dengan mudah, mesra dan teratur dalam suasana pembelajaran yang berkualiti. Hubungi WhatsApp 013-4565245 untuk maklumat lanjut.">
+  <meta name="keywords" content="Kelas Mengaji, Jom Mengaji, Belajar Mengaji, Mengaji Kuala Lumpur, Kelas Al-Quran">
+  <meta name="author" content="KELAS MENGAJI">
   
-  <!-- Google Fonts: Plus Jakarta Sans (Main UI) & Amiri (Arabic/Header touch) -->
+  <!-- Google Fonts: Plus Jakarta Sans (Modern UI) & Amiri (Arabic/Heritage elegance) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -21,528 +21,606 @@
 </head>
 <body>
 
-  <!-- Background Decorative Shapes -->
+  <!-- Soft Ambient Glow Shapes -->
   <div class="bg-shape bg-shape-1" aria-hidden="true"></div>
   <div class="bg-shape bg-shape-2" aria-hidden="true"></div>
 
-  <!-- Announcement / School Header Bar -->
+  <!-- Top Announcement / Truth Status Bar -->
   <aside class="announcement-bar" id="announcement-bar">
     <div class="container announcement-content">
-      <span class="badge badge-confirm"><i data-lucide="help-circle"></i> To confirm</span>
-      <span class="announcement-text">
-        <i data-lucide="building"></i> Sekolah: <strong>SK Permata Perdana</strong> (To confirm) &bull; Sesi Akademik: <strong>2026 / 2027</strong>
-      </span>
+      <div class="announcement-left">
+        <span class="badge badge-confirm">
+          <i data-lucide="help-circle"></i> To confirm
+        </span>
+        <span class="announcement-text">
+          Logo Rasmi, Harga Pakej & Link Facebook <strong class="badge-inline">To confirm</strong> &bull; Waktu Operasi: <strong>8.00–9.00 Pagi</strong> &bull; Lokasi: <strong>Kuala Lumpur</strong>
+        </span>
+      </div>
       <button class="announcement-close" aria-label="Tutup pemberitahuan" onclick="document.getElementById('announcement-bar').style.display='none'">
         <i data-lucide="x"></i>
       </button>
     </div>
   </aside>
 
-  <!-- Navbar -->
+  <!-- Sticky Navbar (App Shell) -->
   <header class="navbar-header" id="header">
     <div class="container navbar-container">
-      <a href="#hero" class="brand-logo">
+      <a href="#hero" class="brand-logo" aria-label="Laman Utama Kelas Mengaji">
         <div class="logo-icon">
-          <i data-lucide="book-open-check"></i>
+          <i data-lucide="book-open"></i>
         </div>
         <div class="brand-text">
-          <span class="brand-title">Laporan PAI</span>
-          <span class="brand-subtitle">Pendidikan Islam</span>
+          <span class="brand-title">KELAS MENGAJI</span>
+          <span class="brand-subtitle">PROGRAM JOM MENGAJI</span>
         </div>
       </a>
 
+      <!-- Desktop Navigation Menu -->
       <nav class="nav-menu" id="nav-menu">
-        <a href="#profil" class="nav-link"><i data-lucide="user"></i> Profil Murid</a>
-        <a href="#pbd-rekod" class="nav-link"><i data-lucide="award"></i> Rekod PBD</a>
-        <a href="#perkembangan" class="nav-link"><i data-lucide="trending-up"></i> Perkembangan</a>
-        <a href="#ulasan-guru" class="nav-link"><i data-lucide="message-square"></i> Ulasan Guru</a>
-        <a href="#galeri" class="nav-link"><i data-lucide="image"></i> Galeri Hasil Kerja</a>
+        <a href="#tentang" class="nav-link"><i data-lucide="info"></i> Tentang Kami</a>
+        <a href="#program" class="nav-link"><i data-lucide="book-marked"></i> Program</a>
+        <a href="#kelebihan" class="nav-link"><i data-lucide="sparkles"></i> Kelebihan</a>
+        <a href="#galeri" class="nav-link"><i data-lucide="image"></i> Galeri</a>
         <a href="#faq" class="nav-link"><i data-lucide="help-circle"></i> FAQ</a>
+        <a href="#lokasi" class="nav-link"><i data-lucide="map-pin"></i> Lokasi</a>
+        <a href="#hubungi" class="nav-link"><i data-lucide="phone-call"></i> Hubungi</a>
       </nav>
 
+      <!-- Action & Mobile Drawer Toggle -->
       <div class="nav-actions">
-        <button class="btn btn-outline btn-print" onclick="window.print()" title="Cetak laporan perkembangan">
-          <i data-lucide="printer"></i>
-          <span>Cetak Laporan</span>
-        </button>
-        <a href="#hubungi" class="btn btn-primary">
-          <i data-lucide="send"></i>
-          <span>Hubungi Guru</span>
+        <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp nav-cta">
+          <i data-lucide="message-circle"></i>
+          <span>WhatsApp 013-4565245</span>
         </a>
+        <button class="mobile-toggle" id="mobile-toggle" aria-label="Buka menu navigasi" aria-expanded="false">
+          <i data-lucide="menu" id="toggle-icon"></i>
+        </button>
       </div>
     </div>
   </header>
 
-  <main>
-    <!-- SECTION 1: HERO -->
+  <!-- Main Content Area -->
+  <main id="main-content">
+    
+    <!-- HERO SECTION (SLICE 2) -->
     <section class="hero-section" id="hero">
       <div class="container hero-grid">
+        <!-- Hero Text & CTAs -->
         <div class="hero-content reveal">
-          <div class="hero-badge">
-            <span class="pulse-dot"></span> Laporan Pentaksiran PBD Terkini
+          <div class="hero-badges-wrapper">
+            <span class="pill-badge pill-emerald">
+              <i data-lucide="heart-handshake"></i> JOM MENGAJI
+            </span>
+            <span class="pill-badge pill-gold">
+              <i data-lucide="map-pin"></i> Kuala Lumpur
+            </span>
           </div>
+
           <h1 class="hero-title">
-            Perkembangan Pembelajaran <span class="text-highlight">Anak Saya</span>
+            Belajar Mengaji dengan <span class="text-gradient">Mudah, Mesra</span> dan <span class="text-highlight">Teratur</span>
           </h1>
+
           <p class="hero-description">
-            Pantau perkembangan pembelajaran Pendidikan Islam anak melalui rekod pencapaian Pentaksiran Berasaskan Darjah (PBD), amalan aktiviti, ulasan guru dan galeri hasil kerja secara tersusun.
+            Belajar mengaji dalam suasana pembelajaran yang berkualiti. Sesuai untuk ibu bapa, pelajar, dan dewasa yang ingin memantapkan bacaan Al-Quran.
           </p>
 
-          <div class="hero-quick-stats">
-            <div class="stat-pill">
-              <i data-lucide="check-circle-2" class="text-green"></i>
-              <div>
-                <span class="stat-value">TP 5</span>
-                <span class="stat-label">Purata Tahap Penguasaan</span>
-              </div>
-            </div>
-            <div class="stat-pill">
-              <i data-lucide="book-marked" class="text-red"></i>
-              <div>
-                <span class="stat-value">6 Bidang</span>
-                <span class="stat-label">Komponen Diuji</span>
-              </div>
-            </div>
-            <div class="stat-pill">
-              <i data-lucide="calendar" class="text-amber"></i>
-              <div>
-                <span class="stat-value">Penggal 2</span>
-                <span class="stat-label">Sesi 2026/2027</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="hero-buttons">
-            <a href="#pbd-rekod" class="btn btn-primary btn-lg">
-              <i data-lucide="award"></i> Semak Rekod PBD
+          <!-- Primary & Secondary Action CTAs -->
+          <div class="hero-cta-group">
+            <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-lg hero-cta-btn">
+              <i data-lucide="message-circle"></i>
+              <span>Hubungi via WhatsApp (013-4565245)</span>
             </a>
-            <a href="#perkembangan" class="btn btn-secondary btn-lg">
-              <i data-lucide="bar-chart-2"></i> Lihat Kemajuan
+            <a href="#program" class="btn btn-outline btn-lg">
+              <i data-lucide="compass"></i>
+              <span>Terokai Program</span>
             </a>
           </div>
-        </div>
 
-        <div class="hero-card-container reveal">
-          <div class="student-summary-card">
-            <div class="card-header-pattern"></div>
-            <div class="student-avatar-wrapper">
-              <div class="avatar-circle">
-                <span class="avatar-initials">AZ</span>
+          <!-- Quick Fact Chips (Verified + To Confirm) -->
+          <div class="hero-fact-chips">
+            <div class="fact-chip">
+              <i data-lucide="clock" class="chip-icon text-emerald"></i>
+              <div>
+                <span class="chip-label">Waktu Operasi</span>
+                <span class="chip-value">8.00–9.00 Pagi</span>
               </div>
-              <span class="status-badge"><i data-lucide="check"></i> Aktif</span>
             </div>
-            <div class="student-card-body">
-              <span class="badge badge-confirm mb-2"><i data-lucide="help-circle"></i> To confirm</span>
-              <h2 class="student-name">Ahmad Ziyad bin Mohd Ridzuan</h2>
-              <p class="student-meta"><i data-lucide="graduation-cap"></i> Tahun 4 Ibnu Sina</p>
-              
-              <div class="progress-highlights-box">
-                <div class="highlight-item">
-                  <span class="hl-title">Kehadiran</span>
-                  <span class="hl-val">98%</span>
-                </div>
-                <div class="highlight-item">
-                  <span class="hl-title">Amalan Adab</span>
-                  <span class="hl-val text-green">Cemerlang</span>
-                </div>
-                <div class="highlight-item">
-                  <span class="hl-title">Hafazan Surah</span>
-                  <span class="hl-val text-red">Lancar</span>
-                </div>
-              </div>
 
-              <div class="card-action-footer">
-                <button class="btn btn-outline btn-full" onclick="document.getElementById('pbd-rekod').scrollIntoView({behavior:'smooth'})">
-                  <i data-lucide="eye"></i> Papar Laporan Penuh
-                </button>
+            <div class="fact-chip">
+              <i data-lucide="map-pin" class="chip-icon text-gold"></i>
+              <div>
+                <span class="chip-label">Lokasi</span>
+                <span class="chip-value">Kuala Lumpur</span>
+              </div>
+            </div>
+
+            <div class="fact-chip chip-confirm">
+              <i data-lucide="help-circle" class="chip-icon text-orange"></i>
+              <div>
+                <span class="chip-label">Pakej & Yuran</span>
+                <span class="chip-value badge-confirm-sm">To confirm</span>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- SECTION 2: PROFIL MURID -->
-    <section class="section profile-section" id="profil">
-      <div class="container">
-        <div class="section-header text-center reveal">
-          <span class="section-tag">Maklumat Am</span>
-          <h2 class="section-title">Profil Murid & Maklumat Laporan</h2>
-          <p class="section-subtitle">Ringkasan butiran murid, maklumat pengajar, dan pendaftaran sekolah.</p>
-        </div>
-
-        <div class="profile-grid reveal" id="profile-grid-container">
-          <!-- Rendered dynamically by JS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 3: REKOD PBD -->
-    <section class="section pbd-section" id="pbd-rekod">
-      <div class="container">
-        <div class="section-header reveal">
-          <div class="header-content">
-            <span class="section-tag">Pentaksiran Berasaskan Darjah</span>
-            <h2 class="section-title">Rekod Tahap Penguasaan (TP) PBD</h2>
-            <p class="section-subtitle">Tekan mana-mana kad bidang di bawah untuk membaca perincian deskriptor pencapaian murid.</p>
-          </div>
-          <div class="pbd-filter-bar">
-            <button class="filter-btn active" data-filter="all">Semua Bidang</button>
-            <button class="filter-btn" data-filter="Al-Quran">Al-Quran</button>
-            <button class="filter-btn" data-filter="Akidah">Akidah</button>
-            <button class="filter-btn" data-filter="Ibadah">Ibadah</button>
-            <button class="filter-btn" data-filter="Sirah">Sirah</button>
-            <button class="filter-btn" data-filter="Adab">Adab</button>
-            <button class="filter-btn" data-filter="Jawi">Jawi</button>
-          </div>
-        </div>
-
-        <div class="pbd-cards-grid" id="pbd-cards-container">
-          <!-- Rendered dynamically by JS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 4: PERKEMBANGAN PEMBELAJARAN -->
-    <section class="section timeline-section" id="perkembangan">
-      <div class="container">
-        <div class="section-header text-center reveal">
-          <span class="section-tag">Carta Kemajuan</span>
-          <h2 class="section-title">Perkembangan Pembelajaran Mengikut Penggal</h2>
-          <p class="section-subtitle">Penilaian graf peningkatan dan pencapaian milestone Pendidikan Islam sepanjang sesi akademik.</p>
-        </div>
-
-        <div class="term-switcher-container reveal">
-          <div class="term-tabs" role="tablist">
-            <button class="term-tab" data-term="term1" role="tab" aria-selected="false">
-              <i data-lucide="calendar"></i> Penggal 1 (Mac - Mei)
-            </button>
-            <button class="term-tab active" data-term="term2" role="tab" aria-selected="true">
-              <i data-lucide="calendar-check"></i> Penggal 2 (Jun - Ogos) <span class="badge-active-term">Semasa</span>
-            </button>
-            <button class="term-tab" data-term="term3" role="tab" aria-selected="false">
-              <i data-lucide="clock"></i> Penggal 3 (Sep - Nov)
-            </button>
-          </div>
-        </div>
-
-        <div class="timeline-content-card reveal" id="term-detail-container">
-          <!-- Rendered dynamically by JS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 5: LAPORAN / ULASAN GURU -->
-    <section class="section report-section" id="ulasan-guru">
-      <div class="container">
-        <div class="section-header reveal">
-          <span class="section-tag">Bimbingan & Maklum Balas</span>
-          <h2 class="section-title">Laporan & Ulasan Guru Pendidikan Islam</h2>
-          <p class="section-subtitle">Ulasan menyeluruh mengenai sahsiah, kekuatan akademik dan cadangan ruang penambahbaikan.</p>
-        </div>
-
-        <div class="teacher-report-wrapper reveal" id="teacher-report-container">
-          <!-- Rendered dynamically by JS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 6: GALERI HASIL KERJA -->
-    <section class="section gallery-section" id="galeri">
-      <div class="container">
-        <div class="section-header reveal">
-          <div class="header-content">
-            <span class="section-tag">Hasil Pembelajaran</span>
-            <h2 class="section-title">Galeri Hasil Kerja Murid</h2>
-            <p class="section-subtitle">Hasil tugasan, tulisan Jawi, nota adab dan carta hafazan Pendidikan Islam Ahmad Ziyad.</p>
-          </div>
-          <div class="gallery-category-bar" id="gallery-filter-bar">
-            <button class="g-filter-btn active" data-gfilter="all">Semua</button>
-            <button class="g-filter-btn" data-gfilter="Jawi">Tulisan Jawi</button>
-            <button class="g-filter-btn" data-gfilter="Hafazan">Hafazan Al-Quran</button>
-            <button class="g-filter-btn" data-gfilter="Adab">Projek Adab</button>
-            <button class="g-filter-btn" data-gfilter="Ibadah">Praktikal Ibadah</button>
-          </div>
-        </div>
-
-        <div class="gallery-grid" id="gallery-grid-container">
-          <!-- Rendered dynamically by JS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 7: HUBUNGI GURU & MAKLUM BALAS -->
-    <section class="section contact-section" id="hubungi">
-      <div class="container">
-        <div class="contact-card-wrapper reveal">
-          <div class="contact-info-side">
-            <span class="section-tag light">Komunikasi Ibu Bapa</span>
-            <h2>Hubungi Ustaz / Ustazah</h2>
-            <p>Ingin bertanyakan soalan khusus mengenai perkembangan Pendidikan Islam anak anda? Hantarkan maklum balas terus kepada guru mata pelajaran.</p>
-            
-            <div class="contact-details-list">
-              <div class="contact-item">
-                <i data-lucide="user-check"></i>
-                <div>
-                  <span class="badge badge-confirm inline-badge">To confirm</span>
-                  <strong>Ustaz Ahmad Fairuz bin Ramli</strong>
-                  <p>Guru Pendidikan Islam Tahun 4</p>
-                </div>
+        <!-- Hero Visual Showcase -->
+        <div class="hero-visual reveal">
+          <div class="hero-card-frame">
+            <div class="hero-card-header">
+              <div class="brand-avatar">
+                <i data-lucide="book-open"></i>
               </div>
-              <div class="contact-item">
-                <i data-lucide="clock"></i>
-                <div>
-                  <strong>Waktu Konsultasi</strong>
-                  <p>Isnin - Khamis (2:00 PM - 3:30 PM)</p>
-                </div>
+              <div>
+                <h3 class="card-brand-name">KELAS MENGAJI</h3>
+                <p class="card-brand-sub">Suasana Pembelajaran Berkualiti</p>
               </div>
-              <div class="contact-item">
-                <i data-lucide="mail"></i>
-                <div>
-                  <strong>E-mel Pertanyaan</strong>
-                  <p>ustaz.fairuz@skpermata.edu.my <span class="text-xs text-muted">(To confirm)</span></p>
-                </div>
+              <span class="badge badge-confirm ml-auto">To confirm Logo</span>
+            </div>
+
+            <!-- Preview Card Grid displaying Real Uploaded Assets -->
+            <div class="hero-gallery-preview">
+              <div class="hero-img-box">
+                <img src="assets/hafazan_sample.png" alt="Aktiviti Hafazan & Pembelajaran Al-Quran" loading="eager">
+                <span class="img-tag">Hafazan</span>
+              </div>
+              <div class="hero-img-box">
+                <img src="assets/solat_sample.png" alt="Panduan Solat & Amali" loading="eager">
+                <span class="img-tag">Amali Solat</span>
+              </div>
+              <div class="hero-img-box">
+                <img src="assets/jawi_sample.png" alt="Asas Jawi & Al-Quran" loading="eager">
+                <span class="img-tag">Asas Jawi</span>
+              </div>
+              <div class="hero-img-box">
+                <img src="assets/adab_sample.png" alt="Adab & Sahsiah" loading="eager">
+                <span class="img-tag">Adab</span>
+              </div>
+            </div>
+
+            <div class="hero-card-footer">
+              <div class="footer-info-item">
+                <i data-lucide="users" class="text-emerald"></i>
+                <span>Untuk Ibu Bapa, Pelajar & Dewasa</span>
+              </div>
+              <div class="footer-info-item">
+                <i data-lucide="facebook" class="text-muted"></i>
+                <span class="badge-confirm-sm">Facebook: To confirm</span>
               </div>
             </div>
           </div>
 
-          <div class="contact-form-side">
-            <form id="contact-form" onsubmit="handleFormSubmit(event)">
-              <h3>Hantar Maklum Balas Ibu Bapa</h3>
-              
-              <div class="form-group">
-                <label for="parentName">Nama Ibu Bapa / Penjaga</label>
-                <input type="text" id="parentName" class="form-control" placeholder="Contoh: Mohd Ridzuan bin Hassan" required>
-              </div>
-
-              <div class="form-group">
-                <label for="parentPhone">Nombor Telefon untuk Dihubungi</label>
-                <input type="tel" id="parentPhone" class="form-control" placeholder="Contoh: 012-345 6789" required>
-              </div>
-
-              <div class="form-group">
-                <label for="topic">Topik Perbincangan</label>
-                <select id="topic" class="form-control" required>
-                  <option value="">-- Pilih Topik --</option>
-                  <option value="bacaan">Bacaan Al-Quran / Hafazan</option>
-                  <option value="jawi">Penguasaan Tulisan Jawi</option>
-                  <option value="ibadah">Praktikal Solat & Wuduk</option>
-                  <option value="am">Sokongan Pembelajaran di Rumah</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="message">Mesej / Catatan Penjaga</label>
-                <textarea id="message" class="form-control" rows="4" placeholder="Tuliskan soalan atau maklum balas anda di sini..." required></textarea>
-              </div>
-
-              <button type="submit" class="btn btn-primary btn-full btn-lg">
-                <i data-lucide="send"></i> Hantar Mesej Kepada Guru
-              </button>
-            </form>
+          <!-- Decorative Floating Card -->
+          <div class="floating-trust-badge">
+            <div class="trust-badge-icon">
+              <i data-lucide="check-circle-2"></i>
+            </div>
+            <div>
+              <strong>Mesra & Teratur</strong>
+              <p>Pembimbing Pengajian</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 8: FAQ -->
-    <section class="section faq-section" id="faq">
+    <!-- CORE CONTENT SECTIONS (SLICE 3 & 4) -->
+
+    <!-- SECTION 1: TENTANG KAMI -->
+    <section class="section-block" id="tentang">
       <div class="container">
         <div class="section-header text-center reveal">
-          <span class="section-tag">Panduan Ibu Bapa</span>
-          <h2 class="section-title">Soalan Lazim Mengenai PBD</h2>
-          <p class="section-subtitle">Memahami skala Tahap Penguasaan (TP1 - TP6) dan peranan ibu bapa di rumah.</p>
+          <span class="pill-badge pill-emerald"><i data-lucide="info"></i> Mengenali Kami</span>
+          <h2 class="section-title">Tentang KELAS MENGAJI</h2>
+          <p class="section-subtitle">
+            Ramai ibu bapa dan individu mencari kelas mengaji yang mudah difahami, dipercayai dan senang dihubungi. Landing page ini memperkenalkan KELAS MENGAJI secara profesional untuk memudahkan keputusan anda.
+          </p>
         </div>
 
-        <div class="faq-accordion reveal" id="faq-accordion-container">
-          <!-- Rendered dynamically by JS -->
+        <div class="about-grid reveal">
+          <div class="about-card">
+            <div class="about-icon text-emerald">
+              <i data-lucide="users"></i>
+            </div>
+            <h3>Sasaran Pelajar</h3>
+            <p>Sesuai untuk ibu bapa, pelajar sekolah, serta golongan dewasa yang berhasrat mempelajari dan memperbaiki bacaan Al-Quran.</p>
+          </div>
+
+          <div class="about-card">
+            <div class="about-icon text-gold">
+              <i data-lucide="heart"></i>
+            </div>
+            <h3>Penyampaian Mesra</h3>
+            <p>Pendekatan pengajian yang mengutamakan suasana mesra, tenang, dan teratur bagi membina keyakinan setiap pelajar.</p>
+          </div>
+
+          <div class="about-card">
+            <div class="about-icon text-emerald">
+              <i data-lucide="map-pin"></i>
+            </div>
+            <h3>Lokasi & Akses</h3>
+            <p>Pengajian berpusat di Kuala Lumpur dengan waktu operasi dari jam 8.00 pagi hingga 9.00 pagi.</p>
+          </div>
+
+          <div class="about-card card-confirm">
+            <div class="about-icon text-orange">
+              <i data-lucide="user-check"></i>
+            </div>
+            <h3>Tenaga Pengajar</h3>
+            <p>Pengajaran dibimbing secara berhemah. <span class="badge-confirm-sm">Nama guru: To confirm</span></p>
+          </div>
         </div>
       </div>
     </section>
+
+    <!-- SECTION 2: PROGRAM JOM MENGAJI -->
+    <section class="section-block alt-bg" id="program">
+      <div class="container">
+        <div class="section-header text-center reveal">
+          <span class="pill-badge pill-gold"><i data-lucide="book-marked"></i> Servis Utama</span>
+          <h2 class="section-title">Program JOM MENGAJI</h2>
+          <p class="section-subtitle">
+            Pilihan fokus pengajian mengaji Al-Quran yang dirancang untuk keperluan pelbagai peringkat umur.
+          </p>
+        </div>
+
+        <div class="program-grid reveal">
+          <!-- Card 1 -->
+          <div class="program-card">
+            <div class="program-badge">Bimbingan Utas</div>
+            <div class="program-icon">
+              <i data-lucide="book-open-check"></i>
+            </div>
+            <h3 class="program-title">Kelas Al-Quran & Tajwid</h3>
+            <p class="program-desc">
+              Bimbingan sebutan makhraj huruf, tajwid asas, dan kelancaran bacaan Al-Quran secara tersusun.
+            </p>
+            <div class="program-price-box">
+              <span class="price-label">Yuran & Pakej</span>
+              <span class="badge-confirm-sm">Pakej akan diumumkan (To confirm)</span>
+            </div>
+            <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-full">
+              <i data-lucide="message-circle"></i> Sila WhatsApp untuk pertanyaan
+            </a>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="program-card">
+            <div class="program-badge">Hafazan</div>
+            <div class="program-icon">
+              <i data-lucide="award"></i>
+            </div>
+            <h3 class="program-title">Bimbingan Hafazan Surah</h3>
+            <p class="program-desc">
+              Latihan mengafaz surah-surah lazim dan ayat pilihan dalam Al-Quran mengikut kemampuan pelajar.
+            </p>
+            <div class="program-price-box">
+              <span class="price-label">Yuran & Pakej</span>
+              <span class="badge-confirm-sm">Pakej akan diumumkan (To confirm)</span>
+            </div>
+            <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-full">
+              <i data-lucide="message-circle"></i> Sila WhatsApp untuk pertanyaan
+            </a>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="program-card">
+            <div class="program-badge">Fardhu Ain</div>
+            <div class="program-icon">
+              <i data-lucide="file-text"></i>
+            </div>
+            <h3 class="program-title">Asas Jawi & Amali Solat</h3>
+            <p class="program-desc">
+              Pembelajaran asas bacaan Jawi serta bimbingan praktikal ibadah solat dan adab harian.
+            </p>
+            <div class="program-price-box">
+              <span class="price-label">Yuran & Pakej</span>
+              <span class="badge-confirm-sm">Pakej akan diumumkan (To confirm)</span>
+            </div>
+            <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-full">
+              <i data-lucide="message-circle"></i> Sila WhatsApp untuk pertanyaan
+            </a>
+          </div>
+        </div>
+
+        <div class="section-cta-banner reveal">
+          <div class="cta-banner-text">
+            <h3>Berminat Mengetahui Lebih Lanjut Tentang Program?</h3>
+            <p>Hubungi kami terus untuk berbincang mengenai kesesuaian waktu dan maklumat lanjut.</p>
+          </div>
+          <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-lg">
+            <i data-lucide="message-circle"></i> Hubungi WhatsApp (013-4565245)
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: KELEBIHAN MEMILIH KAMI -->
+    <section class="section-block" id="kelebihan">
+      <div class="container">
+        <div class="section-header text-center reveal">
+          <span class="pill-badge pill-emerald"><i data-lucide="sparkles"></i> Keutamaan Kami</span>
+          <h2 class="section-title">Kelebihan Memilih Kami</h2>
+          <p class="section-subtitle">
+            Faktor utama yang menjadikan KELAS MENGAJI pilihan pengajian Al-Quran yang dipercayai.
+          </p>
+        </div>
+
+        <div class="features-grid reveal">
+          <div class="feature-card">
+            <div class="feature-number">01</div>
+            <div class="feature-icon"><i data-lucide="smile"></i></div>
+            <h3>Mudah & Mesra</h3>
+            <p>Penyampaian pembelajaran Al-Quran yang mesra, mengurangkan rasa segan dan membina sifat minat mengaji.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-number">02</div>
+            <div class="feature-icon"><i data-lucide="check-square"></i></div>
+            <h3>Teratur & Berkualiti</h3>
+            <p>Modul pengajian disampaikan secara teratur dalam suasana pembelajaran yang tenang dan kondusif.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-number">03</div>
+            <div class="feature-icon"><i data-lucide="map-pin"></i></div>
+            <h3>Lokasi Kuala Lumpur</h3>
+            <p>Kemudahan pengajian tempatan di Kuala Lumpur bagi memudahkan akses penduduk persekitaran.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-number">04</div>
+            <div class="feature-icon"><i data-lucide="phone"></i></div>
+            <h3>Pertanyaan Pantas</h3>
+            <p>Komunikasi mudah melalui WhatsApp (013-4565245) untuk sebarang pertanyaan tanpa proses rumit.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: GALERI -->
+    <section class="section-block alt-bg" id="galeri">
+      <div class="container">
+        <div class="section-header text-center reveal">
+          <span class="pill-badge pill-gold"><i data-lucide="image"></i> Visual Aktiviti</span>
+          <h2 class="section-title">Galeri Pembelajaran</h2>
+          <p class="section-subtitle">
+            Gambar aktiviti pengajian Al-Quran, amali solat, dan modul pembelajaran murid.
+          </p>
+        </div>
+
+        <div class="gallery-grid reveal">
+          <div class="gallery-item" onclick="openLightbox('assets/hafazan_sample.png', 'Bimbingan Hafazan & Al-Quran')">
+            <img src="assets/hafazan_sample.png" alt="Aktiviti Hafazan Al-Quran">
+            <div class="gallery-overlay">
+              <span class="gallery-tag">Hafazan Al-Quran</span>
+              <p>Bimbingan bacaan & hafazan</p>
+              <div class="gallery-zoom"><i data-lucide="maximize-2"></i> Besarkan</div>
+            </div>
+          </div>
+
+          <div class="gallery-item" onclick="openLightbox('assets/solat_sample.png', 'Amali & Bimbingan Solat')">
+            <img src="assets/solat_sample.png" alt="Panduan Amali Solat">
+            <div class="gallery-overlay">
+              <span class="gallery-tag">Amali Solat</span>
+              <p>Praktikal solat & wuduk</p>
+              <div class="gallery-zoom"><i data-lucide="maximize-2"></i> Besarkan</div>
+            </div>
+          </div>
+
+          <div class="gallery-item" onclick="openLightbox('assets/jawi_sample.png', 'Pembelajaran Asas Jawi')">
+            <img src="assets/jawi_sample.png" alt="Pembelajaran Asas Jawi">
+            <div class="gallery-overlay">
+              <span class="gallery-tag">Asas Jawi</span>
+              <p>Latihan kemahiran Jawi</p>
+              <div class="gallery-zoom"><i data-lucide="maximize-2"></i> Besarkan</div>
+            </div>
+          </div>
+
+          <div class="gallery-item" onclick="openLightbox('assets/adab_sample.png', 'Adab & Sahsiah Murid')">
+            <img src="assets/adab_sample.png" alt="Adab Pembelajaran">
+            <div class="gallery-overlay">
+              <span class="gallery-tag">Adab & Sahsiah</span>
+              <p>Penerapan nilai adab Islam</p>
+              <div class="gallery-zoom"><i data-lucide="maximize-2"></i> Besarkan</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-3 reveal">
+          <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+            <i data-lucide="message-circle"></i> WhatsApp 013-4565245 Untuk Gambar & Info Lanjut
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: FAQ -->
+    <section class="section-block" id="faq">
+      <div class="container">
+        <div class="section-header text-center reveal">
+          <span class="pill-badge pill-emerald"><i data-lucide="help-circle"></i> Jawapan Pantas</span>
+          <h2 class="section-title">Soalan Lazim (FAQ)</h2>
+          <p class="section-subtitle">
+            Jawapan bagi pertanyaan umum berkenaan pendaftaran dan kelas mengaji.
+          </p>
+        </div>
+
+        <div class="faq-container reveal">
+          <!-- Accordion 1 -->
+          <div class="faq-card">
+            <button class="faq-question" aria-expanded="false">
+              <span>Siapakah yang boleh menyertai KELAS MENGAJI?</span>
+              <i data-lucide="chevron-down" class="faq-icon"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Kelas mengaji ini terbuka untuk pelbagai peringkat umur termasuk ibu bapa, pelajar sekolah, serta golongan dewasa yang ingin belajar mengaji atau memperbaiki bacaan Al-Quran di Kuala Lumpur.</p>
+            </div>
+          </div>
+
+          <!-- Accordion 2 -->
+          <div class="faq-card">
+            <button class="faq-question" aria-expanded="false">
+              <span>Bila waktu operasi kelas mengaji ini?</span>
+              <i data-lucide="chevron-down" class="faq-icon"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Waktu operasi semasa kami adalah dari jam <strong>8.00 pagi hingga 9.00 pagi</strong>. <span class="badge-confirm-sm">Hari operasi: To confirm</span>. Sila WhatsApp untuk pengesahan hari pengajian.</p>
+            </div>
+          </div>
+
+          <!-- Accordion 3 -->
+          <div class="faq-card">
+            <button class="faq-question" aria-expanded="false">
+              <span>Berapakah yuran dan pakej yang ditawarkan?</span>
+              <i data-lucide="chevron-down" class="faq-icon"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Kadar yuran dan jenis pakej mengaji <span class="badge-confirm-sm">To confirm</span>. Sila WhatsApp kami di 013-4565245 untuk maklumat lanjut berkenaan pakej terkini.</p>
+            </div>
+          </div>
+
+          <!-- Accordion 4 -->
+          <div class="faq-card">
+            <button class="faq-question" aria-expanded="false">
+              <span>Di manakah lokasi sebenar pengajian?</span>
+              <i data-lucide="chevron-down" class="faq-icon"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Lokasi pengajian kami terletak di <strong>Kuala Lumpur</strong>. <span class="badge-confirm-sm">Alamat penuh: To confirm</span>. Alamat tepat akan dikongsi melalui mesej WhatsApp.</p>
+            </div>
+          </div>
+
+          <!-- Accordion 5 -->
+          <div class="faq-card">
+            <button class="faq-question" aria-expanded="false">
+              <span>Bagaimana cara untuk mendaftar atau bertanya maklumat lanjut?</span>
+              <i data-lucide="chevron-down" class="faq-icon"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Sangat mudah! Anda boleh menekan butang WhatsApp di laman ini atau terus menghantar mesej ke <strong>013-4565245</strong> untuk perbincangan pantas.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: LOKASI & WAKTU OPERASI -->
+    <section class="section-block alt-bg" id="lokasi">
+      <div class="container">
+        <div class="section-header text-center reveal">
+          <span class="pill-badge pill-gold"><i data-lucide="map-pin"></i> Maklumat Pusat</span>
+          <h2 class="section-title">Lokasi & Waktu Operasi</h2>
+          <p class="section-subtitle">
+            Butiran tempat dan waktu pengajian KELAS MENGAJI.
+          </p>
+        </div>
+
+        <div class="location-grid reveal">
+          <!-- Card Location -->
+          <div class="info-card">
+            <div class="info-card-icon text-emerald">
+              <i data-lucide="map-pin"></i>
+            </div>
+            <h3>Lokasi Pusat</h3>
+            <p class="info-highlight">Kuala Lumpur</p>
+            <p class="info-note"><span class="badge-confirm-sm">Alamat penuh: To confirm</span></p>
+            <p class="info-desc">Perkhidmatan kelas mengaji di kawasan Kuala Lumpur.</p>
+          </div>
+
+          <!-- Card Time -->
+          <div class="info-card">
+            <div class="info-card-icon text-gold">
+              <i data-lucide="clock"></i>
+            </div>
+            <h3>Waktu Operasi</h3>
+            <p class="info-highlight">8.00–9.00 Pagi</p>
+            <p class="info-note"><span class="badge-confirm-sm">Hari operasi: To confirm</span></p>
+            <p class="info-desc">Sesi pembelajaran dijalankan mengikut jadual pagi.</p>
+          </div>
+
+          <!-- Card Social & Contact -->
+          <div class="info-card">
+            <div class="info-card-icon text-emerald">
+              <i data-lucide="share-2"></i>
+            </div>
+            <h3>Perhubungan & Media</h3>
+            <p class="info-highlight">WhatsApp: 013-4565245</p>
+            <p class="info-note"><span class="badge-confirm-sm">Link Facebook: To confirm</span></p>
+            <p class="info-desc">Media sosial rasmi Facebook akan dikemaskini kelak.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: HUBUNGI KAMI -->
+    <section class="section-block" id="hubungi">
+      <div class="container">
+        <div class="contact-box reveal">
+          <div class="contact-content">
+            <span class="pill-badge pill-emerald"><i data-lucide="phone-call"></i> Tindakan Pantas</span>
+            <h2 class="contact-title">Sedia Untuk Mula Mengaji?</h2>
+            <p class="contact-text">
+              Hubungi kami melalui WhatsApp untuk pertanyaan kelas, jadual, dan pengesahan lokasi secara mesra.
+            </p>
+            <div class="contact-meta">
+              <div class="meta-item">
+                <i data-lucide="phone"></i> WhatsApp: <strong>013-4565245</strong>
+              </div>
+              <div class="meta-item">
+                <i data-lucide="map-pin"></i> Lokasi: <strong>Kuala Lumpur</strong>
+              </div>
+              <div class="meta-item">
+                <i data-lucide="clock"></i> Waktu: <strong>8.00–9.00 pagi</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-action">
+            <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-lg contact-btn">
+              <i data-lucide="message-circle"></i>
+              <span>Hubungi Kami via WhatsApp</span>
+            </a>
+            <p class="contact-subtext">Tekan butang untuk terus membuka aplikasi WhatsApp</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <!-- PRINTABLE REPORT WRAPPER (Shown only during window.print()) -->
-  <div id="printable-report" class="print-only-container">
-    <div class="print-header">
-      <div class="print-logo-box">
-        <div class="print-emblem">PBI</div>
-        <div>
-          <h1 class="print-school-name">SEKOLAH KEBANGSAAN PERMATA PERDANA</h1>
-          <p class="print-school-sub">Laporan Pentaksiran Berasaskan Darjah (PBD) Pendidikan Islam</p>
-          <p class="print-school-meta">Sesi Akademik 2026/2027 &bull; [Terkini: Penggal 2]</p>
-        </div>
-      </div>
-      <div class="print-badge-to-confirm">DISAHKAN / TO CONFIRM</div>
-    </div>
-
-    <div class="print-divider"></div>
-
-    <div class="print-section">
-      <h3 class="print-sec-title">1. MAKLUMAT MURID & GURU</h3>
-      <table class="print-table">
-        <tr>
-          <th>Nama Murid:</th>
-          <td>Ahmad Ziyad bin Mohd Ridzuan</td>
-          <th>No. MyKid:</th>
-          <td>160412-10-XXXX (To confirm)</td>
-        </tr>
-        <tr>
-          <th>Kelas:</th>
-          <td>Tahun 4 Ibnu Sina</td>
-          <th>Kehadiran:</th>
-          <td>98%</td>
-        </tr>
-        <tr>
-          <th>Guru Kelas:</th>
-          <td>Ustazah Siti Nurhaliza binti Ishak (To confirm)</td>
-          <th>Guru Pendidikan Islam:</th>
-          <td>Ustaz Ahmad Fairuz bin Ramli (To confirm)</td>
-        </tr>
-      </table>
-    </div>
-
-    <div class="print-section">
-      <h3 class="print-sec-title">2. REKOD TAHAP PENGUASAAN (TP) PENDIDIKAN ISLAM</h3>
-      <table class="print-table print-table-bordered">
-        <thead>
-          <tr>
-            <th>Bidang</th>
-            <th>Kemahiran / Penguasaan</th>
-            <th>Tahap Penguasaan (TP)</th>
-            <th>Ulasan Guru / Deskriptor</th>
-          </tr>
-        </thead>
-        <tbody id="print-pbd-tbody">
-          <!-- Dynamic insertion -->
-        </tbody>
-      </table>
-    </div>
-
-    <div class="print-section">
-      <h3 class="print-sec-title">3. LAPORAN & ULASAN KESELURAHAN GURU</h3>
-      <div class="print-comment-box" id="print-teacher-comment">
-        <!-- Dynamic insertion -->
-      </div>
-    </div>
-
-    <div class="print-signatures-row">
-      <div class="sig-box">
-        <p>Disediakan Oleh:</p>
-        <div class="sig-line"></div>
-        <p><strong>Ustaz Ahmad Fairuz bin Ramli</strong></p>
-        <p class="text-xs">Guru Pendidikan Islam (To confirm)</p>
-      </div>
-      <div class="sig-box">
-        <p>Disahkan Oleh Penjaga:</p>
-        <div class="sig-line"></div>
-        <p><strong>( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; )</strong></p>
-        <p class="text-xs">Tandatangan Ibu Bapa / Penjaga</p>
-      </div>
+  <!-- Image Lightbox Modal for Gallery -->
+  <div class="lightbox-modal" id="lightbox-modal" aria-hidden="true" onclick="closeLightbox()">
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+      <button class="lightbox-close" onclick="closeLightbox()" aria-label="Tutup foto"><i data-lucide="x"></i></button>
+      <img id="lightbox-img" src="" alt="Paparan Foto Besark">
+      <p id="lightbox-caption" class="lightbox-caption"></p>
     </div>
   </div>
 
-  <!-- PBD MODAL DIALOG -->
-  <div class="modal-backdrop" id="pbd-modal" aria-hidden="true">
-    <div class="modal-card">
-      <button class="modal-close-btn" onclick="closePbdModal()" aria-label="Tutup Dialog">
-        <i data-lucide="x"></i>
-      </button>
-      <div class="modal-header-banner" id="modal-header-banner">
-        <span class="modal-badge-tp" id="modal-badge-tp">TP 5</span>
-        <h3 id="modal-domain-title">Bidang Al-Quran</h3>
-      </div>
-      <div class="modal-body-content">
-        <div class="modal-info-row">
-          <div>
-            <span class="modal-label">Tahap Penguasaan:</span>
-            <strong id="modal-tp-desc">Sangat Baik</strong>
-          </div>
-          <div>
-            <span class="modal-label">Tarikh Penilaian:</span>
-            <span id="modal-eval-date">15 Jun 2026</span>
-          </div>
-        </div>
-
-        <div class="modal-section-block">
-          <h4><i data-lucide="target"></i> Standard Pembelajaran / Deskriptor</h4>
-          <p id="modal-descriptor-text">Menguasai bacaan ayat dengan tajwid asas dan tajwid makhraj huruf yang betul.</p>
-        </div>
-
-        <div class="modal-section-block">
-          <h4><i data-lucide="check-square"></i> Kekuatan Yang Ditunjukkan</h4>
-          <ul class="modal-bullets-list" id="modal-strengths-list">
-            <!-- Dynamic bullets -->
-          </ul>
-        </div>
-
-        <div class="modal-section-block highlight-bg">
-          <h4><i data-lucide="home"></i> Bimbingan Ibu Bapa di Rumah</h4>
-          <p id="modal-home-guidance">Mendengar bacaan surah al-Mulk anak 10 minit sebelum tidur.</p>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closePbdModal()">Tutup</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- GALLERY LIGHTBOX MODAL -->
-  <div class="modal-backdrop" id="gallery-modal" aria-hidden="true">
-    <div class="modal-card gallery-modal-card">
-      <button class="modal-close-btn" onclick="closeGalleryModal()" aria-label="Tutup Galeri">
-        <i data-lucide="x"></i>
-      </button>
-      <div class="gallery-modal-body">
-        <div class="gmodal-image-container">
-          <img id="gmodal-img" src="" alt="Hasil Kerja Murid">
-        </div>
-        <div class="gmodal-info-container">
-          <span class="badge badge-primary mb-2" id="gmodal-tag">Tulisan Jawi</span>
-          <h3 id="gmodal-title">Latihan Ejaan Jawi</h3>
-          <span class="gmodal-date" id="gmodal-date">12 Mei 2026</span>
-          <p class="gmodal-desc" id="gmodal-desc">Kertas latihan ejaan kata pinjaman Bahasa Melayu dalam tulisan Jawi.</p>
-
-          <div class="gmodal-feedback-box">
-            <h4><i data-lucide="message-square"></i> Catatan Guru:</h4>
-            <p id="gmodal-feedback">"Tahniah Ziyad, ejaan sangat kemas dan tepat!"</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TOAST NOTIFICATION CONTAINER -->
-  <div id="toast-container" class="toast-container"></div>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="container footer-content">
+  <!-- Footer (App Shell) -->
+  <footer class="app-footer">
+    <div class="container footer-container">
       <div class="footer-brand">
         <div class="logo-icon small">
-          <i data-lucide="book-open-check"></i>
+          <i data-lucide="book-open"></i>
         </div>
         <div>
-          <h3>Laporan PAI &bull; Pendidikan Islam</h3>
-          <p>Satu platform mesra ibu bapa dan murid untuk memantau pembelajaran Pendidikan Islam.</p>
+          <span class="footer-title">KELAS MENGAJI</span>
+          <p class="footer-tagline">Belajar mengaji dengan mudah, mesra dan teratur.</p>
         </div>
       </div>
 
-      <div class="footer-disclaimer">
-        <span class="badge badge-confirm"><i data-lucide="info"></i> Penafian Data</span>
-        <p>Laman ini menggunakan data sampel sementara. Semua maklumat bertanda <strong>"To confirm"</strong> belum disahkan dan sedia untuk dikemas kini berpandukan rekod rasmi sekolah.</p>
-      </div>
-
-      <div class="footer-bottom">
-        <p>&copy; 2026 Laman Laporan Perkembangan Murid. Hak Cipta Terpelihara.</p>
-        <button class="btn-top" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-          Ke Atas <i data-lucide="arrow-up"></i>
-        </button>
+      <div class="footer-links">
+        <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="footer-whatsapp">
+          <i data-lucide="message-circle"></i> WhatsApp: 013-4565245
+        </a>
+        <span class="footer-copy">&copy; 2026 KELAS MENGAJI &bull; All Rights Reserved.</span>
       </div>
     </div>
   </footer>
 
-  <!-- JS Scripts -->
-  <script src="js/studentData.js"></script>
+  <!-- Scripts -->
   <script src="js/app.js"></script>
 </body>
 </html>
