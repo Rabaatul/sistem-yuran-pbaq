@@ -182,7 +182,36 @@ function initDateAndMonth() {
   }
 }
 
+function renderStudentSelectOptions() {
+  const selectEl = document.getElementById("student-native-select");
+  if (!selectEl) return;
+  let html = `<option value="">-- Tekan Di Sini Untuk Pilih Murid (${appState.students.length} Murid) --</option>`;
+  appState.students.forEach((student, idx) => {
+    html += `<option value="${idx}">${idx + 1}. ${student.nama} (${student.phone || 'Tiada No.'})</option>`;
+  });
+  selectEl.innerHTML = html;
+}
+
+function onNativeStudentSelect(idxVal) {
+  const phoneDisplay = document.getElementById("parent-phone-display");
+  const searchInput = document.getElementById("student-search-input");
+  if (idxVal === "") {
+    appState.selectedStudent = null;
+    if (phoneDisplay) phoneDisplay.value = "";
+    if (searchInput) searchInput.value = "";
+  } else {
+    const student = appState.students[parseInt(idxVal, 10)];
+    if (student) {
+      appState.selectedStudent = student;
+      if (phoneDisplay) phoneDisplay.value = student.phone || "";
+      if (searchInput) searchInput.value = student.nama;
+    }
+  }
+  renderReceiptPreview();
+}
+
 function initStudentSearch() {
+  renderStudentSelectOptions();
   const searchInput = document.getElementById("student-search-input");
   const dropdown = document.getElementById("student-dropdown-options");
   const phoneDisplay = document.getElementById("parent-phone-display");
@@ -209,6 +238,11 @@ function initStudentSearch() {
         appState.selectedStudent = student;
         searchInput.value = student.nama;
         if (phoneDisplay) phoneDisplay.value = student.phone || '';
+        const selectEl = document.getElementById("student-native-select");
+        if (selectEl) {
+          const foundIdx = appState.students.findIndex(s => s.nama === student.nama);
+          if (foundIdx !== -1) selectEl.value = foundIdx.toString();
+        }
         dropdown.classList.remove("show");
         renderReceiptPreview();
       };

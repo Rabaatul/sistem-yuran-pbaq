@@ -344,13 +344,16 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-gradie
                 <div class="card-body">
                   <div class="form-group">
                     <label class="form-label">
-                      Nama Murid <span style="color:red;">*</span> 
+                      Pilih / Cari Nama Murid <span style="color:red;">*</span> 
                       <button type="button" class="btn-refresh-students" onclick="fetchStudentsFromBackend(true)" title="Kemaskini Senarai Murid">
                         <i class="fa-solid fa-rotate"></i> Kemaskini
                       </button>
                     </label>
+                    <select id="student-native-select" class="form-select" style="font-weight:700; color:var(--primary-dark); margin-bottom:8px;" onchange="onNativeStudentSelect(this.value)">
+                      <option value="">-- Tekan Di Sini Untuk Pilih Murid --</option>
+                    </select>
                     <div class="searchable-select">
-                      <input type="text" id="student-search-input" class="form-control" placeholder="Taip nama murid..." autocomplete="off">
+                      <input type="text" id="student-search-input" class="form-control" placeholder="🔍 ATAU Taip huruf nama / nombor telefon..." autocomplete="off">
                       <div id="student-dropdown-options" class="dropdown-options"></div>
                     </div>
                   </div>
@@ -677,7 +680,36 @@ function initDateAndMonth() {
   }
 }
 
+function renderStudentSelectOptions() {
+  const selectEl = document.getElementById("student-native-select");
+  if (!selectEl) return;
+  let html = `<option value="">-- Tekan Di Sini Untuk Pilih Murid (${appState.students.length} Murid) --</option>`;
+  appState.students.forEach((student, idx) => {
+    html += `<option value="${idx}">${idx + 1}. ${student.nama} (${student.phone || 'Tiada No.'})</option>`;
+  });
+  selectEl.innerHTML = html;
+}
+
+function onNativeStudentSelect(idxVal) {
+  const phoneDisplay = document.getElementById("parent-phone-display");
+  const searchInput = document.getElementById("student-search-input");
+  if (idxVal === "") {
+    appState.selectedStudent = null;
+    if (phoneDisplay) phoneDisplay.value = "";
+    if (searchInput) searchInput.value = "";
+  } else {
+    const student = appState.students[parseInt(idxVal, 10)];
+    if (student) {
+      appState.selectedStudent = student;
+      if (phoneDisplay) phoneDisplay.value = student.phone || "";
+      if (searchInput) searchInput.value = student.nama;
+    }
+  }
+  renderReceiptPreview();
+}
+
 function initStudentSearch() {
+  renderStudentSelectOptions();
   const searchInput = document.getElementById("student-search-input");
   const dropdown = document.getElementById("student-dropdown-options");
   const phoneDisplay = document.getElementById("parent-phone-display");
@@ -695,6 +727,11 @@ function initStudentSearch() {
         appState.selectedStudent = student;
         searchInput.value = student.nama;
         if (phoneDisplay) phoneDisplay.value = student.phone || '';
+        const selectEl = document.getElementById("student-native-select");
+        if (selectEl) {
+          const foundIdx = appState.students.findIndex(s => s.nama === student.nama);
+          if (foundIdx !== -1) selectEl.value = foundIdx.toString();
+        }
         dropdown.classList.remove("show");
         renderReceiptPreview();
       };
