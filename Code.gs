@@ -54,7 +54,8 @@ const MASTER_STUDENTS = [
   { id: 35, nama: "Che Aqil Rayqal Bin Hafizul Ariffin", phone: "0126648853", status: "AKTIF" },
   { id: 36, nama: "Muhammad Aryan Ziqri Bin Md Zahid", phone: "0193853222", status: "AKTIF" },
   { id: 37, nama: "Muhammad Al Hafiz Bin Mohd Zin", phone: "0192248326", status: "AKTIF" },
-  { id: 38, nama: "NAJIHAH", phone: "0134565245", status: "AKTIF" }
+  { id: 38, nama: "NAJIHAH", phone: "0134565245", status: "AKTIF" },
+  { id: 39, nama: "FUDLAA", phone: "0139436009", status: "AKTIF" }
 ];
 
 /**
