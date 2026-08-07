@@ -180,20 +180,30 @@ function handleFileUpload(event, storageKey, configKey) {
 
 // Navigation View Switcher
 function switchView(viewId) {
-  document.querySelectorAll(".tab-view").forEach(el => el.classList.remove("active"));
-  document.querySelectorAll(".nav-link").forEach(el => el.classList.remove("active"));
-  
-  const targetView = document.getElementById(`view-${viewId}`);
-  const targetNav = document.getElementById(`nav-${viewId}`);
+  try {
+    document.querySelectorAll(".tab-view").forEach(el => el.classList.remove("active"));
+    document.querySelectorAll(".nav-link").forEach(el => el.classList.remove("active"));
+    
+    const targetView = document.getElementById(`view-${viewId}`);
+    const targetNav = document.getElementById(`nav-${viewId}`);
 
-  if (targetView) targetView.classList.add("active");
-  if (targetNav) targetNav.classList.add("active");
+    if (targetView) targetView.classList.add("active");
+    if (targetNav) targetNav.classList.add("active");
 
-  // Close mobile sidebar if open
-  document.querySelector(".sidebar")?.classList.remove("mobile-open");
+    // Close mobile sidebar if open
+    document.querySelector(".sidebar")?.classList.remove("mobile-open");
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
-  if (viewId === "dashboard") renderDashboard();
-  if (viewId === "rekod") renderHistoryTable();
+    if (viewId === "dashboard") renderDashboard();
+    if (viewId === "rekod") renderHistoryTable();
+    if (viewId === "bayaran") {
+      renderCheckboxFeeGroups();
+      updateTotalAmount();
+      renderReceiptPreview();
+    }
+  } catch (e) {
+    console.error("Ralat switchView:", e);
+  }
 }
 
 function toggleMobileSidebar() {
