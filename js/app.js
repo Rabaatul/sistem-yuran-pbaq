@@ -962,16 +962,24 @@ function normalizeStudents(list) {
   });
 }
 
-async function fetchStudentsFromBackend() {
+async function fetchStudentsFromBackend(showToastMsg = false) {
   if (!appState.appsScriptUrl) return;
   try {
+    if (showToastMsg) showLoading(true, "Memuat turun data murid terkini dari Google Sheets...");
     const res = await fetch(`${appState.appsScriptUrl}?action=getStudents`);
     const data = await res.json();
+    if (showToastMsg) showLoading(false);
+
     if (data.success && Array.isArray(data.data) && data.data.length > 0) {
       appState.students = normalizeStudents(data.data);
       initStudentSearch();
+      if (showToastMsg) showToast(`Senarai ${appState.students.length} murid berjaya dikemaskini dari Google Sheets!`, "success");
     }
   } catch (err) {
+    if (showToastMsg) {
+      showLoading(false);
+      showToast("Gagal memuat turun data murid: " + err.message, "error");
+    }
     console.log("Using default master student database:", err);
   }
 }

@@ -561,6 +561,24 @@ body {
   padding: 0.35rem 0.5rem;
 }
 
+.btn-refresh-students {
+  background: transparent;
+  border: none;
+  color: var(--primary-main);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: var(--transition);
+}
+
+.btn-refresh-students:hover {
+  color: var(--accent-gold-dark);
+}
+
 /* Payment Method Radios */
 .payment-methods {
   display: flex;

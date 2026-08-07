@@ -351,7 +351,7 @@ body { font-family: var(--font-main); background: var(--bg-gradient); color: var
                 </div>
                 <div class="card-body">
                   <div class="form-group">
-                    <label class="form-label">Nama Murid <span class="required">*</span></label>
+                    <label class="form-label">Nama Murid <span class="required">*</span> <button type="button" class="btn-refresh-students" onclick="fetchStudentsFromBackend(true)" title="Kemaskini Senarai Murid dari Google Sheets"><i class="fa-solid fa-rotate"></i> Kemaskini</button></label>
                     <div class="searchable-select">
                       <input type="text" id="student-search-input" class="select-search-input" placeholder="Cari atau pilih nama murid..." autocomplete="off">
                       <i class="fa-solid fa-magnifying-glass select-search-icon"></i>
@@ -1116,13 +1116,21 @@ function normalizeStudents(list) {
   });
 }
 
-async function fetchStudentsFromBackend() {
+async function fetchStudentsFromBackend(showToastMsg = false) {
   if (!appState.appsScriptUrl) return;
   try {
+    if (showToastMsg) showLoading(true, "Memuat turun data murid terkini dari Google Sheets...");
     const res = await fetch(`${appState.appsScriptUrl}?action=getStudents`);
     const data = await res.json();
-    if (data.success && Array.isArray(data.data) && data.data.length > 0) { appState.students = normalizeStudents(data.data); initStudentSearch(); }
-  } catch (err) {}
+    if (showToastMsg) showLoading(false);
+    if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+      appState.students = normalizeStudents(data.data);
+      initStudentSearch();
+      if (showToastMsg) showToast(`Senarai ${appState.students.length} murid dikemaskini dari Google Sheets!`, "success");
+    }
+  } catch (err) {
+    if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid.", "error"); }
+  }
 }
 
 async function fetchPaymentHistoryFromBackend() {
