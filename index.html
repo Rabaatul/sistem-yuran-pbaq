@@ -3,624 +3,1323 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KELAS MENGAJI – JOM MENGAJI | Kuala Lumpur</title>
-  <meta name="description" content="Belajar mengaji dengan mudah, mesra dan teratur dalam suasana pembelajaran yang berkualiti. Hubungi WhatsApp 013-4565245 untuk maklumat lanjut.">
-  <meta name="keywords" content="Kelas Mengaji, Jom Mengaji, Belajar Mengaji, Mengaji Kuala Lumpur, Kelas Al-Quran">
-  <meta name="author" content="KELAS MENGAJI">
+  <title>SISTEM BAYARAN YURAN MURID</title>
   
-  <!-- Google Fonts: Plus Jakarta Sans (Modern UI) & Amiri (Arabic/Heritage elegance) -->
+  <!-- Google Fonts & Font Awesome Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <!-- Stylesheets -->
+  <!-- Custom Stylesheet -->
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <!-- Soft Ambient Glow Shapes -->
-  <div class="bg-shape bg-shape-1" aria-hidden="true"></div>
-  <div class="bg-shape bg-shape-2" aria-hidden="true"></div>
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">
+    <i id="toast-icon" class="fa-solid fa-circle-check"></i>
+    <span id="toast-msg">Mesej Notifikasi</span>
+  </div>
 
-  <!-- Top Announcement / Truth Status Bar -->
-  <aside class="announcement-bar" id="announcement-bar">
-    <div class="container announcement-content">
-      <div class="announcement-left">
-        <span class="badge badge-confirm">
-          <i data-lucide="help-circle"></i> To confirm
-        </span>
-        <span class="announcement-text">
-          Logo Rasmi, Harga Pakej & Link Facebook <strong class="badge-inline">To confirm</strong> &bull; Waktu Operasi: <strong>8.00–9.00 Pagi</strong> &bull; Lokasi: <strong>Kuala Lumpur</strong>
-        </span>
+  <!-- Loading Overlay -->
+  <div id="loading" class="loading-overlay">
+    <div class="spinner"></div>
+    <div style="font-weight: 700; color: var(--primary-dark);" id="loading-text">Memproses data daripada Google Sheets...</div>
+  </div>
+
+  <!-- App Shell Container -->
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation (Desktop View) -->
+    <aside class="sidebar no-print">
+      <div class="brand-header">
+        <div class="brand-icon-box">
+          <i class="fa-solid fa-school-flag"></i>
+        </div>
+        <div>
+          <div class="brand-title-text">SISTEM BAYARAN</div>
+          <div class="brand-subtitle-text">YURAN MURID</div>
+        </div>
       </div>
-      <button class="announcement-close" aria-label="Tutup pemberitahuan" onclick="document.getElementById('announcement-bar').style.display='none'">
-        <i data-lucide="x"></i>
-      </button>
-    </div>
-  </aside>
 
-  <!-- Sticky Navbar (App Shell) -->
-  <header class="navbar-header" id="header">
-    <div class="container navbar-container">
-      <a href="#hero" class="brand-logo" aria-label="Laman Utama Kelas Mengaji">
-        <div class="logo-icon">
-          <i data-lucide="book-open"></i>
-        </div>
-        <div class="brand-text">
-          <span class="brand-title">KELAS MENGAJI</span>
-          <span class="brand-subtitle">PROGRAM JOM MENGAJI</span>
-        </div>
-      </a>
-
-      <!-- Desktop Navigation Menu -->
-      <nav class="nav-menu" id="nav-menu">
-        <a href="#tentang" class="nav-link"><i data-lucide="info"></i> Tentang Kami</a>
-        <a href="#program" class="nav-link"><i data-lucide="book-marked"></i> Program</a>
-        <a href="#kelebihan" class="nav-link"><i data-lucide="sparkles"></i> Kelebihan</a>
-        <a href="#galeri" class="nav-link"><i data-lucide="image"></i> Galeri</a>
-        <a href="#faq" class="nav-link"><i data-lucide="help-circle"></i> FAQ</a>
-        <a href="#lokasi" class="nav-link"><i data-lucide="map-pin"></i> Lokasi</a>
-        <a href="#hubungi" class="nav-link"><i data-lucide="phone-call"></i> Hubungi</a>
+      <nav class="nav-menu">
+        <button class="nav-link active" id="nav-dashboard" onclick="switchView('dashboard')">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-link" id="nav-murid" onclick="switchView('murid')">
+          <i class="fa-solid fa-user-graduate"></i>
+          <span>Data Murid</span>
+        </button>
+        <button class="nav-link" id="nav-bayaran" onclick="switchView('bayaran')">
+          <i class="fa-solid fa-cash-register"></i>
+          <span>Rekod Bayaran</span>
+        </button>
+        <button class="nav-link" id="nav-rekod" onclick="switchView('rekod')">
+          <i class="fa-solid fa-receipt"></i>
+          <span>Senarai Bayaran</span>
+        </button>
       </nav>
 
-      <!-- Action & Mobile Drawer Toggle -->
-      <div class="nav-actions">
-        <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp nav-cta">
-          <i data-lucide="message-circle"></i>
-          <span>WhatsApp 013-4565245</span>
-        </a>
-        <button class="mobile-toggle" id="mobile-toggle" aria-label="Buka menu navigasi" aria-expanded="false">
-          <i data-lucide="menu" id="toggle-icon"></i>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-sm btn-block" onclick="openSetupModal()">
+          <i class="fa-solid fa-gear"></i> Setup Google Sheets
         </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Content Area -->
-  <main id="main-content">
-    
-    <!-- HERO SECTION (SLICE 2) -->
-    <section class="hero-section" id="hero">
-      <div class="container hero-grid">
-        <!-- Hero Text & CTAs -->
-        <div class="hero-content reveal">
-          <div class="hero-badges-wrapper">
-            <span class="pill-badge pill-emerald">
-              <i data-lucide="heart-handshake"></i> JOM MENGAJI
-            </span>
-            <span class="pill-badge pill-gold">
-              <i data-lucide="map-pin"></i> Kuala Lumpur
-            </span>
-          </div>
-
-          <h1 class="hero-title">
-            Belajar Mengaji dengan <span class="text-gradient">Mudah, Mesra</span> dan <span class="text-highlight">Teratur</span>
-          </h1>
-
-          <p class="hero-description">
-            Belajar mengaji dalam suasana pembelajaran yang berkualiti. Sesuai untuk ibu bapa, pelajar, dan dewasa yang ingin memantapkan bacaan Al-Quran.
-          </p>
-
-          <!-- Primary & Secondary Action CTAs -->
-          <div class="hero-cta-group">
-            <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-lg hero-cta-btn">
-              <i data-lucide="message-circle"></i>
-              <span>Hubungi via WhatsApp (013-4565245)</span>
-            </a>
-            <a href="#program" class="btn btn-outline btn-lg">
-              <i data-lucide="compass"></i>
-              <span>Terokai Program</span>
-            </a>
-          </div>
-
-          <!-- Quick Fact Chips (Verified + To Confirm) -->
-          <div class="hero-fact-chips">
-            <div class="fact-chip">
-              <i data-lucide="clock" class="chip-icon text-emerald"></i>
-              <div>
-                <span class="chip-label">Waktu Operasi</span>
-                <span class="chip-value">8.00–9.00 Pagi</span>
-              </div>
-            </div>
-
-            <div class="fact-chip">
-              <i data-lucide="map-pin" class="chip-icon text-gold"></i>
-              <div>
-                <span class="chip-label">Lokasi</span>
-                <span class="chip-value">Kuala Lumpur</span>
-              </div>
-            </div>
-
-            <div class="fact-chip chip-confirm">
-              <i data-lucide="help-circle" class="chip-icon text-orange"></i>
-              <div>
-                <span class="chip-label">Pakej & Yuran</span>
-                <span class="chip-value badge-confirm-sm">To confirm</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Hero Visual Showcase -->
-        <div class="hero-visual reveal">
-          <div class="hero-card-frame">
-            <div class="hero-card-header">
-              <div class="brand-avatar">
-                <i data-lucide="book-open"></i>
-              </div>
-              <div>
-                <h3 class="card-brand-name">KELAS MENGAJI</h3>
-                <p class="card-brand-sub">Suasana Pembelajaran Berkualiti</p>
-              </div>
-              <span class="badge badge-confirm ml-auto">To confirm Logo</span>
-            </div>
-
-            <!-- Preview Card Grid displaying Real Uploaded Assets -->
-            <div class="hero-gallery-preview">
-              <div class="hero-img-box">
-                <img src="assets/hafazan_sample.png" alt="Aktiviti Hafazan & Pembelajaran Al-Quran" loading="eager">
-                <span class="img-tag">Hafazan</span>
-              </div>
-              <div class="hero-img-box">
-                <img src="assets/solat_sample.png" alt="Panduan Solat & Amali" loading="eager">
-                <span class="img-tag">Amali Solat</span>
-              </div>
-              <div class="hero-img-box">
-                <img src="assets/jawi_sample.png" alt="Asas Jawi & Al-Quran" loading="eager">
-                <span class="img-tag">Asas Jawi</span>
-              </div>
-              <div class="hero-img-box">
-                <img src="assets/adab_sample.png" alt="Adab & Sahsiah" loading="eager">
-                <span class="img-tag">Adab</span>
-              </div>
-            </div>
-
-            <div class="hero-card-footer">
-              <div class="footer-info-item">
-                <i data-lucide="users" class="text-emerald"></i>
-                <span>Untuk Ibu Bapa, Pelajar & Dewasa</span>
-              </div>
-              <div class="footer-info-item">
-                <i data-lucide="facebook" class="text-muted"></i>
-                <span class="badge-confirm-sm">Facebook: To confirm</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Decorative Floating Card -->
-          <div class="floating-trust-badge">
-            <div class="trust-badge-icon">
-              <i data-lucide="check-circle-2"></i>
-            </div>
-            <div>
-              <strong>Mesra & Teratur</strong>
-              <p>Pembimbing Pengajian</p>
-            </div>
-          </div>
+        <div style="margin-top: 10px; font-size: 0.7rem; text-align: center; color: var(--text-light);">
+          v2.0 • Google Sheets DB
         </div>
       </div>
-    </section>
+    </aside>
 
-    <!-- CORE CONTENT SECTIONS (SLICE 3 & 4) -->
-
-    <!-- SECTION 1: TENTANG KAMI -->
-    <section class="section-block" id="tentang">
-      <div class="container">
-        <div class="section-header text-center reveal">
-          <span class="pill-badge pill-emerald"><i data-lucide="info"></i> Mengenali Kami</span>
-          <h2 class="section-title">Tentang KELAS MENGAJI</h2>
-          <p class="section-subtitle">
-            Ramai ibu bapa dan individu mencari kelas mengaji yang mudah difahami, dipercayai dan senang dihubungi. Landing page ini memperkenalkan KELAS MENGAJI secara profesional untuk memudahkan keputusan anda.
-          </p>
+    <!-- Main Content Area -->
+    <main class="main-wrapper">
+      
+      <!-- Top Bar Header -->
+      <header class="top-bar no-print">
+        <div>
+          <h1 class="page-header-title" id="page-title">Dashboard Utama</h1>
+          <p class="page-header-subtitle">Pengurusan Yuran Sekolah & Rekod Pembayaran Google Sheets</p>
         </div>
-
-        <div class="about-grid reveal">
-          <div class="about-card">
-            <div class="about-icon text-emerald">
-              <i data-lucide="users"></i>
-            </div>
-            <h3>Sasaran Pelajar</h3>
-            <p>Sesuai untuk ibu bapa, pelajar sekolah, serta golongan dewasa yang berhasrat mempelajari dan memperbaiki bacaan Al-Quran.</p>
-          </div>
-
-          <div class="about-card">
-            <div class="about-icon text-gold">
-              <i data-lucide="heart"></i>
-            </div>
-            <h3>Penyampaian Mesra</h3>
-            <p>Pendekatan pengajian yang mengutamakan suasana mesra, tenang, dan teratur bagi membina keyakinan setiap pelajar.</p>
-          </div>
-
-          <div class="about-card">
-            <div class="about-icon text-emerald">
-              <i data-lucide="map-pin"></i>
-            </div>
-            <h3>Lokasi & Akses</h3>
-            <p>Pengajian berpusat di Kuala Lumpur dengan waktu operasi dari jam 8.00 pagi hingga 9.00 pagi.</p>
-          </div>
-
-          <div class="about-card card-confirm">
-            <div class="about-icon text-orange">
-              <i data-lucide="user-check"></i>
-            </div>
-            <h3>Tenaga Pengajar</h3>
-            <p>Pengajaran dibimbing secara berhemah. <span class="badge-confirm-sm">Nama guru: To confirm</span></p>
+        <div>
+          <div class="status-badge-api" id="api-status-badge">
+            <span class="status-indicator-dot" id="api-dot"></span>
+            <span id="api-status-text">Google Sheets: Bersambung</span>
           </div>
         </div>
-      </div>
-    </section>
+      </header>
 
-    <!-- SECTION 2: PROGRAM JOM MENGAJI -->
-    <section class="section-block alt-bg" id="program">
-      <div class="container">
-        <div class="section-header text-center reveal">
-          <span class="pill-badge pill-gold"><i data-lucide="book-marked"></i> Servis Utama</span>
-          <h2 class="section-title">Program JOM MENGAJI</h2>
-          <p class="section-subtitle">
-            Pilihan fokus pengajian mengaji Al-Quran yang dirancang untuk keperluan pelbagai peringkat umur.
-          </p>
-        </div>
-
-        <div class="program-grid reveal">
-          <!-- Card 1 -->
-          <div class="program-card">
-            <div class="program-badge">Bimbingan Utas</div>
-            <div class="program-icon">
-              <i data-lucide="book-open-check"></i>
+      <!-- =================================================================== -->
+      <!-- VIEW 1: DASHBOARD -->
+      <!-- =================================================================== -->
+      <section id="view-dashboard" class="view-section active">
+        <!-- Stats Cards Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Jumlah Murid</span>
+              <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
             </div>
-            <h3 class="program-title">Kelas Al-Quran & Tajwid</h3>
-            <p class="program-desc">
-              Bimbingan sebutan makhraj huruf, tajwid asas, dan kelancaran bacaan Al-Quran secara tersusun.
-            </p>
-            <div class="program-price-box">
-              <span class="price-label">Yuran & Pakej</span>
-              <span class="badge-confirm-sm">Pakej akan diumumkan (To confirm)</span>
-            </div>
-            <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-full">
-              <i data-lucide="message-circle"></i> Sila WhatsApp untuk pertanyaan
-            </a>
+            <div class="stat-value" id="dash-stat-students">0</div>
           </div>
 
-          <!-- Card 2 -->
-          <div class="program-card">
-            <div class="program-badge">Hafazan</div>
-            <div class="program-icon">
-              <i data-lucide="award"></i>
+          <div class="stat-card success">
+            <div class="stat-header">
+              <span class="stat-label">Bayaran Hari Ini</span>
+              <div class="stat-icon"><i class="fa-solid fa-calendar-day"></i></div>
             </div>
-            <h3 class="program-title">Bimbingan Hafazan Surah</h3>
-            <p class="program-desc">
-              Latihan mengafaz surah-surah lazim dan ayat pilihan dalam Al-Quran mengikut kemampuan pelajar.
-            </p>
-            <div class="program-price-box">
-              <span class="price-label">Yuran & Pakej</span>
-              <span class="badge-confirm-sm">Pakej akan diumumkan (To confirm)</span>
-            </div>
-            <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-full">
-              <i data-lucide="message-circle"></i> Sila WhatsApp untuk pertanyaan
-            </a>
+            <div class="stat-value" id="dash-stat-today">RM 0.00</div>
           </div>
 
-          <!-- Card 3 -->
-          <div class="program-card">
-            <div class="program-badge">Fardhu Ain</div>
-            <div class="program-icon">
-              <i data-lucide="file-text"></i>
+          <div class="stat-card accent-teal">
+            <div class="stat-header">
+              <span class="stat-label">Bayaran Bulan Ini</span>
+              <div class="stat-icon"><i class="fa-solid fa-calendar-days"></i></div>
             </div>
-            <h3 class="program-title">Asas Jawi & Amali Solat</h3>
-            <p class="program-desc">
-              Pembelajaran asas bacaan Jawi serta bimbingan praktikal ibadah solat dan adab harian.
-            </p>
-            <div class="program-price-box">
-              <span class="price-label">Yuran & Pakej</span>
-              <span class="badge-confirm-sm">Pakej akan diumumkan (To confirm)</span>
+            <div class="stat-value" id="dash-stat-month">RM 0.00</div>
+          </div>
+
+          <div class="stat-card warning">
+            <div class="stat-header">
+              <span class="stat-label">Jumlah Keseluruhan</span>
+              <div class="stat-icon"><i class="fa-solid fa-wallet"></i></div>
             </div>
-            <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-full">
-              <i data-lucide="message-circle"></i> Sila WhatsApp untuk pertanyaan
-            </a>
+            <div class="stat-value" id="dash-stat-total">RM 0.00</div>
           </div>
         </div>
 
-        <div class="section-cta-banner reveal">
-          <div class="cta-banner-text">
-            <h3>Berminat Mengetahui Lebih Lanjut Tentang Program?</h3>
-            <p>Hubungi kami terus untuk berbincang mengenai kesesuaian waktu dan maklumat lanjut.</p>
-          </div>
-          <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-lg">
-            <i data-lucide="message-circle"></i> Hubungi WhatsApp (013-4565245)
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 3: KELEBIHAN MEMILIH KAMI -->
-    <section class="section-block" id="kelebihan">
-      <div class="container">
-        <div class="section-header text-center reveal">
-          <span class="pill-badge pill-emerald"><i data-lucide="sparkles"></i> Keutamaan Kami</span>
-          <h2 class="section-title">Kelebihan Memilih Kami</h2>
-          <p class="section-subtitle">
-            Faktor utama yang menjadikan KELAS MENGAJI pilihan pengajian Al-Quran yang dipercayai.
-          </p>
+        <!-- Quick Action & Recent Payments -->
+        <div style="margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
+          <button class="btn btn-primary" onclick="switchView('bayaran')">
+            <i class="fa-solid fa-circle-plus"></i> + REKOD BAYARAN BARU
+          </button>
+          <button class="btn btn-secondary" onclick="switchView('murid')">
+            <i class="fa-solid fa-user-plus"></i> + TAMBAH MURID BARU
+          </button>
         </div>
 
-        <div class="features-grid reveal">
-          <div class="feature-card">
-            <div class="feature-number">01</div>
-            <div class="feature-icon"><i data-lucide="smile"></i></div>
-            <h3>Mudah & Mesra</h3>
-            <p>Penyampaian pembelajaran Al-Quran yang mesra, mengurangkan rasa segan dan membina sifat minat mengaji.</p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-number">02</div>
-            <div class="feature-icon"><i data-lucide="check-square"></i></div>
-            <h3>Teratur & Berkualiti</h3>
-            <p>Modul pengajian disampaikan secara teratur dalam suasana pembelajaran yang tenang dan kondusif.</p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-number">03</div>
-            <div class="feature-icon"><i data-lucide="map-pin"></i></div>
-            <h3>Lokasi Kuala Lumpur</h3>
-            <p>Kemudahan pengajian tempatan di Kuala Lumpur bagi memudahkan akses penduduk persekitaran.</p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-number">04</div>
-            <div class="feature-icon"><i data-lucide="phone"></i></div>
-            <h3>Pertanyaan Pantas</h3>
-            <p>Komunikasi mudah melalui WhatsApp (013-4565245) untuk sebarang pertanyaan tanpa proses rumit.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 4: GALERI -->
-    <section class="section-block alt-bg" id="galeri">
-      <div class="container">
-        <div class="section-header text-center reveal">
-          <span class="pill-badge pill-gold"><i data-lucide="image"></i> Visual Aktiviti</span>
-          <h2 class="section-title">Galeri Pembelajaran</h2>
-          <p class="section-subtitle">
-            Gambar aktiviti pengajian Al-Quran, amali solat, dan modul pembelajaran murid.
-          </p>
-        </div>
-
-        <div class="gallery-grid reveal">
-          <div class="gallery-item" onclick="openLightbox('assets/hafazan_sample.png', 'Bimbingan Hafazan & Al-Quran')">
-            <img src="assets/hafazan_sample.png" alt="Aktiviti Hafazan Al-Quran">
-            <div class="gallery-overlay">
-              <span class="gallery-tag">Hafazan Al-Quran</span>
-              <p>Bimbingan bacaan & hafazan</p>
-              <div class="gallery-zoom"><i data-lucide="maximize-2"></i> Besarkan</div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+              <span>Transaksi Terkini</span>
             </div>
+            <button class="btn btn-secondary btn-sm" onclick="switchView('rekod')">Lihat Semua</button>
           </div>
-
-          <div class="gallery-item" onclick="openLightbox('assets/solat_sample.png', 'Amali & Bimbingan Solat')">
-            <img src="assets/solat_sample.png" alt="Panduan Amali Solat">
-            <div class="gallery-overlay">
-              <span class="gallery-tag">Amali Solat</span>
-              <p>Praktikal solat & wuduk</p>
-              <div class="gallery-zoom"><i data-lucide="maximize-2"></i> Besarkan</div>
-            </div>
-          </div>
-
-          <div class="gallery-item" onclick="openLightbox('assets/jawi_sample.png', 'Pembelajaran Asas Jawi')">
-            <img src="assets/jawi_sample.png" alt="Pembelajaran Asas Jawi">
-            <div class="gallery-overlay">
-              <span class="gallery-tag">Asas Jawi</span>
-              <p>Latihan kemahiran Jawi</p>
-              <div class="gallery-zoom"><i data-lucide="maximize-2"></i> Besarkan</div>
-            </div>
-          </div>
-
-          <div class="gallery-item" onclick="openLightbox('assets/adab_sample.png', 'Adab & Sahsiah Murid')">
-            <img src="assets/adab_sample.png" alt="Adab Pembelajaran">
-            <div class="gallery-overlay">
-              <span class="gallery-tag">Adab & Sahsiah</span>
-              <p>Penerapan nilai adab Islam</p>
-              <div class="gallery-zoom"><i data-lucide="maximize-2"></i> Besarkan</div>
-            </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>No Resit</th>
+                  <th>Tarikh</th>
+                  <th>Nama Murid</th>
+                  <th>Jenis Yuran</th>
+                  <th>Jumlah</th>
+                  <th>Tindakan</th>
+                </tr>
+              </thead>
+              <tbody id="dash-recent-table-body">
+                <tr>
+                  <td colspan="6" style="text-align: center; color: var(--text-muted);">Memuatkan data...</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
+      </section>
 
-        <div class="text-center mt-3 reveal">
-          <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
-            <i data-lucide="message-circle"></i> WhatsApp 013-4565245 Untuk Gambar & Info Lanjut
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 5: FAQ -->
-    <section class="section-block" id="faq">
-      <div class="container">
-        <div class="section-header text-center reveal">
-          <span class="pill-badge pill-emerald"><i data-lucide="help-circle"></i> Jawapan Pantas</span>
-          <h2 class="section-title">Soalan Lazim (FAQ)</h2>
-          <p class="section-subtitle">
-            Jawapan bagi pertanyaan umum berkenaan pendaftaran dan kelas mengaji.
-          </p>
-        </div>
-
-        <div class="faq-container reveal">
-          <!-- Accordion 1 -->
-          <div class="faq-card">
-            <button class="faq-question" aria-expanded="false">
-              <span>Siapakah yang boleh menyertai KELAS MENGAJI?</span>
-              <i data-lucide="chevron-down" class="faq-icon"></i>
+      <!-- =================================================================== -->
+      <!-- VIEW 2: DATA MURID -->
+      <!-- =================================================================== -->
+      <section id="view-murid" class="view-section">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fa-solid fa-users-rectangle"></i>
+              <span>Senarai Data Murid (Sheet: MURID)</span>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openAddStudentModal()">
+              <i class="fa-solid fa-plus"></i> + Tambah Murid
             </button>
-            <div class="faq-answer">
-              <p>Kelas mengaji ini terbuka untuk pelbagai peringkat umur termasuk ibu bapa, pelajar sekolah, serta golongan dewasa yang ingin belajar mengaji atau memperbaiki bacaan Al-Quran di Kuala Lumpur.</p>
-            </div>
           </div>
 
-          <!-- Accordion 2 -->
-          <div class="faq-card">
-            <button class="faq-question" aria-expanded="false">
-              <span>Bila waktu operasi kelas mengaji ini?</span>
-              <i data-lucide="chevron-down" class="faq-icon"></i>
-            </button>
-            <div class="faq-answer">
-              <p>Waktu operasi semasa kami adalah dari jam <strong>8.00 pagi hingga 9.00 pagi</strong>. <span class="badge-confirm-sm">Hari operasi: To confirm</span>. Sila WhatsApp untuk pengesahan hari pengajian.</p>
-            </div>
+          <!-- Search Filter -->
+          <div class="filter-toolbar">
+            <input type="text" id="search-student-input" class="form-control filter-input" placeholder="🔍 Cari nama murid, kelas, atau nama penjaga..." oninput="renderStudentsTable()">
           </div>
 
-          <!-- Accordion 3 -->
-          <div class="faq-card">
-            <button class="faq-question" aria-expanded="false">
-              <span>Berapakah yuran dan pakej yang ditawarkan?</span>
-              <i data-lucide="chevron-down" class="faq-icon"></i>
-            </button>
-            <div class="faq-answer">
-              <p>Kadar yuran dan jenis pakej mengaji <span class="badge-confirm-sm">To confirm</span>. Sila WhatsApp kami di 013-4565245 untuk maklumat lanjut berkenaan pakej terkini.</p>
-            </div>
-          </div>
-
-          <!-- Accordion 4 -->
-          <div class="faq-card">
-            <button class="faq-question" aria-expanded="false">
-              <span>Di manakah lokasi sebenar pengajian?</span>
-              <i data-lucide="chevron-down" class="faq-icon"></i>
-            </button>
-            <div class="faq-answer">
-              <p>Lokasi pengajian kami terletak di <strong>Kuala Lumpur</strong>. <span class="badge-confirm-sm">Alamat penuh: To confirm</span>. Alamat tepat akan dikongsi melalui mesej WhatsApp.</p>
-            </div>
-          </div>
-
-          <!-- Accordion 5 -->
-          <div class="faq-card">
-            <button class="faq-question" aria-expanded="false">
-              <span>Bagaimana cara untuk mendaftar atau bertanya maklumat lanjut?</span>
-              <i data-lucide="chevron-down" class="faq-icon"></i>
-            </button>
-            <div class="faq-answer">
-              <p>Sangat mudah! Anda boleh menekan butang WhatsApp di laman ini atau terus menghantar mesej ke <strong>013-4565245</strong> untuk perbincangan pantas.</p>
-            </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Bil</th>
+                  <th>Nama Murid</th>
+                  <th>Kelas</th>
+                  <th>Nama Penjaga</th>
+                  <th>No. WhatsApp</th>
+                  <th>Tindakan</th>
+                </tr>
+              </thead>
+              <tbody id="students-table-body">
+                <tr>
+                  <td colspan="6" style="text-align: center; color: var(--text-muted);">Memuatkan data murid daripada Google Sheets...</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- SECTION 6: LOKASI & WAKTU OPERASI -->
-    <section class="section-block alt-bg" id="lokasi">
-      <div class="container">
-        <div class="section-header text-center reveal">
-          <span class="pill-badge pill-gold"><i data-lucide="map-pin"></i> Maklumat Pusat</span>
-          <h2 class="section-title">Lokasi & Waktu Operasi</h2>
-          <p class="section-subtitle">
-            Butiran tempat dan waktu pengajian KELAS MENGAJI.
-          </p>
-        </div>
-
-        <div class="location-grid reveal">
-          <!-- Card Location -->
-          <div class="info-card">
-            <div class="info-card-icon text-emerald">
-              <i data-lucide="map-pin"></i>
+      <!-- =================================================================== -->
+      <!-- VIEW 3: REKOD BAYARAN -->
+      <!-- =================================================================== -->
+      <section id="view-bayaran" class="view-section">
+        <div class="card" style="max-width: 750px; margin: 0 auto;">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fa-solid fa-file-signature"></i>
+              <span>Borang Rekod Pembayaran Yuran</span>
             </div>
-            <h3>Lokasi Pusat</h3>
-            <p class="info-highlight">Kuala Lumpur</p>
-            <p class="info-note"><span class="badge-confirm-sm">Alamat penuh: To confirm</span></p>
-            <p class="info-desc">Perkhidmatan kelas mengaji di kawasan Kuala Lumpur.</p>
           </div>
 
-          <!-- Card Time -->
-          <div class="info-card">
-            <div class="info-card-icon text-gold">
-              <i data-lucide="clock"></i>
+          <form id="payment-form" onsubmit="handlePaymentSubmit(event)">
+            
+            <!-- Tarikh -->
+            <div class="form-group">
+              <label class="form-label" for="pay-tarikh">Tarikh <span class="req">*</span></label>
+              <input type="date" id="pay-tarikh" class="form-control" required>
             </div>
-            <h3>Waktu Operasi</h3>
-            <p class="info-highlight">8.00–9.00 Pagi</p>
-            <p class="info-note"><span class="badge-confirm-sm">Hari operasi: To confirm</span></p>
-            <p class="info-desc">Sesi pembelajaran dijalankan mengikut jadual pagi.</p>
-          </div>
 
-          <!-- Card Social & Contact -->
-          <div class="info-card">
-            <div class="info-card-icon text-emerald">
-              <i data-lucide="share-2"></i>
-            </div>
-            <h3>Perhubungan & Media</h3>
-            <p class="info-highlight">WhatsApp: 013-4565245</p>
-            <p class="info-note"><span class="badge-confirm-sm">Link Facebook: To confirm</span></p>
-            <p class="info-desc">Media sosial rasmi Facebook akan dikemaskini kelak.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 7: HUBUNGI KAMI -->
-    <section class="section-block" id="hubungi">
-      <div class="container">
-        <div class="contact-box reveal">
-          <div class="contact-content">
-            <span class="pill-badge pill-emerald"><i data-lucide="phone-call"></i> Tindakan Pantas</span>
-            <h2 class="contact-title">Sedia Untuk Mula Mengaji?</h2>
-            <p class="contact-text">
-              Hubungi kami melalui WhatsApp untuk pertanyaan kelas, jadual, dan pengesahan lokasi secara mesra.
-            </p>
-            <div class="contact-meta">
-              <div class="meta-item">
-                <i data-lucide="phone"></i> WhatsApp: <strong>013-4565245</strong>
-              </div>
-              <div class="meta-item">
-                <i data-lucide="map-pin"></i> Lokasi: <strong>Kuala Lumpur</strong>
-              </div>
-              <div class="meta-item">
-                <i data-lucide="clock"></i> Waktu: <strong>8.00–9.00 pagi</strong>
+            <!-- Nama Murid (Searchable Dropdown LIVE daripada Sheet MURID) -->
+            <div class="form-group">
+              <label class="form-label" for="pay-student-search">Nama Murid <span class="req">*</span></label>
+              <div class="dropdown-container">
+                <input type="text" id="pay-student-search" class="form-control" placeholder="🔍 Taip untuk cari nama murid daripada sheet MURID..." autocomplete="off" required oninput="filterStudentDropdown()" onfocus="showStudentDropdown()">
+                <div id="pay-student-dropdown-list" class="dropdown-list"></div>
               </div>
             </div>
+
+            <!-- Auto-Filled Fields -->
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Kelas</label>
+                <input type="text" id="pay-kelas" class="form-control" placeholder="Auto-fill" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Nama Penjaga</label>
+                <input type="text" id="pay-penjaga" class="form-control" placeholder="Auto-fill" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">No. WhatsApp</label>
+                <input type="text" id="pay-whatsapp" class="form-control" placeholder="Auto-fill" readonly>
+              </div>
+            </div>
+
+            <!-- Jenis Yuran -->
+            <div class="form-group">
+              <label class="form-label" for="pay-jenis">Jenis Yuran <span class="req">*</span></label>
+              <select id="pay-jenis" class="form-control" required onchange="handleJenisYuranChange(this)">
+                <option value="">-- Pilih Jenis Yuran --</option>
+                <option value="Yuran Bulanan">Yuran Bulanan</option>
+                <option value="Yuran PIBG">Yuran PIBG</option>
+                <option value="Yuran Aktiviti">Yuran Aktiviti</option>
+                <option value="Yuran Buku">Yuran Buku</option>
+                <option value="Yuran Peperiksaan">Yuran Peperiksaan</option>
+                <option value="Yuran Program">Yuran Program</option>
+                <option value="Lain-lain">Lain-lain</option>
+              </select>
+            </div>
+
+            <!-- Input Jenis Yuran Custom jika Lain-lain -->
+            <div class="form-group" id="group-custom-jenis" style="display: none;">
+              <label class="form-label" for="pay-custom-jenis">Nyatakan Jenis Yuran <span class="req">*</span></label>
+              <input type="text" id="pay-custom-jenis" class="form-control" placeholder="Contoh: Yuran Sukan / Uniform">
+            </div>
+
+            <!-- Jumlah Bayaran -->
+            <div class="form-group">
+              <label class="form-label" for="pay-jumlah">Jumlah Bayaran (RM) <span class="req">*</span></label>
+              <input type="number" step="0.01" min="0.01" id="pay-jumlah" class="form-control" placeholder="0.00" required>
+            </div>
+
+            <!-- Kaedah Bayaran -->
+            <div class="form-group">
+              <label class="form-label" for="pay-kaedah">Kaedah Bayaran <span class="req">*</span></label>
+              <select id="pay-kaedah" class="form-control" required>
+                <option value="">-- Pilih Kaedah Bayaran --</option>
+                <option value="Tunai">Tunai</option>
+                <option value="Online Transfer">Online Transfer</option>
+                <option value="QR">QR</option>
+                <option value="Lain-lain">Lain-lain</option>
+              </select>
+            </div>
+
+            <!-- Catatan -->
+            <div class="form-group">
+              <label class="form-label" for="pay-catatan">Catatan</label>
+              <textarea id="pay-catatan" class="form-control" rows="2" placeholder="Catatan tambahan (pilihan)..."></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="btn-submit-payment" class="btn btn-primary btn-block" style="padding: 16px; font-size: 1rem;">
+              <i class="fa-solid fa-floppy-disk"></i> SIMPAN BAYARAN
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 4: SENARAI BAYARAN -->
+      <!-- =================================================================== -->
+      <section id="view-rekod" class="view-section">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fa-solid fa-list-check"></i>
+              <span>Senarai Rekod Bayaran (Sheet: BAYARAN)</span>
+            </div>
+            <div style="font-weight: 700; color: var(--primary-dark); font-size: 0.9rem;" id="filtered-total-display">
+              Jumlah: RM 0.00
+            </div>
           </div>
 
-          <div class="contact-action">
-            <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-lg contact-btn">
-              <i data-lucide="message-circle"></i>
-              <span>Hubungi Kami via WhatsApp</span>
-            </a>
-            <p class="contact-subtext">Tekan butang untuk terus membuka aplikasi WhatsApp</p>
+          <!-- Filters Toolbar -->
+          <div class="filter-toolbar">
+            <!-- Search Box -->
+            <div style="flex: 2; min-width: 240px;">
+              <input type="text" id="search-payment-input" class="form-control" placeholder="🔍 Cari Nama Murid, No Resit, atau Jenis Yuran..." oninput="renderPaymentsTable()">
+            </div>
+
+            <!-- Filter Tarikh/Bulan -->
+            <div style="flex: 1; min-width: 150px;">
+              <select id="filter-payment-month" class="filter-select form-control" onchange="renderPaymentsTable()">
+                <option value="">Semua Bulan</option>
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Mac</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Jun</option>
+                <option value="07">Juli</option>
+                <option value="08">Ogos</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Disember</option>
+              </select>
+            </div>
+
+            <!-- Filter Jenis Yuran -->
+            <div style="flex: 1; min-width: 150px;">
+              <select id="filter-payment-jenis" class="filter-select form-control" onchange="renderPaymentsTable()">
+                <option value="">Semua Jenis Yuran</option>
+                <option value="Yuran Bulanan">Yuran Bulanan</option>
+                <option value="Yuran PIBG">Yuran PIBG</option>
+                <option value="Yuran Aktiviti">Yuran Aktiviti</option>
+                <option value="Yuran Buku">Yuran Buku</option>
+                <option value="Yuran Peperiksaan">Yuran Peperiksaan</option>
+                <option value="Yuran Program">Yuran Program</option>
+                <option value="Lain-lain">Lain-lain</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>No Resit</th>
+                  <th>Tarikh</th>
+                  <th>Nama Murid</th>
+                  <th>Jenis Yuran</th>
+                  <th>Jumlah</th>
+                  <th>Kaedah Bayaran</th>
+                  <th>Catatan</th>
+                  <th>Tindakan</th>
+                </tr>
+              </thead>
+              <tbody id="payments-table-body">
+                <tr>
+                  <td colspan="8" style="text-align: center; color: var(--text-muted);">Memuatkan rekod bayaran daripada Google Sheets...</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="mobile-nav-bar no-print">
+    <button class="mobile-nav-item active" id="mob-nav-dashboard" onclick="switchView('dashboard')">
+      <i class="fa-solid fa-chart-pie"></i>
+      <span>Dashboard</span>
+    </button>
+    <button class="mobile-nav-item" id="mob-nav-murid" onclick="switchView('murid')">
+      <i class="fa-solid fa-user-graduate"></i>
+      <span>Murid</span>
+    </button>
+    <button class="mobile-nav-item" id="mob-nav-bayaran" onclick="switchView('bayaran')">
+      <i class="fa-solid fa-cash-register"></i>
+      <span>Bayar</span>
+    </button>
+    <button class="mobile-nav-item" id="mob-nav-rekod" onclick="switchView('rekod')">
+      <i class="fa-solid fa-receipt"></i>
+      <span>Rekod</span>
+    </button>
+  </nav>
+
+  <!-- =================================================================== -->
+  <!-- MODAL 1: ADD / EDIT STUDENT -->
+  <!-- =================================================================== -->
+  <div id="modal-student" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-student-title">Tambah Murid Baharu</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-student')"><i class="fa-solid fa-xmark"></i></button>
       </div>
-    </section>
 
-  </main>
+      <form id="student-form" onsubmit="handleStudentSubmit(event)">
+        <input type="hidden" id="student-edit-bil">
 
-  <!-- Image Lightbox Modal for Gallery -->
-  <div class="lightbox-modal" id="lightbox-modal" aria-hidden="true" onclick="closeLightbox()">
-    <div class="lightbox-content" onclick="event.stopPropagation()">
-      <button class="lightbox-close" onclick="closeLightbox()" aria-label="Tutup foto"><i data-lucide="x"></i></button>
-      <img id="lightbox-img" src="" alt="Paparan Foto Besark">
-      <p id="lightbox-caption" class="lightbox-caption"></p>
+        <div class="form-group">
+          <label class="form-label" for="stu-nama">Nama Murid <span class="req">*</span></label>
+          <input type="text" id="stu-nama" class="form-control" placeholder="Contoh: ALI" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="stu-kelas">Kelas <span class="req">*</span></label>
+          <input type="text" id="stu-kelas" class="form-control" placeholder="Contoh: 3QA" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="stu-penjaga">Nama Penjaga <span class="req">*</span></label>
+          <input type="text" id="stu-penjaga" class="form-control" placeholder="Contoh: UMAR" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="stu-whatsapp">No. WhatsApp <span class="req">*</span></label>
+          <input type="text" id="stu-whatsapp" class="form-control" placeholder="Contoh: 0134565245" required>
+          <small style="color: var(--text-muted); font-size: 0.75rem;">Nombor akan disimpan sebagai teks mengekalkan digit 0 di hadapan.</small>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 24px;">
+          <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeModal('modal-student')">Batal</button>
+          <button type="submit" id="btn-save-student" class="btn btn-primary" style="flex: 1;">
+            <i class="fa-solid fa-floppy-disk"></i> SIMPAN
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
-  <!-- Footer (App Shell) -->
-  <footer class="app-footer">
-    <div class="container footer-container">
-      <div class="footer-brand">
-        <div class="logo-icon small">
-          <i data-lucide="book-open"></i>
+  <!-- =================================================================== -->
+  <!-- MODAL 2: DIGITAL RECEIPT -->
+  <!-- =================================================================== -->
+  <div id="modal-receipt" class="modal-backdrop">
+    <div class="modal-content">
+      
+      <div class="receipt-box" id="printable-receipt">
+        <div class="receipt-header">
+          <div class="receipt-title">RESIT PEMBAYARAN YURAN</div>
+          <div class="receipt-num" id="rcpt-no">RESIT-2026-0001</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;" id="rcpt-date">Tarikh: 07/08/2026</div>
         </div>
-        <div>
-          <span class="footer-title">KELAS MENGAJI</span>
-          <p class="footer-tagline">Belajar mengaji dengan mudah, mesra dan teratur.</p>
+
+        <div class="receipt-row">
+          <span class="receipt-label">Nama Murid:</span>
+          <span class="receipt-val" id="rcpt-nama">ALI</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Kelas:</span>
+          <span class="receipt-val" id="rcpt-kelas">3QA</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Nama Penjaga:</span>
+          <span class="receipt-val" id="rcpt-penjaga">UMAR</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Jenis Yuran:</span>
+          <span class="receipt-val" id="rcpt-jenis">Yuran Bulanan</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Kaedah Bayaran:</span>
+          <span class="receipt-val" id="rcpt-kaedah">Online Transfer</span>
+        </div>
+        <div class="receipt-row" id="rcpt-catatan-row">
+          <span class="receipt-label">Catatan:</span>
+          <span class="receipt-val" id="rcpt-catatan">-</span>
+        </div>
+
+        <div class="receipt-amount-box">
+          <div class="receipt-amount-label">JUMLAH DIBAYAR</div>
+          <div class="receipt-amount-val" id="rcpt-jumlah">RM 50.00</div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 12px;">
+          <span class="badge badge-success" style="font-size: 0.82rem; padding: 6px 14px;">
+            <i class="fa-solid fa-circle-check"></i> RESIT RASMI SAH
+          </span>
+        </div>
+
+        <div class="receipt-footer">
+          <p>Terima kasih atas pembayaran yuran.</p>
         </div>
       </div>
 
-      <div class="footer-links">
-        <a href="https://wa.me/60134565245" target="_blank" rel="noopener noreferrer" class="footer-whatsapp">
-          <i data-lucide="message-circle"></i> WhatsApp: 013-4565245
-        </a>
-        <span class="footer-copy">&copy; 2026 KELAS MENGAJI &bull; All Rights Reserved.</span>
+      <!-- Action Buttons -->
+      <div style="display: flex; flex-direction: column; gap: 10px;" class="no-print">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <button class="btn btn-secondary" onclick="printReceipt()">
+            <i class="fa-solid fa-print"></i> CETAK RESIT
+          </button>
+          <button class="btn btn-whatsapp" onclick="sendWhatsAppReceipt()">
+            <i class="fa-brands fa-whatsapp"></i> HANTAR WHATSAPP
+          </button>
+        </div>
+        <button class="btn btn-primary" onclick="closeModal('modal-receipt')">
+          <i class="fa-solid fa-check"></i> TUTUP
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- MODAL 3: SETUP GOOGLE SHEETS API GUIDE -->
+  <!-- =================================================================== -->
+  <div id="modal-setup" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 650px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Konfigurasi Google Apps Script URL</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-setup')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div style="font-size: 0.88rem; line-height: 1.6; color: var(--text-body);">
+        <p style="margin-bottom: 12px;">Untuk menghubungkan aplikasi ini ke Google Spreadsheet anda:</p>
+        <ol style="margin-left: 20px; margin-bottom: 16px;">
+          <li>Buka Google Spreadsheet anda yang mengandungi sheet <strong>MURID</strong> dan <strong>BAYARAN</strong>.</li>
+          <li>Klik menu <strong>Extensions &gt; Apps Script</strong>.</li>
+          <li>Salin semua kod daripada file <code>Code.gs</code> di projek ini dan tampal ke skrip editor Apps Script.</li>
+          <li>Tekan <strong>Deploy &gt; New Deployment</strong>.</li>
+          <li>Pilih type <strong>Web App</strong>, set <em>Execute as: Me</em>, dan <em>Who has access: Anyone</em>.</li>
+          <li>Salin <strong>Web App URL</strong> yang terhasil.</li>
+          <li>Buka file <code>index.html</code> dan gantikan nilai <code>const API_URL</code> dengan Web App URL anda.</li>
+        </ol>
+
+        <div class="form-group">
+          <label class="form-label">Masukkan API Web App URL Terkini:</label>
+          <input type="text" id="setup-api-url-input" class="form-control" placeholder="https://script.google.com/macros/s/.../exec">
+        </div>
+
+        <button class="btn btn-primary btn-block" onclick="saveCustomApiUrl()">
+          <i class="fa-solid fa-floppy-disk"></i> SIMPAN URL & REFRESH DATA
+        </button>
       </div>
     </div>
-  </footer>
+  </div>
 
-  <!-- Scripts -->
-  <script src="js/app.js"></script>
+  <!-- =================================================================== -->
+  <!-- JAVASCRIPT LOGIC -->
+  <!-- =================================================================== -->
+  <script>
+    // ==================================================================
+    // GOOGLE APPS SCRIPT WEB APP API URL CONFIGURATION
+    // ==================================================================
+    let API_URL = "MASUKKAN_URL_GOOGLE_APPS_SCRIPT_DI_SINI";
+    
+    // Semak jika URL tersimpan dalam localStorage
+    if (localStorage.getItem('CUSTOM_GAS_API_URL')) {
+      API_URL = localStorage.getItem('CUSTOM_GAS_API_URL');
+    }
+
+    // Global Application State
+    const state = {
+      students: [],
+      payments: [],
+      currentReceipt: null
+    };
+
+    // Default Mock Data (Digunakan sebelum API URL dikonfigurasi)
+    const mockStudents = [
+      { bil: 1, nama: "ALI", kelas: "3QA", penjaga: "UMAR", whatsapp: "0134565245" },
+      { bil: 2, nama: "SOFIA", kelas: "2QA", penjaga: "SITI", whatsapp: "0134565245" },
+      { bil: 3, nama: "WAWA", kelas: "2AD", penjaga: "AQA", whatsapp: "0134565245" }
+    ];
+
+    const mockPayments = [
+      { idBayaran: "BYR0001", tarikh: "07/08/2026", noResit: "RESIT-2026-0001", namaMurid: "ALI", jenisYuran: "Yuran Bulanan", jumlah: 50.00, kaedahBayaran: "Online Transfer", catatan: "Bayaran Ogos" },
+      { idBayaran: "BYR0002", tarikh: "07/08/2026", noResit: "RESIT-2026-0002", namaMurid: "SOFIA", jenisYuran: "Yuran PIBG", jumlah: 100.00, kaedahBayaran: "Tunai", catatan: "Sumbangan PIBG" },
+      { idBayaran: "BYR0003", tarikh: "06/08/2026", noResit: "RESIT-2026-0003", namaMurid: "WAWA", jenisYuran: "Yuran Buku", jumlah: 75.00, kaedahBayaran: "QR", catatan: "Buku teks" }
+    ];
+
+    // Semak persekitaran
+    function isApiConnected() {
+      return API_URL && API_URL !== "MASUKKAN_URL_GOOGLE_APPS_SCRIPT_DI_SINI" && API_URL.startsWith("http");
+    }
+
+    // Initialize App
+    document.addEventListener("DOMContentLoaded", function() {
+      // Set tarikh laluan kepada hari ini
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('pay-tarikh').value = today;
+
+      updateApiStatusBadge();
+      loadAllData();
+
+      // Tutup dropdown murid jika klik di luar
+      document.addEventListener('click', function(e) {
+        if (!e.target.closest('.dropdown-container')) {
+          hideStudentDropdown();
+        }
+      });
+    });
+
+    function updateApiStatusBadge() {
+      const dot = document.getElementById('api-dot');
+      const text = document.getElementById('api-status-text');
+
+      if (isApiConnected()) {
+        dot.className = "status-indicator-dot";
+        text.innerText = "Google Sheets: LIVE";
+      } else if (typeof google !== 'undefined' && google.script && google.script.run) {
+        dot.className = "status-indicator-dot";
+        text.innerText = "Google Apps Script: Internal";
+      } else {
+        dot.className = "status-indicator-dot offline";
+        text.innerText = "Mod Tempatan (Demo Data)";
+      }
+    }
+
+    // View Switcher Router
+    function switchView(viewName) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.remove('active'));
+
+      document.getElementById('view-' + viewName).classList.add('active');
+      
+      const desktopNav = document.getElementById('nav-' + viewName);
+      if (desktopNav) desktopNav.classList.add('active');
+
+      const mobileNav = document.getElementById('mob-nav-' + viewName);
+      if (mobileNav) mobileNav.classList.add('active');
+
+      const titleMap = {
+        dashboard: "Dashboard Utama",
+        murid: "Data Murid (Sheet MURID)",
+        bayaran: "Rekod Pembayaran Yuran",
+        rekod: "Senarai Bayaran (Sheet BAYARAN)"
+      };
+
+      document.getElementById('page-title').innerText = titleMap[viewName] || "SISTEM BAYARAN YURAN";
+
+      if (viewName === 'dashboard') {
+        renderDashboardUI();
+      } else if (viewName === 'murid') {
+        renderStudentsTable();
+      } else if (viewName === 'rekod') {
+        renderPaymentsTable();
+      }
+
+      window.scrollTo(0, 0);
+    }
+
+    // Generic API Call Manager (Fetch API CORS vs GAS Native vs Local Mock)
+    async function apiCall(action, payload = {}) {
+      if (isApiConnected()) {
+        try {
+          const response = await fetch(API_URL, {
+            method: 'POST',
+            mode: 'cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: action, payload: payload })
+          });
+          const result = await response.json();
+          return result;
+        } catch (err) {
+          console.error("API Call error:", err);
+          throw new Error("Gagal berhubung dengan Google Apps Script: " + err.message);
+        }
+      } else if (typeof google !== 'undefined' && google.script && google.script.run) {
+        return new Promise((resolve, reject) => {
+          google.script.run
+            .withSuccessHandler(res => resolve(res))
+            .withFailureHandler(err => reject(err))[action](payload);
+        });
+      } else {
+        // Fallback Mod Tempatan (LocalStorage / Mock Data)
+        return new Promise(resolve => {
+          setTimeout(() => {
+            if (action === "getStudents") {
+              if (!localStorage.getItem('MOCK_STUDENTS')) {
+                localStorage.setItem('MOCK_STUDENTS', JSON.stringify(mockStudents));
+              }
+              const st = JSON.parse(localStorage.getItem('MOCK_STUDENTS'));
+              resolve({ success: true, data: st });
+            } else if (action === "addStudent") {
+              const st = JSON.parse(localStorage.getItem('MOCK_STUDENTS') || JSON.stringify(mockStudents));
+              let maxBil = 0;
+              st.forEach(s => { if (s.bil > maxBil) maxBil = s.bil; });
+              const newS = {
+                bil: maxBil + 1,
+                nama: payload.nama.toUpperCase(),
+                kelas: payload.kelas.toUpperCase(),
+                penjaga: payload.penjaga.toUpperCase(),
+                whatsapp: payload.whatsapp
+              };
+              st.push(newS);
+              localStorage.setItem('MOCK_STUDENTS', JSON.stringify(st));
+              resolve({ success: true, message: "✅ Murid berjaya ditambah.", student: newS });
+            } else if (action === "updateStudent") {
+              let st = JSON.parse(localStorage.getItem('MOCK_STUDENTS') || JSON.stringify(mockStudents));
+              const index = st.findIndex(s => s.bil === parseInt(payload.bil));
+              if (index !== -1) {
+                st[index] = {
+                  bil: parseInt(payload.bil),
+                  nama: payload.nama.toUpperCase(),
+                  kelas: payload.kelas.toUpperCase(),
+                  penjaga: payload.penjaga.toUpperCase(),
+                  whatsapp: payload.whatsapp
+                };
+                localStorage.setItem('MOCK_STUDENTS', JSON.stringify(st));
+                resolve({ success: true, message: "✅ Rekod murid berjaya dikemaskini." });
+              } else {
+                resolve({ success: false, message: "Murid tidak dijumpai." });
+              }
+            } else if (action === "deleteStudent") {
+              let st = JSON.parse(localStorage.getItem('MOCK_STUDENTS') || JSON.stringify(mockStudents));
+              st = st.filter(s => s.bil !== parseInt(payload));
+              localStorage.setItem('MOCK_STUDENTS', JSON.stringify(st));
+              resolve({ success: true, message: "✅ Murid berjaya dipadam." });
+            } else if (action === "getPayments") {
+              if (!localStorage.getItem('MOCK_PAYMENTS')) {
+                localStorage.setItem('MOCK_PAYMENTS', JSON.stringify(mockPayments));
+              }
+              const py = JSON.parse(localStorage.getItem('MOCK_PAYMENTS'));
+              resolve({ success: true, data: py });
+            } else if (action === "addPayment") {
+              let py = JSON.parse(localStorage.getItem('MOCK_PAYMENTS') || JSON.stringify(mockPayments));
+              
+              const nextSeq = py.length + 1;
+              const seqStr = ("0000" + nextSeq).slice(-4);
+              const year = new Date().getFullYear();
+              const newId = "BYR" + seqStr;
+              const newRcpt = "RESIT-" + year + "-" + seqStr;
+
+              let formattedDate = payload.tarikh;
+              if (formattedDate.includes("-")) {
+                const parts = formattedDate.split("-");
+                formattedDate = parts[2] + "/" + parts[1] + "/" + parts[0];
+              }
+
+              const newP = {
+                idBayaran: newId,
+                tarikh: formattedDate,
+                noResit: newRcpt,
+                namaMurid: payload.namaMurid,
+                jenisYuran: payload.jenisYuran,
+                jumlah: parseFloat(payload.jumlah),
+                kaedahBayaran: payload.kaedahBayaran,
+                catatan: payload.catatan || ""
+              };
+
+              py.unshift(newP);
+              localStorage.setItem('MOCK_PAYMENTS', JSON.stringify(py));
+              
+              const st = JSON.parse(localStorage.getItem('MOCK_STUDENTS') || JSON.stringify(mockStudents));
+              const sInfo = st.find(s => s.nama.toLowerCase() === payload.namaMurid.toLowerCase()) || { kelas: payload.kelas || "-", penjaga: payload.penjaga || "-", whatsapp: payload.whatsapp || "-" };
+
+              resolve({
+                success: true,
+                message: "Bayaran berjaya direkodkan.",
+                payment: { ...newP, kelas: sInfo.kelas, namaPenjaga: sInfo.penjaga, noWhatsapp: sInfo.whatsapp }
+              });
+            } else if (action === "getDashboardData") {
+              const st = JSON.parse(localStorage.getItem('MOCK_STUDENTS') || JSON.stringify(mockStudents));
+              const py = JSON.parse(localStorage.getItem('MOCK_PAYMENTS') || JSON.stringify(mockPayments));
+              
+              const todayStr = new Date().toLocaleDateString('en-GB');
+              const currentMonth = todayStr.substring(3);
+              
+              let total = 0, today = 0, month = 0;
+              py.forEach(p => {
+                const amt = p.jumlah || 0;
+                total += amt;
+                if (p.tarikh === todayStr) today += amt;
+                if (p.tarikh && p.tarikh.substring(3) === currentMonth) month += amt;
+              });
+
+              resolve({
+                success: true,
+                data: {
+                  jumlahMurid: st.length,
+                  jumlahHariIni: today,
+                  jumlahBulanIni: month,
+                  jumlahKeseluruhan: total,
+                  bilanganTransaksi: py.length,
+                  transaksiTerkini: py.slice(0, 5)
+                }
+              });
+            }
+          }, 300);
+        });
+      }
+    }
+
+    // Load Initial Data
+    async function loadAllData() {
+      toggleLoading(true, "Memuatkan data murid & bayaran...");
+      try {
+        const resStudents = await apiCall("getStudents");
+        state.students = (resStudents && resStudents.data) ? resStudents.data : [];
+        populateStudentDropdown(state.students);
+
+        const resPayments = await apiCall("getPayments");
+        state.payments = (resPayments && resPayments.data) ? resPayments.data : [];
+
+        renderDashboardUI();
+        toggleLoading(false);
+      } catch (err) {
+        toggleLoading(false);
+        showToast(err.message, false);
+      }
+    }
+
+    // Render Dashboard UI
+    async function renderDashboardUI() {
+      try {
+        const res = await apiCall("getDashboardData");
+        if (res && res.data) {
+          const d = res.data;
+          document.getElementById('dash-stat-students').innerText = d.jumlahMurid;
+          document.getElementById('dash-stat-today').innerText = 'RM ' + parseFloat(d.jumlahHariIni || 0).toFixed(2);
+          document.getElementById('dash-stat-month').innerText = 'RM ' + parseFloat(d.jumlahBulanIni || 0).toFixed(2);
+          document.getElementById('dash-stat-total').innerText = 'RM ' + parseFloat(d.jumlahKeseluruhan || 0).toFixed(2);
+
+          const tbody = document.getElementById('dash-recent-table-body');
+          if (!d.transaksiTerkini || d.transaksiTerkini.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">Tiada transaksi terkini.</td></tr>`;
+            return;
+          }
+
+          tbody.innerHTML = d.transaksiTerkini.map(p => `
+            <tr>
+              <td><span class="badge badge-primary">${escapeHtml(p.noResit)}</span></td>
+              <td>${escapeHtml(p.tarikh)}</td>
+              <td><strong>${escapeHtml(p.namaMurid)}</strong></td>
+              <td>${escapeHtml(p.jenisYuran)}</td>
+              <td style="color:var(--accent-teal); font-weight:800;">RM ${parseFloat(p.jumlah).toFixed(2)}</td>
+              <td>
+                <button class="btn btn-secondary btn-sm" onclick="viewReceiptById('${escapeHtml(p.idBayaran)}')">
+                  👁️ Resit
+                </button>
+              </td>
+            </tr>
+          `).join('');
+        }
+      } catch (err) {
+        console.error("Dashboard render error:", err);
+      }
+    }
+
+    // ==================================================================
+    // DATA MURID LOGIC (Tambah / Edit / Padam / Table)
+    // ==================================================================
+    function renderStudentsTable() {
+      const keyword = document.getElementById('search-student-input').value.toLowerCase();
+      const filtered = state.students.filter(s => 
+        s.nama.toLowerCase().includes(keyword) ||
+        s.kelas.toLowerCase().includes(keyword) ||
+        s.penjaga.toLowerCase().includes(keyword)
+      );
+
+      const tbody = document.getElementById('students-table-body');
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">Tiada murid dijumpai dalam Sheet MURID.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(s => `
+        <tr>
+          <td><strong>${s.bil}</strong></td>
+          <td><strong>${escapeHtml(s.nama)}</strong></td>
+          <td><span class="badge badge-primary">${escapeHtml(s.kelas)}</span></td>
+          <td>${escapeHtml(s.penjaga)}</td>
+          <td><code>${escapeHtml(s.whatsapp)}</code></td>
+          <td>
+            <div style="display:flex; gap:6px;">
+              <button class="btn btn-secondary btn-sm" onclick="openEditStudentModal(${s.bil})">
+                <i class="fa-solid fa-pen-to-square"></i> Edit
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="confirmDeleteStudent(${s.bil})">
+                <i class="fa-solid fa-trash"></i> Padam
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openAddStudentModal() {
+      document.getElementById('modal-student-title').innerText = "Tambah Murid Baharu";
+      document.getElementById('student-edit-bil').value = "";
+      document.getElementById('student-form').reset();
+      document.getElementById('modal-student').classList.add('active');
+    }
+
+    function openEditStudentModal(bil) {
+      const student = state.students.find(s => s.bil === bil);
+      if (!student) return;
+
+      document.getElementById('modal-student-title').innerText = "Edit Data Murid";
+      document.getElementById('student-edit-bil').value = student.bil;
+      document.getElementById('stu-nama').value = student.nama;
+      document.getElementById('stu-kelas').value = student.kelas;
+      document.getElementById('stu-penjaga').value = student.penjaga;
+      document.getElementById('stu-whatsapp').value = student.whatsapp;
+      document.getElementById('modal-student').classList.add('active');
+    }
+
+    async function handleStudentSubmit(e) {
+      e.preventDefault();
+      const editBil = document.getElementById('student-edit-bil').value;
+      const nama = document.getElementById('stu-nama').value.trim();
+      const kelas = document.getElementById('stu-kelas').value.trim();
+      const penjaga = document.getElementById('stu-penjaga').value.trim();
+      const whatsapp = document.getElementById('stu-whatsapp').value.trim();
+
+      if (!nama || !kelas || !penjaga || !whatsapp) {
+        showToast("Sila lengkapkan semua ruangan.", false);
+        return;
+      }
+
+      const payload = { bil: editBil, nama: nama, kelas: kelas, penjaga: penjaga, whatsapp: whatsapp };
+      const action = editBil ? "updateStudent" : "addStudent";
+
+      toggleLoading(true, editBil ? "Kemaskini data murid..." : "Menambah murid baharu...");
+      try {
+        const res = await apiCall(action, payload);
+        toggleLoading(false);
+        if (res.success) {
+          showToast(res.message, true);
+          closeModal('modal-student');
+          loadAllData();
+        } else {
+          showToast(res.message, false);
+        }
+      } catch (err) {
+        toggleLoading(false);
+        showToast(err.message, false);
+      }
+    }
+
+    async function confirmDeleteStudent(bil) {
+      const student = state.students.find(s => s.bil === bil);
+      if (!student) return;
+
+      if (confirm(`Adakah anda pasti mahu memadam murid ${student.nama}?`)) {
+        toggleLoading(true, "Memadam rekod murid...");
+        try {
+          const res = await apiCall("deleteStudent", bil);
+          toggleLoading(false);
+          if (res.success) {
+            showToast(res.message, true);
+            loadAllData();
+          } else {
+            showToast(res.message, false);
+          }
+        } catch (err) {
+          toggleLoading(false);
+          showToast(err.message, false);
+        }
+      }
+    }
+
+    // ==================================================================
+    // REKOD BAYARAN LOGIC (Live Dropdown, Autofill & Form Submit)
+    // ==================================================================
+    function populateStudentDropdown(students) {
+      const list = document.getElementById('pay-student-dropdown-list');
+      if (!students || students.length === 0) {
+        list.innerHTML = `<div class="dropdown-item" style="color:var(--text-muted);">Tiada murid dijumpai dalam Sheet MURID</div>`;
+        return;
+      }
+
+      list.innerHTML = students.map(s => `
+        <div class="dropdown-item" onclick="selectStudent('${escapeHtml(s.nama)}')">
+          <div>
+            <strong>${escapeHtml(s.nama)}</strong>
+            <div class="dropdown-item-info">Penjaga: ${escapeHtml(s.penjaga)}</div>
+          </div>
+          <span class="badge badge-primary">${escapeHtml(s.kelas)}</span>
+        </div>
+      `).join('');
+    }
+
+    function showStudentDropdown() {
+      document.getElementById('pay-student-dropdown-list').style.display = 'block';
+    }
+
+    function hideStudentDropdown() {
+      document.getElementById('pay-student-dropdown-list').style.display = 'none';
+    }
+
+    function filterStudentDropdown() {
+      const input = document.getElementById('pay-student-search').value.toLowerCase();
+      const filtered = state.students.filter(s => 
+        s.nama.toLowerCase().includes(input) || 
+        s.kelas.toLowerCase().includes(input) ||
+        s.penjaga.toLowerCase().includes(input)
+      );
+      populateStudentDropdown(filtered);
+      showStudentDropdown();
+    }
+
+    function selectStudent(nama) {
+      const student = state.students.find(s => s.nama.toLowerCase() === nama.toLowerCase());
+      if (!student) return;
+
+      document.getElementById('pay-student-search').value = student.nama;
+      document.getElementById('pay-kelas').value = student.kelas;
+      document.getElementById('pay-penjaga').value = student.penjaga;
+      document.getElementById('pay-whatsapp').value = student.whatsapp;
+
+      hideStudentDropdown();
+    }
+
+    function handleJenisYuranChange(select) {
+      const customGroup = document.getElementById('group-custom-jenis');
+      const customInput = document.getElementById('pay-custom-jenis');
+
+      if (select.value === 'Lain-lain') {
+        customGroup.style.display = 'block';
+        customInput.required = true;
+      } else {
+        customGroup.style.display = 'none';
+        customInput.required = false;
+        customInput.value = '';
+      }
+    }
+
+    async function handlePaymentSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-submit-payment');
+      btn.disabled = true;
+
+      const tarikh = document.getElementById('pay-tarikh').value;
+      const namaMurid = document.getElementById('pay-student-search').value.trim();
+      const kelas = document.getElementById('pay-kelas').value;
+      const penjaga = document.getElementById('pay-penjaga').value;
+      const whatsapp = document.getElementById('pay-whatsapp').value;
+      
+      let jenisYuran = document.getElementById('pay-jenis').value;
+      if (jenisYuran === 'Lain-lain') {
+        jenisYuran = document.getElementById('pay-custom-jenis').value.trim();
+      }
+
+      const jumlah = parseFloat(document.getElementById('pay-jumlah').value);
+      const kaedahBayaran = document.getElementById('pay-kaedah').value;
+      const catatan = document.getElementById('pay-catatan').value.trim();
+
+      if (!namaMurid) {
+        showToast("Sila pilih nama murid daripada senarai.", false);
+        btn.disabled = false;
+        return;
+      }
+
+      const payload = {
+        tarikh: tarikh,
+        namaMurid: namaMurid,
+        kelas: kelas,
+        penjaga: penjaga,
+        whatsapp: whatsapp,
+        jenisYuran: jenisYuran,
+        jumlah: jumlah,
+        kaedahBayaran: kaedahBayaran,
+        catatan: catatan
+      };
+
+      toggleLoading(true, "Menyimpan rekod bayaran ke sheet BAYARAN...");
+      try {
+        const res = await apiCall("addPayment", payload);
+        toggleLoading(false);
+        btn.disabled = false;
+
+        if (res.success) {
+          showToast("Bayaran berjaya direkodkan.", true);
+          state.currentReceipt = res.payment;
+          displayDigitalReceipt(res.payment);
+          
+          // Reset Borang Pembayaran
+          document.getElementById('payment-form').reset();
+          document.getElementById('pay-student-search').value = "";
+          document.getElementById('pay-kelas').value = "";
+          document.getElementById('pay-penjaga').value = "";
+          document.getElementById('pay-whatsapp').value = "";
+          document.getElementById('group-custom-jenis').style.display = "none";
+          document.getElementById('pay-tarikh').value = new Date().toISOString().split('T')[0];
+
+          loadAllData();
+        } else {
+          showToast(res.message, false);
+        }
+      } catch (err) {
+        toggleLoading(false);
+        btn.disabled = false;
+        showToast(err.message, false);
+      }
+    }
+
+    // ==================================================================
+    // RESIT DIGITAL & WHATSAPP LOGIC
+    // ==================================================================
+    function displayDigitalReceipt(p) {
+      document.getElementById('rcpt-no').innerText = p.noResit || '-';
+      document.getElementById('rcpt-date').innerText = 'Tarikh: ' + (p.tarikh || '-');
+      document.getElementById('rcpt-nama').innerText = p.namaMurid || '-';
+      document.getElementById('rcpt-kelas').innerText = p.kelas || '-';
+      document.getElementById('rcpt-penjaga').innerText = p.namaPenjaga || p.penjaga || '-';
+      document.getElementById('rcpt-jenis').innerText = p.jenisYuran || '-';
+      document.getElementById('rcpt-kaedah').innerText = p.kaedahBayaran || '-';
+      document.getElementById('rcpt-jumlah').innerText = 'RM ' + parseFloat(p.jumlah || 0).toFixed(2);
+
+      const catRow = document.getElementById('rcpt-catatan-row');
+      if (p.catatan) {
+        catRow.style.display = 'flex';
+        document.getElementById('rcpt-catatan').innerText = p.catatan;
+      } else {
+        catRow.style.display = 'none';
+      }
+
+      state.currentReceipt = p;
+      document.getElementById('modal-receipt').classList.add('active');
+    }
+
+    function viewReceiptById(idBayaran) {
+      const p = state.payments.find(item => item.idBayaran === idBayaran);
+      if (p) {
+        // Cari data murid untuk maklumat kelas & penjaga jika tiada dalam p
+        const sInfo = state.students.find(s => s.nama.toLowerCase() === p.namaMurid.toLowerCase()) || {};
+        p.kelas = p.kelas || sInfo.kelas || '-';
+        p.namaPenjaga = p.namaPenjaga || sInfo.penjaga || '-';
+        p.noWhatsapp = p.noWhatsapp || sInfo.whatsapp || '-';
+        displayDigitalReceipt(p);
+      } else {
+        showToast("Rekod transaksi tidak dijumpai.", false);
+      }
+    }
+
+    function printReceipt() {
+      window.print();
+    }
+
+    function sendWhatsAppReceipt() {
+      if (!state.currentReceipt) return;
+      const p = state.currentReceipt;
+
+      // Cari nombor WhatsApp daripada data murid jika tiada dalam p
+      let rawPhone = p.noWhatsapp || "";
+      if (!rawPhone) {
+        const student = state.students.find(s => s.nama.toLowerCase() === p.namaMurid.toLowerCase());
+        if (student) rawPhone = student.whatsapp;
+      }
+
+      let cleanPhone = String(rawPhone || "").replace(/\D/g, '');
+
+      // Menukar format nombor Malaysia secara automatik (0134565245 -> 60134565245)
+      if (cleanPhone.startsWith('0')) {
+        cleanPhone = '6' + cleanPhone;
+      } else if (!cleanPhone.startsWith('60') && cleanPhone.length > 0) {
+        cleanPhone = '60' + cleanPhone;
+      }
+
+      if (!cleanPhone) {
+        showToast("Nombor WhatsApp penjaga tidak wujud dalam pangkalan data.", false);
+        return;
+      }
+
+      // Format Mesej Mengikut Spesifikasi Tepat Prompt
+      const messageText = 
+`Assalamualaikum / Salam Sejahtera.
+
+Terima kasih. Bayaran yuran bagi:
+
+Nama Murid: ${p.namaMurid}
+Kelas: ${p.kelas || '-'}
+Jenis Yuran: ${p.jenisYuran}
+Jumlah: RM${parseFloat(p.jumlah).toFixed(2)}
+Tarikh: ${p.tarikh}
+No. Resit: ${p.noResit}
+
+telah diterima.
+
+Terima kasih.`;
+
+      const encodedMsg = encodeURIComponent(messageText);
+      const waUrl = `https://wa.me/${cleanPhone}?text=${encodedMsg}`;
+      window.open(waUrl, '_blank');
+    }
+
+    // ==================================================================
+    // SENARAI BAYARAN TABLE & FILTERS LOGIC
+    // ==================================================================
+    function renderPaymentsTable() {
+      const searchKey = document.getElementById('search-payment-input').value.toLowerCase();
+      const monthKey = document.getElementById('filter-payment-month').value;
+      const jenisKey = document.getElementById('filter-payment-jenis').value;
+
+      let totalSum = 0;
+
+      const filtered = state.payments.filter(p => {
+        const matchSearch = p.namaMurid.toLowerCase().includes(searchKey) ||
+                            p.noResit.toLowerCase().includes(searchKey) ||
+                            p.jenisYuran.toLowerCase().includes(searchKey);
+
+        if (!matchSearch) return false;
+
+        if (monthKey) {
+          // Format tarikh DD/MM/YYYY
+          if (p.tarikh && p.tarikh.length >= 7) {
+            const parts = p.tarikh.split('/');
+            if (parts.length === 3 && parts[1] !== monthKey) return false;
+          }
+        }
+
+        if (jenisKey && p.jenisYuran !== jenisKey) {
+          return false;
+        }
+
+        totalSum += (parseFloat(p.jumlah) || 0);
+        return true;
+      });
+
+      document.getElementById('filtered-total-display').innerText = `Jumlah Terpilih: RM ${totalSum.toFixed(2)}`;
+
+      const tbody = document.getElementById('payments-table-body');
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:var(--text-muted);">Tiada rekod bayaran dijumpai.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(p => `
+        <tr>
+          <td><span class="badge badge-primary">${escapeHtml(p.noResit)}</span></td>
+          <td>${escapeHtml(p.tarikh)}</td>
+          <td><strong>${escapeHtml(p.namaMurid)}</strong></td>
+          <td>${escapeHtml(p.jenisYuran)}</td>
+          <td style="color:var(--accent-teal); font-weight:800;">RM ${parseFloat(p.jumlah).toFixed(2)}</td>
+          <td>${escapeHtml(p.kaedahBayaran)}</td>
+          <td>${escapeHtml(p.catatan || "-")}</td>
+          <td>
+            <div style="display:flex; gap:6px;">
+              <button class="btn btn-secondary btn-sm" onclick="viewReceiptById('${escapeHtml(p.idBayaran)}')">
+                👁️ Resit
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // ==================================================================
+    // HELPER FUNCTIONS & UTILITIES
+    // ==================================================================
+    function showToast(msg, isSuccess = true) {
+      const toast = document.getElementById('toast');
+      const icon = document.getElementById('toast-icon');
+      const text = document.getElementById('toast-msg');
+
+      text.innerText = msg;
+      icon.className = isSuccess ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-exclamation';
+      toast.style.backgroundColor = isSuccess ? '#059669' : '#dc2626';
+
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    function toggleLoading(show, text = 'Memproses data...') {
+      const loader = document.getElementById('loading');
+      document.getElementById('loading-text').innerText = text;
+      if (show) loader.classList.add('active');
+      else loader.classList.remove('active');
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+    }
+
+    function openSetupModal() {
+      document.getElementById('setup-api-url-input').value = isApiConnected() ? API_URL : "";
+      document.getElementById('modal-setup').classList.add('active');
+    }
+
+    function saveCustomApiUrl() {
+      const inputUrl = document.getElementById('setup-api-url-input').value.trim();
+      if (!inputUrl) {
+        localStorage.removeItem('CUSTOM_GAS_API_URL');
+        API_URL = "MASUKKAN_URL_GOOGLE_APPS_SCRIPT_DI_SINI";
+        showToast("URL API dikosongkan. Kembali ke Mod Tempatan.", false);
+      } else {
+        localStorage.setItem('CUSTOM_GAS_API_URL', inputUrl);
+        API_URL = inputUrl;
+        showToast("Web App API URL berjaya disimpan!", true);
+      }
+      closeModal('modal-setup');
+      updateApiStatusBadge();
+      loadAllData();
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
 </body>
 </html>
