@@ -553,47 +553,40 @@ async function actionSimpanPembayaran() {
   }
 }
 
-// Action: SIMPAN & WHATSAPP
-async function actionSimpanDanWhatsapp() {
-  const savedRecord = await actionSimpanPembayaran();
-  if (!savedRecord) return;
+// Action: HANTAR WHATSAPP (Berasingan)
+async function actionHantarWhatsapp() {
+  if (!validateForm()) return;
+
+  const studentName = appState.selectedStudent ? appState.selectedStudent.nama : (document.getElementById("student-search-input")?.value || "Murid");
+  const phone = document.getElementById("parent-phone-display")?.value || (appState.selectedStudent ? appState.selectedStudent.phone : "");
+  const noResit = appState.currentReceiptNo || "FQC-1100";
+  const tarikh = formatDateDisplay(document.getElementById("pay-date")?.value || new Date().toISOString().split("T")[0]);
+  const bulan = document.getElementById("pay-month")?.value || "";
+  const jumlah = calculateTotalAmount();
+  const kaedah = document.querySelector("input[name='kaedahBayaran']:checked")?.value || "TUNAI";
 
   try {
-    showLoading(true, "Menjana gambar resit PNG...");
-    
-    // Generate PNG image of receipt
+    showLoading(true, "Menjana gambar resit PNG untuk WhatsApp...");
     const canvas = await generateReceiptCanvas();
-    const studentNameClean = savedRecord.namaMurid.replace(/[^a-zA-Z0-9]/g, "_");
-    const fileName = `FQC_Resit_${savedRecord.noResit}_${studentNameClean}.png`;
+    const studentNameClean = studentName.replace(/[^a-zA-Z0-9]/g, "_");
+    const fileName = `FQC_Resit_${noResit}_${studentNameClean}.png`;
 
     const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
     const file = new File([blob], fileName, { type: 'image/png' });
 
     showLoading(false);
 
-    // Format phone number
-    const formattedPhone = formatWhatsAppPhone(savedRecord.noWhatsapp);
+    const formattedPhone = formatWhatsAppPhone(phone);
     const msg = `Assalamualaikum / Salam sejahtera.
 
-Terima kasih. Pembayaran yuran Fathul Quranic Centre (FQC) telah diterima.
+Resit Pembayaran Yuran Fathul Quranic Centre (FQC)
 
-Nama Murid:
-${savedRecord.namaMurid}
-
-Tarikh:
-${savedRecord.tarikh}
-
-Bulan:
-${savedRecord.bulan}
-
-No. Resit:
-${savedRecord.noResit}
-
-Jumlah Bayaran:
-RM${savedRecord.jumlah.toFixed(2)}
-
-Kaedah Bayaran:
-${savedRecord.kaedahBayaran}
+Nama Murid: ${studentName}
+No. Resit: ${noResit}
+Tarikh: ${tarikh}
+Bulan: ${bulan}
+Jumlah Bayaran: RM${jumlah.toFixed(2)}
+Kaedah Bayaran: ${kaedah}
 
 Resit rasmi dilampirkan untuk rujukan.
 
@@ -603,30 +596,34 @@ Fathul Quranic Centre (FQC)`;
     const encodedMsg = encodeURIComponent(msg);
     const waUrl = formattedPhone ? `https://wa.me/${formattedPhone}?text=${encodedMsg}` : `https://wa.me/?text=${encodedMsg}`;
 
-    // Try Web Share API on mobile
     if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
       try {
         await navigator.share({
           files: [file],
-          title: `Resit FQC ${savedRecord.noResit}`,
+          title: `Resit FQC ${noResit}`,
           text: msg
         });
         showToast("Resit berjaya dikongsi ke WhatsApp!", "success");
         return;
       } catch (err) {
-        console.log("Web Share cancelled/unsupported, falling back to download & link:", err);
+        console.log("Web Share fallback:", err);
       }
     }
 
-    // Fallback: Trigger PNG download & open wa.me link
     triggerDownloadBlob(blob, fileName);
     window.open(waUrl, "_blank");
-
-    alert(`Resit FQC (${savedRecord.noResit}) telah dijana & dimuat turun!\n\nSila lampirkan gambar resit yang telah dimuat turun ke perbualan WhatsApp parent yang sedang dibuka.`);
+    showToast("WhatsApp dibuka & gambar resit dimuat turun!", "success");
   } catch (err) {
     showLoading(false);
-    showToast("Gagal menjana gambar resit: " + err.message, "error");
+    showToast("Gagal hantar WhatsApp: " + err.message, "error");
   }
+}
+
+// Action: SIMPAN & WHATSAPP (Legacy Combo)
+async function actionSimpanDanWhatsapp() {
+  const savedRecord = await actionSimpanPembayaran();
+  if (!savedRecord) return;
+  await actionHantarWhatsapp();
 }
 
 // Action: DOWNLOAD RESIT PNG
