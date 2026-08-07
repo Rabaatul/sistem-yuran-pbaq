@@ -269,7 +269,7 @@ function getSpecialRates() {
 
 /**
  * 2. getStudents()
- * Mengambil senarai murid aktif dari Sheet MURID
+ * Mengambil senarai murid dari Sheet MURID mengikut susunan asal Google Sheets
  */
 function getStudents() {
   try {
@@ -291,47 +291,35 @@ function getStudents() {
       var colC = row[2] ? row[2].toString().trim() : "";
       var colD = row[3] ? row[3].toString().trim() : "";
 
-      var studentId = i + 1;
-      var studentNama = "";
-      var studentPhone = "";
-      var studentStatus = "AKTIF";
+      var nama = "";
+      var phone = "";
+      var status = "AKTIF";
 
-      // Detect layout pintar:
-      var cleanB = colB.replace(/[^0-9]/g, '');
-      if (cleanB.length >= 8 && (cleanB.indexOf("01") === 0 || cleanB.indexOf("601") === 0)) {
-        // Kes A: colA = Nama, colB = Phone
-        studentNama = colA;
-        studentPhone = colB;
-        studentStatus = colC || "AKTIF";
-      } else if (colB && isNaN(colB)) {
-        // Kes B: colA = ID, colB = Nama, colC = Phone
-        studentId = colA || (i + 1);
-        studentNama = colB;
-        studentPhone = colC;
-        studentStatus = colD || "AKTIF";
+      // Tentukan Kolom Nama & Phone secara dinamik
+      if (colB && isNaN(colB)) {
+        nama = colB;
+        phone = colC;
+        status = colD || "AKTIF";
       } else if (colA && isNaN(colA)) {
-        // Kes C: colA = Nama
-        studentNama = colA;
-        studentPhone = colB;
-        studentStatus = colC || "AKTIF";
+        nama = colA;
+        phone = colB;
+        status = colC || "AKTIF";
       }
 
-      if (studentNama && studentStatus.toUpperCase() !== "TIDAK AKTIF") {
+      if (nama && nama.toUpperCase() !== "NAMA MURID" && nama.toUpperCase() !== "NAMA" && status.toUpperCase() !== "TIDAK AKTIF") {
         students.push({
-          id: studentId,
-          nama: studentNama,
-          phone: studentPhone,
-          status: studentStatus
+          id: i + 1,
+          nama: nama,
+          phone: phone,
+          status: status
         });
       }
     }
 
-    // Sort mengikut nama
-    students.sort(function(a, b) {
-      return a.nama.localeCompare(b.nama);
-    });
-
-    return students;
+    if (students.length > 0) {
+      return students;
+    }
+    return MASTER_STUDENTS;
   } catch (err) {
     Logger.log("Error getStudents: " + err.toString());
     return MASTER_STUDENTS;
