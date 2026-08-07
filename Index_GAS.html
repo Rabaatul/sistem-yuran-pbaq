@@ -956,6 +956,31 @@ async function actionSimpanPembayaran() {
       timestamp: new Date().toISOString()
     };
 
+    if (typeof google !== "undefined" && google.script && google.script.run) {
+      return new Promise((resolve) => {
+        google.script.run
+          .withSuccessHandler(function(resJson) {
+            if (resJson && resJson.success && resJson.noResit) {
+              paymentObj.noResit = resJson.noResit;
+            }
+            appState.payments.unshift(paymentObj);
+            saveLocalStoragePayments();
+            showLoading(false);
+            showToast(`Pembayaran berjaya disimpan. No. Resit: ${paymentObj.noResit}`, "success");
+            calculateNextReceiptNo();
+            renderDashboard();
+            renderHistoryTable();
+            resolve(paymentObj);
+          })
+          .withFailureHandler(function(err) {
+            showLoading(false);
+            showToast("Gagal menyimpan ke Sheet: " + err, "error");
+            resolve(false);
+          })
+          .savePayment(paymentObj);
+      });
+    }
+
     if (appState.appsScriptUrl) {
       try {
         const response = await fetch(appState.appsScriptUrl, {
@@ -1142,9 +1167,28 @@ function cetakResitRekod(idx) {
 }
 
 async function fetchStudentsFromBackend(showToastMsg = false) {
+  if (showToastMsg) showLoading(true, "Memuat turun data murid terkini dari Google Sheets...");
+
+  if (typeof google !== "undefined" && google.script && google.script.run) {
+    google.script.run
+      .withSuccessHandler(function(studentsData) {
+        if (showToastMsg) showLoading(false);
+        if (Array.isArray(studentsData) && studentsData.length > 0) {
+          appState.students = studentsData;
+          initStudentSearch();
+          renderDashboard();
+          if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik dari Google Sheets!`, "success");
+        }
+      })
+      .withFailureHandler(function(err) {
+        if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid: " + err, "error"); }
+      })
+      .getStudents();
+    return;
+  }
+
   if (!appState.appsScriptUrl) return;
   try {
-    if (showToastMsg) showLoading(true, "Memuat turun data murid terkini dari Google Sheets...");
     const res = await fetch(`${appState.appsScriptUrl}?action=getStudents`);
     const data = await res.json();
     if (showToastMsg) showLoading(false);
@@ -1160,6 +1204,21 @@ async function fetchStudentsFromBackend(showToastMsg = false) {
 }
 
 async function fetchPaymentHistoryFromBackend() {
+  if (typeof google !== "undefined" && google.script && google.script.run) {
+    google.script.run
+      .withSuccessHandler(function(historyData) {
+        if (Array.isArray(historyData) && historyData.length > 0) {
+          appState.payments = historyData;
+          saveLocalStoragePayments();
+          calculateNextReceiptNo();
+          renderDashboard();
+          renderHistoryTable();
+        }
+      })
+      .getPaymentHistory();
+    return;
+  }
+
   if (!appState.appsScriptUrl) return;
   try {
     const res = await fetch(`${appState.appsScriptUrl}?action=getPaymentHistory`);
