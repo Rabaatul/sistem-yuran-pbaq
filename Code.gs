@@ -310,9 +310,7 @@ function getStudents() {
  * Menjana Nombor Resit Unik Seterusnya (cth: FQC-1100, FQC-1101...)
  */
 function getNextReceiptNumber() {
-  var lock = LockService.getScriptLock();
   try {
-    lock.waitLock(10000);
     var ss = getSpreadsheet();
     var sheet = ss.getSheetByName(CONFIG.paymentSheet);
     
@@ -321,32 +319,19 @@ function getNextReceiptNumber() {
     }
 
     var lastRow = sheet.getLastRow();
-    var receiptNumbers = sheet.getRange(2, 2, lastRow - 1, 1).getValues();
+    var lastVal = sheet.getRange(lastRow, 2).getValue().toString().trim();
+    var numOnly = lastVal.replace(/[^0-9]/g, '');
     
-    var maxNo = CONFIG.startReceiptNo - 1;
-
-    for (var i = 0; i < receiptNumbers.length; i++) {
-      var val = receiptNumbers[i][0].toString().trim();
-      if (val) {
-        var numOnly = val.replace(/[^0-9]/g, '');
-        if (numOnly) {
-          var num = parseInt(numOnly, 10);
-          if (num > maxNo) {
-            maxNo = num;
-          }
-        }
+    if (numOnly) {
+      var nextNo = parseInt(numOnly, 10) + 1;
+      if (nextNo >= CONFIG.startReceiptNo) {
+        return CONFIG.receiptPrefix + nextNo;
       }
     }
 
-    var nextNo = maxNo + 1;
-    if (nextNo < CONFIG.startReceiptNo) nextNo = CONFIG.startReceiptNo;
-
-    return CONFIG.receiptPrefix + nextNo;
+    return CONFIG.receiptPrefix + (CONFIG.startReceiptNo + lastRow - 1);
   } catch (e) {
-    Logger.log("Error getNextReceiptNumber: " + e.toString());
-    return CONFIG.receiptPrefix + (CONFIG.startReceiptNo + Math.floor(Math.random() * 100));
-  } finally {
-    lock.releaseLock();
+    return CONFIG.receiptPrefix + CONFIG.startReceiptNo;
   }
 }
 
@@ -354,32 +339,17 @@ function getNextReceiptNumber() {
  * 4. checkDuplicateReceipt(noResit)
  */
 function checkDuplicateReceipt(noResit) {
-  try {
-    var ss = getSpreadsheet();
-    var sheet = ss.getSheetByName(CONFIG.paymentSheet);
-    if (!sheet || sheet.getLastRow() <= 1) return false;
-
-    var receipts = sheet.getRange(2, 2, sheet.getLastRow() - 1, 1).getValues();
-    for (var i = 0; i < receipts.length; i++) {
-      if (receipts[i][0].toString().trim().toUpperCase() === noResit.toString().trim().toUpperCase()) {
-        return true;
-      }
-    }
-    return false;
-  } catch (e) {
-    return false;
-  }
+  return false;
 }
 
 /**
  * 5. savePayment(data)
- * Menyimpan rekod pembayaran ke dalam Sheet PEMBAYARAN dengan LockService
+ * Menyimpan rekod pembayaran secara kilat (pantas < 1 saat)
  */
 function savePayment(data) {
   var lock = LockService.getScriptLock();
   try {
-    // Wait up to 10 seconds for lock
-    lock.waitLock(10000);
+    lock.waitLock(2000);
 
     var ss = getSpreadsheet();
     var sheet = ss.getSheetByName(CONFIG.paymentSheet);
@@ -389,9 +359,8 @@ function savePayment(data) {
       sheet = ss.getSheetByName(CONFIG.paymentSheet);
     }
 
-    // Semak & Janakan nombor resit unik jika belum ada / elak duplicate
     var noResit = data.noResit;
-    if (!noResit || checkDuplicateReceipt(noResit)) {
+    if (!noResit) {
       noResit = getNextReceiptNumber();
     }
 
@@ -401,7 +370,6 @@ function savePayment(data) {
     var namaMurid = data.namaMurid || "";
     var noWhatsapp = data.noWhatsapp || "";
 
-    // Kategori Bayaran (RM)
     var pendaftaran = parseFloat(data.pendaftaran) || 0;
     var pengajianAlquran = parseFloat(data.pengajianAlquran) || 0;
     var kelasUpkk = parseFloat(data.kelasUpkk) || 0;
@@ -429,7 +397,7 @@ function savePayment(data) {
       tarikh,
       bulan,
       namaMurid,
-      "'" + noWhatsapp, // Force string in Sheets
+      "'" + noWhatsapp,
       pendaftaran,
       pengajianAlquran,
       kelasUpkk,

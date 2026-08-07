@@ -652,14 +652,13 @@ async function actionDownloadPng() {
   }
 }
 
-// Helper: html2canvas Receipt Generator
+// Helper: html2canvas Receipt Generator (Perfect 1 A4 Aspect Ratio)
 async function generateReceiptCanvas() {
   const receiptCard = document.getElementById("receipt-card-printable");
   if (!receiptCard) throw new Error("Kad resit tidak ditemui.");
 
-  // html2canvas configuration for maximum crisp clarity
   return await html2canvas(receiptCard, {
-    scale: 2.5,
+    scale: 2.0,
     useCORS: true,
     allowTaint: true,
     backgroundColor: "#ffffff",
