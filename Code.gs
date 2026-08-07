@@ -1,48 +1,119 @@
 /**
  * ==============================================================================
- * SISTEM BAYARAN YURAN MURID - GOOGLE APPS SCRIPT BACKEND
+ * SISTEM PEMBAYARAN YURAN & RESIT DIGITAL FATHUL QURANIC CENTRE (FQC)
  * ==============================================================================
- * Web App Google Apps Script + Google Sheets Database
- * 
- * Sheet 1: MURID (Bil, Nama Murid, Kelas, Nama Penjaga, No. WhatsApp)
- * Sheet 2: BAYARAN (ID Bayaran, Tarikh, No Resit, Nama Murid, Jenis Yuran, Jumlah, Kaedah Bayaran, Catatan)
+ * Backend Google Apps Script (Code.gs)
+ * Spreadsheet ID: 1ahZXkijsmqPD5MDHcBGSXgp4HR0R1NDi4rUx4NH-nho
  */
 
-var SHEET_MURID = "MURID";
-var SHEET_BAYARAN = "BAYARAN";
+const CONFIG = {
+  spreadsheetId: "1ahZXkijsmqPD5MDHcBGSXgp4HR0R1NDi4rUx4NH-nho",
+  studentSheet: "MURID",
+  paymentSheet: "PEMBAYARAN",
+  centreName: "FATHUL QURANIC CENTRE (FQC)",
+  receiptPrefix: "FQC-",
+  startReceiptNo: 1100
+};
+
+// Master Data 38 Murid FQC
+const MASTER_STUDENTS = [
+  { id: 1, nama: "Nur Farha Binti Mohd Fairoze Mazly", phone: "0179890260", status: "AKTIF" },
+  { id: 2, nama: "Nur Aisya’ Qaseh Binti Aziman", phone: "0133440896", status: "AKTIF" },
+  { id: 3, nama: "Nur Raisha Az-Zahra Binti Jiekie", phone: "0193866867", status: "AKTIF" },
+  { id: 4, nama: "Muhammad Irfan Shafie Bin Kamarul", phone: "0196959040", status: "AKTIF" },
+  { id: 5, nama: "Muhammad Harith Bin Muhamad Hosni", phone: "0193332054", status: "AKTIF" },
+  { id: 6, nama: "Nik Mus’ab Az-Zhafran Bin Ahmad Faidhul Irfan", phone: "0133484008", status: "AKTIF" },
+  { id: 7, nama: "Muhammad Zayyan Nawfal Bin Shahrul Azmi", phone: "0192826203", status: "AKTIF" },
+  { id: 8, nama: "Fadhil Lutfi Bin Ali Imran", phone: "0123647289", status: "AKTIF" },
+  { id: 9, nama: "Syahira Aneesa Binti Ahmad Radzi", phone: "0192885947", status: "AKTIF" },
+  { id: 10, nama: "Abdul Aziz Bin Mohd Razali", phone: "0173184593", status: "AKTIF" },
+  { id: 11, nama: "Tengku Aqill Hafy Bin Tengku Shahrizal", phone: "0179042049", status: "AKTIF" },
+  { id: 12, nama: "Aisyahtul Aufa Raihanah Binti Mohd Riduan", phone: "0126224611", status: "AKTIF" },
+  { id: 13, nama: "Muhammad Ainul Mubarok Asy’ari Bin Kosim", phone: "0133943310", status: "AKTIF" },
+  { id: 14, nama: "Nur Qisya Damia Binti Mohamad Khairi", phone: "0162912079", status: "AKTIF" },
+  { id: 15, nama: "Muhammad Al Fateh Bin Mohd Firdaus", phone: "0126063578", status: "AKTIF" },
+  { id: 16, nama: "Muhammad Syauqi Bin Norsyam", phone: "0176840534", status: "AKTIF" },
+  { id: 17, nama: "Nur Sarah Ardhilya Binti Mohd Sufian", phone: "0123606852", status: "AKTIF" },
+  { id: 18, nama: "Alya Sofia Binti Aris", phone: "0173235786", status: "AKTIF" },
+  { id: 19, nama: "Muhammad Adam Rizq Bin Muhammad Jazuli", phone: "01110340606", status: "AKTIF" },
+  { id: 20, nama: "Muhammad Saeed Bin Muhammad Ridhwan", phone: "0129220073", status: "AKTIF" },
+  { id: 21, nama: "Maryam Sumayyah Binti Muhammad Javed Butt", phone: "0109294407", status: "AKTIF" },
+  { id: 22, nama: "Wan Anaqi Ziqri Bin Wan Sulaiman", phone: "0197751085", status: "AKTIF" },
+  { id: 23, nama: "Muhammad Darwisy Haikal Bin Muhammad Ellias", phone: "0126362359", status: "AKTIF" },
+  { id: 24, nama: "Muhammad Nur Firash Bin Muhammad Nur Fitri", phone: "0122528736", status: "AKTIF" },
+  { id: 25, nama: "Shafy Baaqir Bin Shahrul Nizam", phone: "0166247850", status: "AKTIF" },
+  { id: 26, nama: "Nur Amni Syuhada Binti Mohd Nor Safuan", phone: "0163819439", status: "AKTIF" },
+  { id: 27, nama: "Hani Sofia Binti Mohd Afwaz", phone: "0126765247", status: "AKTIF" },
+  { id: 28, nama: "Arissa Medina Binti Ahmad Fauzi", phone: "0129425926", status: "AKTIF" },
+  { id: 29, nama: "Muhammad Rizal Arshad Bin Mohd Rosmizam", phone: "0129343676", status: "AKTIF" },
+  { id: 30, nama: "Ainan Salsabila Binti Hafiz Anuar", phone: "0139311818", status: "AKTIF" },
+  { id: 31, nama: "Ammar Rifqi Bin Apandi", phone: "0129324167", status: "AKTIF" },
+  { id: 32, nama: "Rayyan Kalif Bin Rafizi", phone: "0134471546", status: "AKTIF" },
+  { id: 33, nama: "Muhammad Eizzuddin", phone: "0196804101 / 0196493646", status: "AKTIF" },
+  { id: 34, nama: "Muhammad Aqil Raziq Bin Zul Azlan", phone: "0123038634", status: "AKTIF" },
+  { id: 35, nama: "Che Aqil Rayqal Bin Hafizul Ariffin", phone: "0126648853", status: "AKTIF" },
+  { id: 36, nama: "Muhammad Aryan Ziqri Bin Md Zahid", phone: "0193853222", status: "AKTIF" },
+  { id: 37, nama: "Muhammad Al Hafiz Bin Mohd Zin", phone: "0192248326", status: "AKTIF" },
+  { id: 38, nama: "NAJIHAH", phone: "0134565245", status: "AKTIF" }
+];
 
 /**
- * Handle HTTP GET Requests (CORS Web App API & Web Page Fallback)
+ * Helper untuk dapatkan Spreadsheet
+ */
+function getSpreadsheet() {
+  if (CONFIG.spreadsheetId) {
+    try {
+      return SpreadsheetApp.openById(CONFIG.spreadsheetId);
+    } catch (e) {
+      Logger.log("Error opening by ID: " + e.toString());
+    }
+  }
+  return SpreadsheetApp.getActiveSpreadsheet();
+}
+
+/**
+ * Handle HTTP GET Requests
  */
 function doGet(e) {
   var action = (e && e.parameter) ? e.parameter.action : null;
   
   if (action === "getStudents") {
     return createJsonResponse({ success: true, data: getStudents() });
-  } else if (action === "getPayments") {
-    return createJsonResponse({ success: true, data: getPayments() });
+  } else if (action === "getPayments" || action === "getPaymentHistory") {
+    return createJsonResponse({ success: true, data: getPaymentHistory() });
+  } else if (action === "getNextReceiptNumber") {
+    return createJsonResponse({ success: true, data: getNextReceiptNumber() });
   } else if (action === "getDashboardData") {
     return createJsonResponse({ success: true, data: getDashboardData() });
+  } else if (action === "setup") {
+    return createJsonResponse(setupDatabase());
   }
 
-  // Jika dibuka terus di dalam Google Apps Script Web App
+  // Paparan Web App Google Apps Script
   try {
-    return HtmlService.createTemplateFromFile("index")
+    return HtmlService.createTemplateFromFile("Index")
       .evaluate()
-      .setTitle("SISTEM BAYARAN YURAN MURID")
+      .setTitle("SISTEM PEMBAYARAN YURAN - FATHUL QURANIC CENTRE (FQC)")
       .addMetaTag("viewport", "width=device-width, initial-scale=1.0")
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   } catch (err) {
-    return HtmlService.createHtmlOutput(
-      "<h2>SISTEM BAYARAN YURAN MURID API ACTIVE</h2>" +
-      "<p>Google Apps Script Web App API kini aktif dan sedia menerima sambungan daripada Laman Web Pembayaran Yuran Murid.</p>" +
-      "<p><strong>Status API:</strong> OK</p>"
-    );
+    try {
+      return HtmlService.createTemplateFromFile("index")
+        .evaluate()
+        .setTitle("SISTEM PEMBAYARAN YURAN - FATHUL QURANIC CENTRE (FQC)")
+        .addMetaTag("viewport", "width=device-width, initial-scale=1.0")
+        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+    } catch (err2) {
+      return HtmlService.createHtmlOutput(
+        "<h2>SISTEM PEMBAYARAN YURAN FQC - API AKTIF</h2>" +
+        "<p>Web App API sedia menerima permintaan daripada aplikasi Web Pembayaran Yuran.</p>"
+      );
+    }
   }
 }
 
 /**
- * Handle HTTP POST Requests (CORS Web App API for fetch requests)
+ * Handle HTTP POST Requests (CORS API)
  */
 function doPost(e) {
   try {
@@ -55,23 +126,20 @@ function doPost(e) {
 
     var action = contents.action;
     var payload = contents.payload || contents;
-
     var result = { success: false, message: "Tindakan tidak sah." };
 
     if (action === "getStudents") {
       result = { success: true, data: getStudents() };
-    } else if (action === "addStudent") {
-      result = addStudent(payload);
-    } else if (action === "updateStudent") {
-      result = updateStudent(payload);
-    } else if (action === "deleteStudent") {
-      result = deleteStudent(payload.bil || payload);
-    } else if (action === "getPayments") {
-      result = { success: true, data: getPayments() };
-    } else if (action === "addPayment") {
-      result = addPayment(payload);
+    } else if (action === "savePayment") {
+      result = savePayment(payload);
+    } else if (action === "getNextReceiptNumber") {
+      result = { success: true, data: getNextReceiptNumber() };
+    } else if (action === "getPaymentHistory") {
+      result = { success: true, data: getPaymentHistory() };
     } else if (action === "getDashboardData") {
       result = { success: true, data: getDashboardData() };
+    } else if (action === "setupDatabase") {
+      result = setupDatabase();
     }
 
     return createJsonResponse(result);
@@ -81,7 +149,7 @@ function doPost(e) {
 }
 
 /**
- * Helper untuk pulangkan jawapan JSON
+ * Helper JSON Response
  */
 function createJsonResponse(data) {
   return ContentService.createTextOutput(JSON.stringify(data))
@@ -89,475 +157,447 @@ function createJsonResponse(data) {
 }
 
 /**
- * Menyediakan Sheet MURID jika belum wujud
+ * 1. setupDatabase()
+ * Menyiapkan sheet MURID dan PEMBAYARAN beserta data awal murid FQC
  */
-function setupMuridSheet(ss) {
-  if (!ss) ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(SHEET_MURID);
-  if (!sheet) {
-    sheet = ss.insertSheet(SHEET_MURID);
-    var headers = ["Bil", "Nama Murid", "Kelas", "Nama Penjaga", "No. WhatsApp"];
-    sheet.appendRow(headers);
-    sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold").setBackground("#e2e8f0");
-    sheet.setFrozenRows(1);
-    sheet.getRange("E:E").setNumberFormat("@");
+function setupDatabase() {
+  try {
+    var ss = getSpreadsheet();
+    if (!ss) return { success: false, message: "Spreadsheet tidak ditemui." };
+
+    // --- SETUP SHEET MURID ---
+    var sheetMurid = ss.getSheetByName(CONFIG.studentSheet);
+    if (!sheetMurid) {
+      sheetMurid = ss.insertSheet(CONFIG.studentSheet);
+    }
+    
+    // Set Header Sheet Murid jika kosong
+    if (sheetMurid.getLastRow() === 0) {
+      var headersMurid = ["ID", "NAMA MURID", "NO WHATSAPP PARENT", "STATUS"];
+      sheetMurid.appendRow(headersMurid);
+      
+      // Formatting Header Murid
+      var headerRangeMurid = sheetMurid.getRange(1, 1, 1, 4);
+      headerRangeMurid.setBackground("#1b5e20")
+                        .setFontColor("#ffffff")
+                        .setFontWeight("bold")
+                        .setHorizontalAlignment("center");
+      sheetMurid.setFrozenRows(1);
+    }
+
+    // Semak jika data murid telah diisi
+    var existingStudents = [];
+    if (sheetMurid.getLastRow() > 1) {
+      var data = sheetMurid.getRange(2, 2, sheetMurid.getLastRow() - 1, 1).getValues();
+      existingStudents = data.map(function(row) { return row[0].toString().trim().toLowerCase(); });
+    }
+
+    // Format Kolom C (No WhatsApp) sebagai Text '@' untuk simpan 0 di hadapan
+    sheetMurid.getRange("C:C").setNumberFormat("@");
+
+    // Masukkan data murid yang belum wujud
+    var addedCount = 0;
+    for (var i = 0; i < MASTER_STUDENTS.length; i++) {
+      var s = MASTER_STUDENTS[i];
+      if (existingStudents.indexOf(s.nama.toLowerCase()) === -1) {
+        sheetMurid.appendRow([s.id, s.nama, s.phone, s.status]);
+        addedCount++;
+      }
+    }
+
+    // Auto Column Width Murid
+    sheetMurid.setColumnWidth(1, 60);
+    sheetMurid.setColumnWidth(2, 380);
+    sheetMurid.setColumnWidth(3, 180);
+    sheetMurid.setColumnWidth(4, 100);
+
+    // --- SETUP SHEET PEMBAYARAN ---
+    var sheetPayment = ss.getSheetByName(CONFIG.paymentSheet);
+    if (!sheetPayment) {
+      sheetPayment = ss.insertSheet(CONFIG.paymentSheet);
+    }
+
+    if (sheetPayment.getLastRow() === 0) {
+      var headersPayment = [
+        "TIMESTAMP", "NO RESIT", "TARIKH", "BULAN", "NAMA MURID", "NO WHATSAPP",
+        "PENDAFTARAN", "PENGAJIAN ALQURAN", "KELAS UPKK", "KELAS PSRA", "KELAS KHAS JAWI",
+        "BUKU REKOD / MODUL", "SUMBANGAN", "KELAS KAFA", "KELAS AKADEMIK", "TRANSIT",
+        "JUMLAH", "KAEDAH BAYARAN", "CATATAN", "STATUS", "LINK / ID RESIT"
+      ];
+      sheetPayment.appendRow(headersPayment);
+
+      var headerRangePayment = sheetPayment.getRange(1, 1, 1, headersPayment.length);
+      headerRangePayment.setBackground("#2e7d32")
+                          .setFontColor("#ffffff")
+                          .setFontWeight("bold")
+                          .setHorizontalAlignment("center");
+      sheetPayment.setFrozenRows(1);
+
+      // Set Number Format untuk No WhatsApp & Tarikh
+      sheetPayment.getRange("F:F").setNumberFormat("@");
+      sheetPayment.getRange("B:B").setNumberFormat("@");
+    }
+
+    return {
+      success: true,
+      message: "Database FQC berjaya disediakan! (" + addedCount + " murid baharu ditambah)."
+    };
+  } catch (err) {
+    return { success: false, message: "Ralat Setup: " + err.toString() };
   }
-  return sheet;
 }
 
 /**
- * Menyediakan Sheet BAYARAN jika belum wujud (8 Kolum Tepat: A..H)
- */
-function setupBayaranSheet(ss) {
-  if (!ss) ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(SHEET_BAYARAN);
-  if (!sheet) {
-    sheet = ss.insertSheet(SHEET_BAYARAN);
-    var headers = [
-      "ID Bayaran",
-      "Tarikh",
-      "No Resit",
-      "Nama Murid",
-      "Jenis Yuran",
-      "Jumlah",
-      "Kaedah Bayaran",
-      "Catatan"
-    ];
-    sheet.appendRow(headers);
-    sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold").setBackground("#e2e8f0");
-    sheet.setFrozenRows(1);
-  }
-  return sheet;
-}
-
-/**
- * 1. GET STUDENTS (Sheet MURID)
+ * 2. getStudents()
+ * Mengambil senarai murid aktif dari Sheet MURID
+ * (Secara pintar mendeteksi sama ada Kolom A = ID atau Kolom A = Nama Murid)
  */
 function getStudents() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = setupMuridSheet(ss);
-  
-  var data = sheet.getDataRange().getDisplayValues();
-  if (data.length <= 1) return [];
-  
-  var students = [];
-  for (var i = 1; i < data.length; i++) {
-    var row = data[i];
-    var nama = String(row[1] || "").trim();
-    if (!nama) continue;
+  try {
+    var ss = getSpreadsheet();
+    var sheet = ss.getSheetByName(CONFIG.studentSheet);
     
-    var bilNum = parseInt(row[0], 10);
-    if (isNaN(bilNum)) bilNum = i;
+    if (!sheet || sheet.getLastRow() <= 1) {
+      return MASTER_STUDENTS;
+    }
 
-    var wa = String(row[4] || "").trim();
-    if (wa.indexOf("'") === 0) wa = wa.substring(1);
-    
-    students.push({
-      bil: bilNum,
-      nama: nama,
-      kelas: String(row[2] || "").trim(),
-      penjaga: String(row[3] || "").trim(),
-      whatsapp: wa
+    var lastRow = sheet.getLastRow();
+    var values = sheet.getRange(2, 1, lastRow - 1, 4).getValues();
+    var students = [];
+
+    for (var i = 0; i < values.length; i++) {
+      var row = values[i];
+      var colA = row[0] ? row[0].toString().trim() : "";
+      var colB = row[1] ? row[1].toString().trim() : "";
+      var colC = row[2] ? row[2].toString().trim() : "";
+      var colD = row[3] ? row[3].toString().trim() : "";
+
+      var studentId = i + 1;
+      var studentNama = "";
+      var studentPhone = "";
+      var studentStatus = "AKTIF";
+
+      // Detect layout: Sekiranya colB kelihatan seperti nombor telefon, colA ialah Nama Murid
+      var cleanPhoneB = colB.replace(/[^0-9]/g, '');
+      if (cleanPhoneB.length >= 8 && (cleanPhoneB.indexOf("01") === 0 || cleanPhoneB.indexOf("601") === 0)) {
+        studentNama = colA;
+        studentPhone = colB;
+        studentStatus = colC || "AKTIF";
+      } else {
+        studentId = colA || (i + 1);
+        studentNama = colB || colA;
+        studentPhone = colC;
+        studentStatus = colD || "AKTIF";
+      }
+
+      if (studentNama && studentStatus.toUpperCase() !== "TIDAK AKTIF") {
+        students.push({
+          id: studentId,
+          nama: studentNama,
+          phone: studentPhone,
+          status: studentStatus
+        });
+      }
+    }
+
+    // Sort mengikut nama
+    students.sort(function(a, b) {
+      return a.nama.localeCompare(b.nama);
     });
+
+    return students;
+  } catch (err) {
+    Logger.log("Error getStudents: " + err.toString());
+    return MASTER_STUDENTS;
   }
-  
-  return students;
 }
 
 /**
- * 2. ADD STUDENT (Auto-generate Bil & Format WhatsApp sebagai TEKS)
+ * 3. getNextReceiptNumber()
+ * Menjana Nombor Resit Unik Seterusnya (cth: FQC-1100, FQC-1101...)
  */
-function addStudent(payload) {
+function getNextReceiptNumber() {
   var lock = LockService.getScriptLock();
   try {
     lock.waitLock(10000);
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var sheet = setupMuridSheet(ss);
+    var ss = getSpreadsheet();
+    var sheet = ss.getSheetByName(CONFIG.paymentSheet);
     
-    if (!payload || !payload.nama) {
-      return { success: false, message: "Nama murid adalah wajib." };
+    if (!sheet || sheet.getLastRow() <= 1) {
+      return CONFIG.receiptPrefix + CONFIG.startReceiptNo;
     }
-    
-    var students = getStudents();
-    var maxBil = 0;
-    for (var i = 0; i < students.length; i++) {
-      if (students[i].bil > maxBil) maxBil = students[i].bil;
-    }
-    var nextBil = maxBil + 1;
-    
-    var rawWa = String(payload.whatsapp || "").trim();
-    if (rawWa.indexOf("'") === 0) rawWa = rawWa.substring(1);
-    var formattedWaText = "'" + rawWa;
-    
-    var rowData = [
-      nextBil,
-      String(payload.nama).trim(),
-      String(payload.kelas || "").trim(),
-      String(payload.penjaga || "").trim(),
-      formattedWaText
-    ];
-    
-    sheet.appendRow(rowData);
-    
-    var newStudent = {
-      bil: nextBil,
-      nama: String(payload.nama).trim(),
-      kelas: String(payload.kelas || "").trim(),
-      penjaga: String(payload.penjaga || "").trim(),
-      whatsapp: rawWa
-    };
-    
-    return {
-      success: true,
-      message: "Murid berjaya ditambah.",
-      student: newStudent
-    };
-  } catch (err) {
-    return { success: false, message: "Ralat tambah murid: " + err.toString() };
-  } finally {
-    lock.releaseLock();
-  }
-}
 
-/**
- * 3. UPDATE STUDENT
- */
-function updateStudent(payload) {
-  var lock = LockService.getScriptLock();
-  try {
-    lock.waitLock(10000);
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var sheet = setupMuridSheet(ss);
-    var data = sheet.getDataRange().getDisplayValues();
+    var lastRow = sheet.getLastRow();
+    var receiptNumbers = sheet.getRange(2, 2, lastRow - 1, 1).getValues();
     
-    var targetBil = parseInt(payload.bil, 10);
-    var rowIndex = -1;
-    
-    for (var i = 1; i < data.length; i++) {
-      if (parseInt(data[i][0], 10) === targetBil) {
-        rowIndex = i + 1;
-        break;
-      }
-    }
-    
-    if (rowIndex === -1) {
-      return { success: false, message: "Rekod murid tidak dijumpai." };
-    }
-    
-    var rawWa = String(payload.whatsapp || "").trim();
-    if (rawWa.indexOf("'") === 0) rawWa = rawWa.substring(1);
-    
-    sheet.getRange(rowIndex, 2).setValue(String(payload.nama).trim());
-    sheet.getRange(rowIndex, 3).setValue(String(payload.kelas || "").trim());
-    sheet.getRange(rowIndex, 4).setValue(String(payload.penjaga || "").trim());
-    sheet.getRange(rowIndex, 5).setValue("'" + rawWa);
-    
-    return {
-      success: true,
-      message: "Rekod murid berjaya dikemaskini."
-    };
-  } catch (err) {
-    return { success: false, message: "Ralat kemaskini murid: " + err.toString() };
-  } finally {
-    lock.releaseLock();
-  }
-}
+    var maxNo = CONFIG.startReceiptNo - 1;
 
-/**
- * 4. DELETE STUDENT
- */
-function deleteStudent(bil) {
-  var lock = LockService.getScriptLock();
-  try {
-    lock.waitLock(10000);
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var sheet = setupMuridSheet(ss);
-    var data = sheet.getDataRange().getDisplayValues();
-    
-    var targetBil = parseInt(bil, 10);
-    var rowIndex = -1;
-    
-    for (var i = 1; i < data.length; i++) {
-      if (parseInt(data[i][0], 10) === targetBil) {
-        rowIndex = i + 1;
-        break;
-      }
-    }
-    
-    if (rowIndex === -1) {
-      return { success: false, message: "Rekod murid tidak dijumpai." };
-    }
-    
-    sheet.deleteRow(rowIndex);
-    
-    return {
-      success: true,
-      message: "Murid berjaya dipadam."
-    };
-  } catch (err) {
-    return { success: false, message: "Ralat padam murid: " + err.toString() };
-  } finally {
-    lock.releaseLock();
-  }
-}
-
-/**
- * 5. GET PAYMENTS (Sheet BAYARAN - 8 Kolum)
- */
-function getPayments() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = setupBayaranSheet(ss);
-  
-  var data = sheet.getDataRange().getDisplayValues();
-  if (data.length <= 1) return [];
-  
-  var payments = [];
-  for (var i = 1; i < data.length; i++) {
-    var row = data[i];
-    if (!row[0] && !row[2]) continue;
-    
-    payments.push({
-      idBayaran: String(row[0] || ""),
-      tarikh: String(row[1] || ""),
-      noResit: String(row[2] || ""),
-      namaMurid: String(row[3] || ""),
-      jenisYuran: String(row[4] || ""),
-      jumlah: parseFloat(row[5]) || 0,
-      kaedahBayaran: String(row[6] || ""),
-      catatan: String(row[7] || "")
-    });
-  }
-  
-  return payments.reverse();
-}
-
-/**
- * Auto Generator: ID Bayaran (BYR0001, BYR0002...)
- */
-function generateNextPaymentId(sheet) {
-  var data = sheet.getDataRange().getDisplayValues();
-  var maxSeq = 0;
-  
-  if (data.length > 1) {
-    for (var i = 1; i < data.length; i++) {
-      var idStr = String(data[i][0] || "").trim();
-      if (idStr.indexOf("BYR") === 0) {
-        var seq = parseInt(idStr.replace("BYR", ""), 10);
-        if (!isNaN(seq) && seq > maxSeq) {
-          maxSeq = seq;
-        }
-      }
-    }
-  }
-  
-  var nextSeq = maxSeq + 1;
-  var seqPadded = ("0000" + nextSeq).slice(-4);
-  return "BYR" + seqPadded;
-}
-
-/**
- * Auto Generator: No Resit (RESIT-YYYY-0001, RESIT-YYYY-0002...)
- */
-function generateNextReceiptNo(sheet, year) {
-  var data = sheet.getDataRange().getDisplayValues();
-  var prefix = "RESIT-" + year + "-";
-  var maxSeq = 0;
-  
-  if (data.length > 1) {
-    for (var i = 1; i < data.length; i++) {
-      var rcptStr = String(data[i][2] || "").trim();
-      if (rcptStr.indexOf(prefix) === 0) {
-        var parts = rcptStr.split("-");
-        if (parts.length === 3) {
-          var seq = parseInt(parts[2], 10);
-          if (!isNaN(seq) && seq > maxSeq) {
-            maxSeq = seq;
+    for (var i = 0; i < receiptNumbers.length; i++) {
+      var val = receiptNumbers[i][0].toString().trim();
+      if (val) {
+        var numOnly = val.replace(/[^0-9]/g, '');
+        if (numOnly) {
+          var num = parseInt(numOnly, 10);
+          if (num > maxNo) {
+            maxNo = num;
           }
         }
       }
     }
-  }
-  
-  var nextSeq = maxSeq + 1;
-  var seqPadded = ("0000" + nextSeq).slice(-4);
-  return prefix + seqPadded;
-}
 
-/**
- * 6. ADD PAYMENT (Simpan ke 8 kolum A..H sheet BAYARAN)
- */
-function addPayment(payload) {
-  var lock = LockService.getScriptLock();
-  try {
-    var success = lock.waitLock(30000);
-    if (!success) {
-      return { success: false, message: "Sistem sibuk. Sila cuba sebentar lagi." };
-    }
-    
-    if (!payload || !payload.namaMurid || !payload.jenisYuran || !payload.jumlah || !payload.kaedahBayaran) {
-      return { success: false, message: "Sila lengkapkan maklumat wajib." };
-    }
-    
-    var jumlahNum = parseFloat(payload.jumlah);
-    if (isNaN(jumlahNum) || jumlahNum <= 0) {
-      return { success: false, message: "Sila masukkan jumlah bayaran yang sah." };
-    }
-    
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var sheet = setupBayaranSheet(ss);
-    
-    // Format Tarikh
-    var formattedDate = payload.tarikh || "";
-    var year = new Date().getFullYear();
-    if (formattedDate.indexOf("-") !== -1) {
-      var parts = formattedDate.split("-");
-      if (parts.length === 3) {
-        year = parts[0];
-        formattedDate = parts[2] + "/" + parts[1] + "/" + parts[0];
-      }
-    } else if (!formattedDate) {
-      formattedDate = Utilities.formatDate(new Date(), ss.getSpreadsheetTimeZone(), "dd/MM/yyyy");
-    }
-    
-    var idBayaran = generateNextPaymentId(sheet);
-    var noResit = generateNextReceiptNo(sheet, year);
-    
-    // 8 Kolum Tepat: A=ID, B=Tarikh, C=No Resit, D=Nama Murid, E=Jenis Yuran, F=Jumlah, G=Kaedah Bayaran, H=Catatan
-    var rowData = [
-      idBayaran,
-      formattedDate,
-      noResit,
-      String(payload.namaMurid).trim(),
-      String(payload.jenisYuran).trim(),
-      jumlahNum,
-      String(payload.kaedahBayaran).trim(),
-      String(payload.catatan || "").trim()
-    ];
-    
-    sheet.appendRow(rowData);
-    
-    // Dapatkan data murid daripada sheet MURID untuk respons resit
-    var students = getStudents();
-    var studentInfo = { kelas: payload.kelas || "-", penjaga: payload.penjaga || "-", whatsapp: payload.whatsapp || "-" };
-    for (var k = 0; k < students.length; k++) {
-      if (students[k].nama.toLowerCase() === String(payload.namaMurid).trim().toLowerCase()) {
-        studentInfo = students[k];
-        break;
-      }
-    }
-    
-    var savedPayment = {
-      idBayaran: idBayaran,
-      tarikh: formattedDate,
-      noResit: noResit,
-      namaMurid: String(payload.namaMurid).trim(),
-      kelas: studentInfo.kelas || "-",
-      namaPenjaga: studentInfo.penjaga || "-",
-      noWhatsapp: studentInfo.whatsapp || "-",
-      jenisYuran: String(payload.jenisYuran).trim(),
-      jumlah: jumlahNum,
-      kaedahBayaran: String(payload.kaedahBayaran).trim(),
-      catatan: String(payload.catatan || "").trim()
-    };
-    
-    return {
-      success: true,
-      message: "Bayaran berjaya direkodkan.",
-      payment: savedPayment
-    };
-    
-  } catch (error) {
-    return { success: false, message: "Ralat semasa menyimpan: " + error.toString() };
+    var nextNo = maxNo + 1;
+    if (nextNo < CONFIG.startReceiptNo) nextNo = CONFIG.startReceiptNo;
+
+    return CONFIG.receiptPrefix + nextNo;
+  } catch (e) {
+    Logger.log("Error getNextReceiptNumber: " + e.toString());
+    return CONFIG.receiptPrefix + (CONFIG.startReceiptNo + Math.floor(Math.random() * 100));
   } finally {
     lock.releaseLock();
   }
 }
 
 /**
- * 7. GET DASHBOARD DATA
+ * 4. checkDuplicateReceipt(noResit)
  */
-function getDashboardData() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  setupBayaranSheet(ss);
-  setupMuridSheet(ss);
-  
-  var students = getStudents();
-  var payments = getPayments();
-  
-  var today = new Date();
-  var todayStr = Utilities.formatDate(today, ss.getSpreadsheetTimeZone(), "dd/MM/yyyy");
-  var currentMonth = Utilities.formatDate(today, ss.getSpreadsheetTimeZone(), "MM/yyyy");
-  
-  var jumlahKeseluruhan = 0;
-  var jumlahHariIni = 0;
-  var jumlahBulanIni = 0;
-  
-  for (var i = 0; i < payments.length; i++) {
-    var p = payments[i];
-    var amt = parseFloat(p.jumlah) || 0;
-    jumlahKeseluruhan += amt;
-    
-    if (p.tarikh === todayStr) {
-      jumlahHariIni += amt;
-    }
-    
-    if (p.tarikh && p.tarikh.length === 10) {
-      var monthPart = p.tarikh.substring(3);
-      if (monthPart === currentMonth) {
-        jumlahBulanIni += amt;
+function checkDuplicateReceipt(noResit) {
+  try {
+    var ss = getSpreadsheet();
+    var sheet = ss.getSheetByName(CONFIG.paymentSheet);
+    if (!sheet || sheet.getLastRow() <= 1) return false;
+
+    var receipts = sheet.getRange(2, 2, sheet.getLastRow() - 1, 1).getValues();
+    for (var i = 0; i < receipts.length; i++) {
+      if (receipts[i][0].toString().trim().toUpperCase() === noResit.toString().trim().toUpperCase()) {
+        return true;
       }
     }
+    return false;
+  } catch (e) {
+    return false;
   }
-  
-  return {
-    jumlahMurid: students.length,
-    jumlahHariIni: jumlahHariIni,
-    jumlahBulanIni: jumlahBulanIni,
-    jumlahKeseluruhan: jumlahKeseluruhan,
-    bilanganTransaksi: payments.length,
-    transaksiTerkini: payments.slice(0, 5)
-  };
 }
 
 /**
- * ==============================================================================
- * FUNGSI UJIAN (Boleh dijalankan terus dalam Google Apps Script Editor)
- * ==============================================================================
+ * 5. savePayment(data)
+ * Menyimpan rekod pembayaran ke dalam Sheet PEMBAYARAN dengan LockService
  */
+function savePayment(data) {
+  var lock = LockService.getScriptLock();
+  try {
+    // Wait up to 10 seconds for lock
+    lock.waitLock(10000);
 
-/**
- * Ujian 1: Sedia Header Sheet MURID dan BAYARAN
- */
-function testSetupSheets() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  setupMuridSheet(ss);
-  setupBayaranSheet(ss);
-  Logger.log("Penyediaan Sheet MURID dan BAYARAN selesai.");
+    var ss = getSpreadsheet();
+    var sheet = ss.getSheetByName(CONFIG.paymentSheet);
+
+    if (!sheet) {
+      setupDatabase();
+      sheet = ss.getSheetByName(CONFIG.paymentSheet);
+    }
+
+    // Semak & Janakan nombor resit unik jika belum ada / elak duplicate
+    var noResit = data.noResit;
+    if (!noResit || checkDuplicateReceipt(noResit)) {
+      noResit = getNextReceiptNumber();
+    }
+
+    var timestamp = new Date();
+    var tarikh = data.tarikh || Utilities.formatDate(timestamp, Session.getScriptTimeZone() || "GMT+8", "dd/MM/yyyy");
+    var bulan = data.bulan || "";
+    var namaMurid = data.namaMurid || "";
+    var noWhatsapp = data.noWhatsapp || "";
+
+    // Kategori Bayaran (RM)
+    var pendaftaran = parseFloat(data.pendaftaran) || 0;
+    var pengajianAlquran = parseFloat(data.pengajianAlquran) || 0;
+    var kelasUpkk = parseFloat(data.kelasUpkk) || 0;
+    var kelasPsra = parseFloat(data.kelasPsra) || 0;
+    var kelasKhasJawi = parseFloat(data.kelasKhasJawi) || 0;
+    var bukuRekodModul = parseFloat(data.bukuRekodModul) || 0;
+    var sumbangan = parseFloat(data.sumbangan) || 0;
+    var kelasKafa = parseFloat(data.kelasKafa) || 0;
+    var kelasAkademik = parseFloat(data.kelasAkademik) || 0;
+    var transit = parseFloat(data.transit) || 0;
+
+    var jumlah = parseFloat(data.jumlah) || (
+      pendaftaran + pengajianAlquran + kelasUpkk + kelasPsra + kelasKhasJawi +
+      bukuRekodModul + sumbangan + kelasKafa + kelasAkademik + transit
+    );
+
+    var kaedahBayaran = data.kaedahBayaran || "TUNAI";
+    var catatan = data.catatan || "";
+    var status = "BERJAYA";
+    var linkResit = data.linkResit || "";
+
+    var newRow = [
+      timestamp,
+      noResit,
+      tarikh,
+      bulan,
+      namaMurid,
+      "'" + noWhatsapp, // Force string in Sheets
+      pendaftaran,
+      pengajianAlquran,
+      kelasUpkk,
+      kelasPsra,
+      kelasKhasJawi,
+      bukuRekodModul,
+      sumbangan,
+      kelasKafa,
+      kelasAkademik,
+      transit,
+      jumlah,
+      kaedahBayaran,
+      catatan,
+      status,
+      linkResit
+    ];
+
+    sheet.appendRow(newRow);
+
+    return {
+      success: true,
+      message: "Pembayaran berjaya disimpan ke Google Sheets!",
+      noResit: noResit,
+      jumlah: jumlah,
+      data: {
+        timestamp: timestamp,
+        noResit: noResit,
+        tarikh: tarikh,
+        bulan: bulan,
+        namaMurid: namaMurid,
+        noWhatsapp: noWhatsapp,
+        jumlah: jumlah,
+        kaedahBayaran: kaedahBayaran,
+        catatan: catatan
+      }
+    };
+  } catch (err) {
+    Logger.log("Error savePayment: " + err.toString());
+    return {
+      success: false,
+      message: "Gagal menyimpan pembayaran: " + err.toString()
+    };
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 /**
- * Ujian 2: Uji Tambah Murid
+ * 6. getPaymentHistory()
+ * Mengambil senarai rekod pembayaran dari Sheet PEMBAYARAN
  */
-function testAddStudent() {
-  var res = addStudent({
-    nama: "ALI",
-    kelas: "3QA",
-    penjaga: "UMAR",
-    whatsapp: "0134565245"
-  });
-  Logger.log("Hasil tambah murid: " + JSON.stringify(res));
+function getPaymentHistory() {
+  try {
+    var ss = getSpreadsheet();
+    var sheet = ss.getSheetByName(CONFIG.paymentSheet);
+    if (!sheet || sheet.getLastRow() <= 1) return [];
+
+    var values = sheet.getRange(2, 1, sheet.getLastRow() - 1, 21).getValues();
+    var history = [];
+
+    for (var i = values.length - 1; i >= 0; i--) { // Susun terkini di atas
+      var row = values[i];
+      if (row[1]) { // Jika ada No Resit
+        var dateFormatted = row[2];
+        if (row[0] instanceof Date && !row[2]) {
+          dateFormatted = Utilities.formatDate(row[0], Session.getScriptTimeZone() || "GMT+8", "dd/MM/yyyy");
+        }
+
+        history.push({
+          timestamp: row[0],
+          noResit: row[1] ? row[1].toString().trim() : "",
+          tarikh: dateFormatted ? dateFormatted.toString() : "",
+          bulan: row[3] ? row[3].toString() : "",
+          namaMurid: row[4] ? row[4].toString() : "",
+          noWhatsapp: row[5] ? row[5].toString().replace(/^'/, '') : "",
+          pendaftaran: parseFloat(row[6]) || 0,
+          pengajianAlquran: parseFloat(row[7]) || 0,
+          kelasUpkk: parseFloat(row[8]) || 0,
+          kelasPsra: parseFloat(row[9]) || 0,
+          kelasKhasJawi: parseFloat(row[10]) || 0,
+          bukuRekodModul: parseFloat(row[11]) || 0,
+          sumbangan: parseFloat(row[12]) || 0,
+          kelasKafa: parseFloat(row[13]) || 0,
+          kelasAkademik: parseFloat(row[14]) || 0,
+          transit: parseFloat(row[15]) || 0,
+          jumlah: parseFloat(row[16]) || 0,
+          kaedahBayaran: row[17] ? row[17].toString() : "TUNAI",
+          catatan: row[18] ? row[18].toString() : "",
+          status: row[19] ? row[19].toString() : "BERJAYA",
+          linkResit: row[20] ? row[20].toString() : ""
+        });
+      }
+    }
+
+    return history;
+  } catch (err) {
+    Logger.log("Error getPaymentHistory: " + err.toString());
+    return [];
+  }
 }
 
 /**
- * Ujian 3: Uji Tambah Bayaran
+ * 7. getPaymentByReceipt(noResit)
  */
-function testAddPayment() {
-  var res = addPayment({
-    namaMurid: "ALI",
-    jenisYuran: "Yuran Bulanan",
-    jumlah: 50.00,
-    kaedahBayaran: "Online Transfer",
-    catatan: "Ujian Bayaran"
-  });
-  Logger.log("Hasil tambah bayaran: " + JSON.stringify(res));
+function getPaymentByReceipt(noResit) {
+  var history = getPaymentHistory();
+  for (var i = 0; i < history.length; i++) {
+    if (history[i].noResit.toUpperCase() === noResit.toUpperCase()) {
+      return history[i];
+    }
+  }
+  return null;
+}
+
+/**
+ * 8. getDashboardData()
+ * Mengira statistik untuk Dashboard Utama
+ */
+function getDashboardData() {
+  try {
+    var history = getPaymentHistory();
+    var students = getStudents();
+
+    var todayStr = Utilities.formatDate(new Date(), Session.getScriptTimeZone() || "GMT+8", "dd/MM/yyyy");
+    var currentMonthIdx = new Date().getMonth();
+    var monthsMalay = ["JANUARI", "FEBRUARI", "MAC", "APRIL", "MEI", "JUN", "JULAI", "OGOS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DISEMBER"];
+    var currentMonthMalay = monthsMalay[currentMonthIdx];
+
+    var totalToday = 0;
+    var totalMonth = 0;
+    var totalTransactions = history.length;
+    var totalStudents = students.length;
+
+    for (var i = 0; i < history.length; i++) {
+      var item = history[i];
+      
+      // Kira Hari Ini
+      if (item.tarikh === todayStr) {
+        totalToday += item.jumlah;
+      }
+
+      // Kira Bulan Ini
+      if (item.bulan && item.bulan.toUpperCase() === currentMonthMalay) {
+        totalMonth += item.jumlah;
+      }
+    }
+
+    return {
+      totalToday: totalToday,
+      totalMonth: totalMonth,
+      totalTransactions: totalTransactions,
+      totalStudents: totalStudents,
+      recentPayments: history.slice(0, 5)
+    };
+  } catch (err) {
+    return {
+      totalToday: 0,
+      totalMonth: 0,
+      totalTransactions: 0,
+      totalStudents: 38,
+      recentPayments: []
+    };
+  }
 }
