@@ -1327,8 +1327,15 @@ async function fetchStudentsFromBackend(showToastMsg = false) {
 async function fetchPaymentHistoryFromBackend() {
   if (!appState.appsScriptUrl) return;
   try {
-    const res.json = await (await fetch(`${appState.appsScriptUrl}?action=getPaymentHistory`)).json();
-    if (res.json.success && Array.isArray(res.json.data) && res.json.data.length > 0) { appState.payments = res.json.data; safeSetStorage("fqc_payments_db", JSON.stringify(appState.payments)); calculateNextReceiptNo(); renderDashboard(); renderHistoryTable(); }
+    const res = await fetch(`${appState.appsScriptUrl}?action=getPaymentHistory`);
+    const data = await res.json();
+    if (data.success && Array.isArray(data.data) && data.data.length > 0) { 
+      appState.payments = data.data; 
+      safeSetStorage("fqc_payments_db", JSON.stringify(appState.payments)); 
+      calculateNextReceiptNo(); 
+      renderDashboard(); 
+      renderHistoryTable(); 
+    }
   } catch (err) {}
 }
 
