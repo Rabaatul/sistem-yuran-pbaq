@@ -216,8 +216,7 @@ function initStudentSearch() {
       const item = document.createElement("div");
       item.className = "option-item";
       item.innerHTML = `
-        <span>${student.nama}</span>
-        <span class="opt-phone">${student.phone || ''}</span>
+        <span style="font-weight:600; color:var(--text-dark);">${student.nama}</span>
       `;
       item.onclick = () => {
         appState.selectedStudent = student;
@@ -868,13 +867,38 @@ function loadLocalStoragePayments() {
   }
 }
 
+function normalizeStudents(list) {
+  if (!Array.isArray(list) || list.length === 0) return MASTER_STUDENTS_DEFAULT;
+  return list.map((s, idx) => {
+    let nama = (s.nama || "").toString().trim();
+    let phone = (s.phone || "").toString().trim();
+    let id = s.id || (idx + 1);
+
+    // Sekiranya backend memulangkan nombor telefon di ruangan 'nama' dan nama murid di ruangan 'id'
+    const cleanNama = nama.replace(/[^0-9]/g, '');
+    if (cleanNama.length >= 8 && (cleanNama.indexOf("01") === 0 || cleanNama.indexOf("601") === 0)) {
+      if (typeof id === "string" && isNaN(id) && id.length > 2) {
+        phone = nama;
+        nama = id;
+        id = idx + 1;
+      }
+    }
+
+    return {
+      id: id,
+      nama: nama || "Murid " + (idx + 1),
+      phone: phone
+    };
+  });
+}
+
 async function fetchStudentsFromBackend() {
   if (!appState.appsScriptUrl) return;
   try {
     const res = await fetch(`${appState.appsScriptUrl}?action=getStudents`);
     const data = await res.json();
     if (data.success && Array.isArray(data.data) && data.data.length > 0) {
-      appState.students = data.data;
+      appState.students = normalizeStudents(data.data);
       initStudentSearch();
     }
   } catch (err) {
