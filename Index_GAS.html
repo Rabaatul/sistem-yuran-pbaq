@@ -439,8 +439,14 @@ body { font-family: var(--font-main); background: var(--bg-gradient); color: var
                   </div>
 
                   <div class="total-summary-box">
-                    <div class="total-title">JUMLAH KESELURUHAN</div>
-                    <div class="total-amount" id="total-display-amount">RM 0.00</div>
+                    <div class="total-title">
+                      JUMLAH KESELURUHAN
+                      <small style="font-weight:600; font-size:0.68rem; color:#fef08a; text-transform:none; display:block; margin-top:2px;">(Boleh diedit secara manual)</small>
+                    </div>
+                    <div class="total-amount-input-group">
+                      <span class="total-currency-prefix">RM</span>
+                      <input type="number" id="fee-total-custom" class="form-control total-custom-input" min="0" step="1" placeholder="0" oninput="onCustomTotalInput()">
+                    </div>
                   </div>
 
                   <div class="action-buttons-toolbar">
@@ -775,16 +781,36 @@ function initFeeCalculations() {
   document.querySelectorAll('input[name="kaedahBayaran"]').forEach(radio => radio.addEventListener("change", renderReceiptPreview));
 }
 
+let isTotalCustomEdited = false;
+
 function calculateTotal() {
+  const customTotalEl = document.getElementById("fee-total-custom");
+  if (isTotalCustomEdited && customTotalEl && customTotalEl.value !== "") {
+    return parseFloat(customTotalEl.value) || 0;
+  }
   let total = 0;
   document.querySelectorAll(".input-fee").forEach(input => { total += parseFloat(input.value) || 0; });
   return total;
 }
 
 function updateTotalAmount() {
-  const total = calculateTotal();
-  const totalDisplay = document.getElementById("total-display-amount");
-  if (totalDisplay) totalDisplay.innerText = `RM ${total.toFixed(2)}`;
+  const customTotalEl = document.getElementById("fee-total-custom");
+  let sum = 0;
+  document.querySelectorAll(".input-fee").forEach(input => { sum += parseFloat(input.value) || 0; });
+  if (!isTotalCustomEdited && customTotalEl) {
+    customTotalEl.value = sum > 0 ? sum : "";
+  }
+  renderReceiptPreview();
+}
+
+function onCustomTotalInput() {
+  const customTotalEl = document.getElementById("fee-total-custom");
+  if (customTotalEl && customTotalEl.value.trim() !== "") {
+    isTotalCustomEdited = true;
+  } else {
+    isTotalCustomEdited = false;
+  }
+  renderReceiptPreview();
 }
 
 function calculateNextReceiptNo() {
@@ -1028,6 +1054,8 @@ async function actionCetakResit() {
 }
 function actionResetBorang() {
   appState.selectedStudent = null;
+  isTotalCustomEdited = false;
+  if (document.getElementById("fee-total-custom")) document.getElementById("fee-total-custom").value = "";
   if (document.getElementById("student-search-input")) document.getElementById("student-search-input").value = "";
   if (document.getElementById("parent-phone-display")) document.getElementById("parent-phone-display").value = "";
   document.querySelectorAll(".input-fee").forEach(input => input.value = "");

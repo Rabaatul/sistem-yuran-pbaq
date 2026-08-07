@@ -378,10 +378,16 @@
                     <input type="text" id="pay-catatan" class="form-control" placeholder="Catatan tambahan jika ada...">
                   </div>
 
-                  <!-- Total Ringkasan -->
+                  <!-- Total Ringkasan (Editable) -->
                   <div class="total-summary-box">
-                    <div class="total-title">JUMLAH KESELURUHAN</div>
-                    <div class="total-amount" id="total-display-amount">RM 0.00</div>
+                    <div class="total-title">
+                      JUMLAH KESELURUHAN
+                      <small style="font-weight:600; font-size:0.68rem; color:#fef08a; text-transform:none; display:block; margin-top:2px;">(Boleh diedit secara manual)</small>
+                    </div>
+                    <div class="total-amount-input-group">
+                      <span class="total-currency-prefix">RM</span>
+                      <input type="number" id="fee-total-custom" class="form-control total-custom-input" min="0" step="1" placeholder="0" oninput="onCustomTotalInput()">
+                    </div>
                   </div>
 
                   <!-- Toolbar Butang Sistem -->

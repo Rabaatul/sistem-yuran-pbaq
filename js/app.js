@@ -268,7 +268,14 @@ function initFeeCalculations() {
   });
 }
 
+let isTotalCustomEdited = false;
+
 function calculateTotal() {
+  const customTotalEl = document.getElementById("fee-total-custom");
+  if (isTotalCustomEdited && customTotalEl && customTotalEl.value !== "") {
+    return parseFloat(customTotalEl.value) || 0;
+  }
+
   const feeInputs = document.querySelectorAll(".input-fee");
   let total = 0;
   feeInputs.forEach(input => {
@@ -279,11 +286,28 @@ function calculateTotal() {
 }
 
 function updateTotalAmount() {
-  const total = calculateTotal();
-  const totalDisplay = document.getElementById("total-display-amount");
-  if (totalDisplay) {
-    totalDisplay.innerText = `RM ${total.toFixed(2)}`;
+  const customTotalEl = document.getElementById("fee-total-custom");
+  const feeInputs = document.querySelectorAll(".input-fee");
+  let calculatedSum = 0;
+  feeInputs.forEach(input => {
+    calculatedSum += (parseFloat(input.value) || 0);
+  });
+
+  if (!isTotalCustomEdited && customTotalEl) {
+    customTotalEl.value = calculatedSum > 0 ? calculatedSum : "";
   }
+
+  renderReceiptPreview();
+}
+
+function onCustomTotalInput() {
+  const customTotalEl = document.getElementById("fee-total-custom");
+  if (customTotalEl && customTotalEl.value.trim() !== "") {
+    isTotalCustomEdited = true;
+  } else {
+    isTotalCustomEdited = false;
+  }
+  renderReceiptPreview();
 }
 
 // Calculate Next Receipt Number
@@ -754,6 +778,10 @@ async function actionCetakResit() {
 // Action: RESET BORANG
 function actionResetBorang() {
   appState.selectedStudent = null;
+  isTotalCustomEdited = false;
+  const customTotal = document.getElementById("fee-total-custom");
+  if (customTotal) customTotal.value = "";
+
   const searchInput = document.getElementById("student-search-input");
   if (searchInput) searchInput.value = "";
   
