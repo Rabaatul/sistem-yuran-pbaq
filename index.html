@@ -113,11 +113,65 @@
 
             <div class="metric-card">
               <div class="metric-info">
-                <h3>Resit Dikeluarkan</h3>
-                <div class="metric-value" id="dash-total-resit">0</div>
+                <h3>Sudah Bayar</h3>
+                <div class="metric-value" style="color:var(--primary-main);" id="dash-total-sudah-bayar">0</div>
               </div>
-              <div class="metric-icon">
-                <i class="fa-solid fa-file-invoice"></i>
+              <div class="metric-icon" style="background:#dcfce7; color:#15803d;">
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-info">
+                <h3>Belum Bayar</h3>
+                <div class="metric-value" style="color:#b91c1c;" id="dash-total-belum-bayar">0</div>
+              </div>
+              <div class="metric-icon" style="background:#fee2e2; color:#b91c1c;">
+                <i class="fa-solid fa-circle-exclamation"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Senarai Murid Belum Bayar -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-user-clock" style="color:#b91c1c;"></i> Senarai Murid Belum Bayar Yuran
+              </div>
+              <div style="display:flex; align-items:center; gap:0.5rem;">
+                <label class="form-label" style="margin:0;">Bulan:</label>
+                <select id="dash-month-filter" class="form-select" style="width:140px; padding:0.3rem 0.6rem;" onchange="renderDashboard()">
+                  <option value="JANUARI">JANUARI</option>
+                  <option value="FEBRUARI">FEBRUARI</option>
+                  <option value="MAC">MAC</option>
+                  <option value="APRIL">APRIL</option>
+                  <option value="MEI">MEI</option>
+                  <option value="JUN">JUN</option>
+                  <option value="JULAI">JULAI</option>
+                  <option value="OGOS" selected>OGOS</option>
+                  <option value="SEPTEMBER">SEPTEMBER</option>
+                  <option value="OKTOBER">OKTOBER</option>
+                  <option value="NOVEMBER">NOVEMBER</option>
+                  <option value="DISEMBER">DISEMBER</option>
+                </select>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="data-table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>NAMA MURID</th>
+                      <th>NO. WHATSAPP</th>
+                      <th>STATUS</th>
+                      <th>TINDAKAN</th>
+                    </tr>
+                  </thead>
+                  <tbody id="unpaid-table-body">
+                    <!-- Dynamic unpaid students -->
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

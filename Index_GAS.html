@@ -278,10 +278,56 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-gradie
             </div>
             <div class="metric-card">
               <div class="metric-info">
-                <h3>Resit Dikeluarkan</h3>
-                <div class="metric-value" id="dash-total-resit">0</div>
+                <h3>Sudah Bayar</h3>
+                <div class="metric-value" style="color:var(--primary-main);" id="dash-total-sudah-bayar">0</div>
               </div>
-              <div class="metric-icon"><i class="fa-solid fa-file-invoice"></i></div>
+              <div class="metric-icon" style="background:#dcfce7; color:#15803d;"><i class="fa-solid fa-circle-check"></i></div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-info">
+                <h3>Belum Bayar</h3>
+                <div class="metric-value" style="color:#b91c1c;" id="dash-total-belum-bayar">0</div>
+              </div>
+              <div class="metric-icon" style="background:#fee2e2; color:#b91c1c;"><i class="fa-solid fa-circle-exclamation"></i></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="fa-solid fa-user-clock" style="color:#b91c1c;"></i> Senarai Murid Belum Bayar Yuran</div>
+              <div style="display:flex; align-items:center; gap:0.5rem;">
+                <label class="form-label" style="margin:0;">Bulan:</label>
+                <select id="dash-month-filter" class="form-select" style="width:140px; padding:0.3rem 0.6rem;" onchange="renderDashboard()">
+                  <option value="JANUARI">JANUARI</option>
+                  <option value="FEBRUARI">FEBRUARI</option>
+                  <option value="MAC">MAC</option>
+                  <option value="APRIL">APRIL</option>
+                  <option value="MEI">MEI</option>
+                  <option value="JUN">JUN</option>
+                  <option value="JULAI">JULAI</option>
+                  <option value="OGOS" selected>OGOS</option>
+                  <option value="SEPTEMBER">SEPTEMBER</option>
+                  <option value="OKTOBER">OKTOBER</option>
+                  <option value="NOVEMBER">NOVEMBER</option>
+                  <option value="DISEMBER">DISEMBER</option>
+                </select>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="data-table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>NAMA MURID</th>
+                      <th>NO. WHATSAPP</th>
+                      <th>STATUS</th>
+                      <th>TINDAKAN</th>
+                    </tr>
+                  </thead>
+                  <tbody id="unpaid-table-body"></tbody>
+                </table>
+              </div>
             </div>
           </div>
         </section>
@@ -987,10 +1033,73 @@ function loadLocalStoragePayments() {
 }
 
 function renderDashboard() {
+  const filterMonth = document.getElementById("dash-month-filter")?.value || document.getElementById("pay-month")?.value || "OGOS";
+  const paidNamesSet = new Set();
+  appState.payments.forEach(p => {
+    if (p.bulan && p.bulan.toUpperCase() === filterMonth.toUpperCase() && p.namaMurid) {
+      paidNamesSet.add(p.namaMurid.trim().toLowerCase());
+    }
+  });
+
+  const unpaidStudents = appState.students.filter(s => !paidNamesSet.has(s.nama.trim().toLowerCase()));
+  const paidCount = appState.students.length - unpaidStudents.length;
   const totalKutipan = appState.payments.reduce((acc, p) => acc + (parseFloat(p.jumlah) || 0), 0);
+
   if (document.getElementById("dash-total-kutipan")) document.getElementById("dash-total-kutipan").innerText = `RM ${totalKutipan.toFixed(0)}`;
   if (document.getElementById("dash-total-murid")) document.getElementById("dash-total-murid").innerText = appState.students.length;
-  if (document.getElementById("dash-total-resit")) document.getElementById("dash-total-resit").innerText = appState.payments.length;
+  if (document.getElementById("dash-total-sudah-bayar")) document.getElementById("dash-total-sudah-bayar").innerText = paidCount;
+  if (document.getElementById("dash-total-belum-bayar")) document.getElementById("dash-total-belum-bayar").innerText = unpaidStudents.length;
+
+  const unpaidTbody = document.getElementById("unpaid-table-body");
+  if (!unpaidTbody) return;
+
+  if (unpaidStudents.length === 0) {
+    unpaidTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:1.25rem; color:#15803d; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Tahniah! Semua ${appState.students.length} murid telah membuat pembayaran bagi bulan ${filterMonth}!</td></tr>`;
+    return;
+  }
+
+  let html = "";
+  unpaidStudents.forEach((student, idx) => {
+    html += `
+      <tr>
+        <td>${idx + 1}</td>
+        <td><strong>${student.nama}</strong></td>
+        <td>${student.phone || '-'}</td>
+        <td><span class="badge-unpaid"><i class="fa-solid fa-clock"></i> Belum Bayar (${filterMonth})</span></td>
+        <td style="display:flex; gap:0.4rem;">
+          <button class="btn btn-whatsapp" style="padding:4px 8px; font-size:0.75rem;" onclick="sendWaReminder('${student.nama.replace(/'/g, "\\'")}', '${student.phone || ''}', '${filterMonth}')">
+            <i class="fa-brands fa-whatsapp"></i> Peringatan WA
+          </button>
+          <button class="btn btn-primary" style="padding:4px 8px; font-size:0.75rem;" onclick="payForStudent('${student.nama.replace(/'/g, "\\'")}')">
+            <i class="fa-solid fa-cash-register"></i> Bayar Now
+          </button>
+        </td>
+      </tr>
+    `;
+  });
+  unpaidTbody.innerHTML = html;
+}
+
+function sendWaReminder(studentName, phone, month) {
+  const phoneFormatted = formatWhatsAppPhone(phone);
+  if (!phoneFormatted) {
+    showToast("Nombor WhatsApp tidak sah untuk murid ini.", "warning");
+    return;
+  }
+  const msg = `*PERINGATAN MESRA BAYARAN YURAN FATHUL QURANIC CENTRE (FQC)*\n\nAssalamu'alaikum / Salam Sejahtera Ibu/Bapa ${studentName},\n\nIni adalah peringatan mesra berkenaan yuran pengajian bulan *${month}* bagi murid *${studentName}* yang belum dijelaskan.\n\nMohon ibu/bapa membuat makluman atau pembayaran yuran. Terima kasih atas kerjasama dan keprihatinan ibu/bapa.\n\nBarakallahufik,\n*Fathul Quranic Centre (FQC)*`;
+  window.open(`https://wa.me/${phoneFormatted}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function payForStudent(studentName) {
+  const student = appState.students.find(s => s.nama.toLowerCase() === studentName.toLowerCase());
+  if (student) {
+    appState.selectedStudent = student;
+    const searchInput = document.getElementById("student-search-input");
+    if (searchInput) searchInput.value = student.nama;
+    const phoneDisplay = document.getElementById("parent-phone-display");
+    if (phoneDisplay) phoneDisplay.value = student.phone || '';
+  }
+  switchView('bayaran');
 }
 
 function renderHistoryTable() {
