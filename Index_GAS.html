@@ -1003,19 +1003,25 @@ async function actionDownloadPng() {
   }
 }
 
-function actionCetakResit() {
-  const receiptCard = document.getElementById("receipt-card-printable");
-  if (!receiptCard) { showToast("Paparan resit tidak ditemui.", "error"); return; }
+async function actionCetakResit() {
+  if (!validateForm()) return;
   try {
+    showLoading(true, "Menyediakan cetakan resit...");
+    const canvas = await html2canvas(document.getElementById("receipt-card-printable"), { scale: 2.5, useCORS: true, backgroundColor: "#ffffff" });
+    const dataUrl = canvas.toDataURL("image/png");
+    showLoading(false);
+
+    const noResit = appState.lastSavedPayment ? appState.lastSavedPayment.noResit : (appState.currentReceiptNo || "FQC-1100");
     const printWin = window.open("", "_blank", "width=850,height=1000");
     if (printWin) {
-      const noResit = appState.lastSavedPayment ? appState.lastSavedPayment.noResit : (appState.currentReceiptNo || "FQC-1100");
-      printWin.document.write(`<!DOCTYPE html><html><head><title>Resit Rasmi FQC - ${noResit}</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><style>@page { size: A4 portrait; margin: 8mm; } body { font-family: 'Inter', system-ui, sans-serif; background: #ffffff; margin: 0; padding: 10px; display: flex; justify-content: center; } .receipt-card { width: 100% !important; max-width: 800px !important; box-shadow: none !important; border: 1.5px solid #1b5e20 !important; margin: 0 auto !important; } @media print { body { padding: 0 !important; } }</style></head><body>${receiptCard.outerHTML}<script>setTimeout(function(){ window.focus(); window.print(); window.close(); }, 400);</script></body></html>`);
+      printWin.document.write(`<!DOCTYPE html><html><head><title>Cetak Resit FQC - ${noResit}</title><style>@page { size: A4 portrait; margin: 0; } html, body { margin: 0; padding: 0; background: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; } img { width: 92%; max-width: 800px; height: auto; display: block; margin: 15px auto; } @media print { html, body { margin: 0; padding: 0; background: #ffffff !important; } img { width: 100% !important; max-width: 100% !important; margin: 0 auto !important; } }</style></head><body><img src="${dataUrl}" alt="Resit FQC ${noResit}"><script>setTimeout(function(){ window.focus(); window.print(); window.close(); }, 350);</script></body></html>`);
       printWin.document.close();
       return;
     }
-  } catch (e) {}
-  window.print();
+    window.print();
+  } catch (err) {
+    showLoading(false); showToast("Ralat cetakan: " + err.message, "error");
+  }
 }
 function actionResetBorang() {
   appState.selectedStudent = null;
