@@ -187,7 +187,21 @@ body { font-family: var(--font-main); background: var(--bg-gradient); color: var
 .modal-backdrop.show { opacity: 1; pointer-events: auto; }
 .modal-content-card { background: #ffffff; border-radius: var(--radius-lg); max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); padding: 1.5rem; position: relative; }
 .modal-close-btn { position: absolute; top: 1rem; right: 1rem; background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1.1rem; color: var(--text-dark); }
-@media print { body { background: #ffffff !important; margin: 0 !important; padding: 0 !important; } body * { visibility: hidden; } .sidebar, .top-header, .mobile-nav-bar, .action-buttons-toolbar, .no-print, .receipt-preview-section .card-header { display: none !important; } #receipt-card-printable, #receipt-card-printable * { visibility: visible !important; } #receipt-card-printable { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; max-width: 100% !important; margin: 0 !important; box-shadow: none !important; border: 1px solid #1b5e20 !important; background: #ffffff !important; } }
+.fee-group-block { margin-bottom: 1rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-md); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.fee-group-header { background: linear-gradient(135deg, #1b4d2e, #2e7d32); color: #ffffff; padding: 0.5rem 0.85rem; font-size: 0.82rem; font-weight: 800; letter-spacing: 0.5px; display: flex; align-items: center; gap: 0.5rem; }
+.fee-checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.6rem; padding: 0.75rem; }
+.fee-checkbox-card { background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); padding: 0.6rem 0.75rem; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; cursor: pointer; user-select: none; transition: all 0.2s ease-in-out; }
+.fee-checkbox-card:hover { border-color: #2e7d32; box-shadow: 0 2px 8px rgba(46,125,50,0.12); }
+.fee-checkbox-card.checked { background: linear-gradient(135deg, #e8f5e9, #c8e6c9) !important; border: 2px solid #2e7d32 !important; box-shadow: 0 3px 10px rgba(46,125,50,0.2) !important; }
+.fee-card-left { display: flex; align-items: center; gap: 0.6rem; flex: 1; }
+.fee-card-checkbox { width: 20px; height: 20px; cursor: pointer; accent-color: #2e7d32; }
+.fee-card-label { font-size: 0.82rem; font-weight: 700; color: #1e293b; line-height: 1.2; }
+.fee-checkbox-card.checked .fee-card-label { color: #1b5e20; }
+.fee-card-price-group { display: flex; align-items: center; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px; padding: 0 4px; width: 95px; }
+.fee-checkbox-card.checked .fee-card-price-group { border-color: #2e7d32; background: #ffffff; }
+.fee-card-price-prefix { font-size: 0.75rem; font-weight: 800; color: #64748b; margin-right: 2px; }
+.fee-card-price-input { width: 100%; border: none; background: transparent; text-align: right; font-weight: 800; font-size: 0.85rem; color: #1e293b; padding: 4px 2px; outline: none; }
+.fee-card-price-input:focus { color: #2e7d32; }
   </style>
 </head>
 <body>
@@ -412,47 +426,23 @@ body { font-family: var(--font-main); background: var(--bg-gradient); color: var
               <div class="card">
                 <div class="card-header">
                   <div class="card-title">
-                    <i class="fa-solid fa-list-check"></i> Butiran Pembayaran Yuran (Master Yuran FQC)
+                    <i class="fa-solid fa-square-check"></i> Butiran Pembayaran Yuran (Kotak Tick)
                   </div>
-                  <button type="button" class="btn btn-sm btn-primary" onclick="addDynamicFeeItem()">
-                    <i class="fa-solid fa-plus"></i> TAMBAH YURAN
-                  </button>
+                  <div style="font-size:0.78rem; font-weight:700; color:var(--primary-dark);">
+                    Tick item yang dibayar. Harga RM boleh diedit secara LIVE.
+                  </div>
                 </div>
                 <div class="card-body">
-
+                  
                   <div class="special-rate-notice-box" id="special-rate-notice" style="display:none;">
                     <i class="fa-solid fa-star" style="color:#d97706; font-size:1.1rem;"></i>
                     <div id="special-rate-notice-text">Harga khas murid dikesan!</div>
                   </div>
 
-                  <div id="dynamic-fee-items-list" class="dynamic-fee-items-list"></div>
+                  <div id="fee-checkbox-groups-container"></div>
 
-                  <div style="font-size:0.78rem; font-weight:700; color:var(--text-muted); margin:0.75rem 0 0.4rem 0;">
-                    <i class="fa-solid fa-bars"></i> Atau masukkan bayaran borang ringkas 10 kategori di bawah:
-                  </div>
-                  <div class="fee-categories-box">
-                    <div class="category-row"><div class="category-name">1. PENDAFTARAN</div><div class="input-rm-group"><span class="input-rm-prefix">RM</span><input type="number" id="fee-pendaftaran" class="form-control input-rm-control input-fee" min="0" placeholder="0"></div></div>
-                    <div class="category-row"><div class="category-name">2. PENGAJIAN ALQURAN</div><div class="input-rm-group"><span class="input-rm-prefix">RM</span><input type="number" id="fee-alquran" class="form-control input-rm-control input-fee" min="0" placeholder="0"></div></div>
-                    <div class="category-row"><div class="category-name">3. KELAS UPKK</div><div class="input-rm-group"><span class="input-rm-prefix">RM</span><input type="number" id="fee-upkk" class="form-control input-rm-control input-fee" min="0" placeholder="0"></div></div>
-                    <div class="category-row"><div class="category-name">4. KELAS PSRA</div><div class="input-rm-group"><span class="input-rm-prefix">RM</span><input type="number" id="fee-psra" class="form-control input-rm-control input-fee" min="0" placeholder="0"></div></div>
-                    <div class="category-row"><div class="category-name">5. KELAS KHAS JAWI</div><div class="input-rm-group"><span class="input-rm-prefix">RM</span><input type="number" id="fee-jawi" class="form-control input-rm-control input-fee" min="0" placeholder="0"></div></div>
-                    <div class="category-row"><div class="category-name">6. BUKU REKOD / MODUL</div><div class="input-rm-group"><span class="input-rm-prefix">RM</span><input type="number" id="fee-buku" class="form-control input-rm-control input-fee" min="0" placeholder="0"></div></div>
-                    <div class="category-row"><div class="category-name">7. SUMBANGAN</div><div class="input-rm-group"><span class="input-rm-prefix">RM</span><input type="number" id="fee-sumbangan" class="form-control input-rm-control input-fee" min="0" placeholder="0"></div></div>
-                    <div class="category-row"><div class="category-name">8. KELAS KAFA</div><div class="input-rm-group"><span class="input-rm-prefix">RM</span><input type="number" id="fee-kafa" class="form-control input-rm-control input-fee" min="0" placeholder="0"></div></div>
-                    <div class="category-row">
-                      <div class="category-name">9. KELAS AKADEMIK</div>
-                      <div class="input-rm-group"><span class="input-rm-prefix">RM</span><input type="number" id="fee-akademik" class="form-control input-rm-control input-fee" min="0" placeholder="0"></div>
-                      <div class="sub-fields-box">
-                        <div><label style="font-size:0.75rem; font-weight:700; color:var(--primary-dark);">Kelas / Program (Optional):</label><input type="text" id="akademik-kelas" class="form-control" placeholder="Contoh: MPT4"></div>
-                        <div><label style="font-size:0.75rem; font-weight:700; color:var(--primary-dark);">Bulan (Optional):</label>
-                          <select id="akademik-bulan" class="form-control">
-                            <option value="">Ikut Bulan Bayaran</option><option value="JANUARI">JANUARI</option><option value="FEBRUARI">FEBRUARI</option><option value="MAC">MAC</option><option value="APRIL">APRIL</option><option value="MEI">MEI</option><option value="JUN">JUN</option><option value="JULAI">JULAI</option><option value="OGOS">OGOS</option><option value="SEPTEMBER">SEPTEMBER</option><option value="OKTOBER">OKTOBER</option><option value="NOVEMBER">NOVEMBER</option><option value="DISEMBER">DISEMBER</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="category-row"><div class="category-name">10. TRANSIT</div><div class="input-rm-group"><span class="input-rm-prefix">RM</span><input type="number" id="fee-transit" class="form-control input-rm-control input-fee" min="0" placeholder="0"></div></div>
-                  </div>
+                </div>
+              </div>
 
                   <div style="margin-top:1.25rem;">
                     <label class="form-label">Kaedah Bayaran <span class="required">*</span></label>

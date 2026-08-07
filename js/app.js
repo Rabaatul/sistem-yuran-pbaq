@@ -267,26 +267,131 @@ function initStudentSearch() {
     }
   });
 
-  document.addEventListener("click", (e) => {
-    if (!e.target.closest(".searchable-select")) {
-      dropdown.classList.remove("show");
-    }
+// Master List 26 Pre-configured Checkbox Fee Items
+const FEE_CHECKBOX_ITEMS = [
+  // 1. KELAS MENGAJI
+  { id: "mengaji_pendaftaran", group: "1. KELAS MENGAJI", label: "Pendaftaran Mengaji", stdPrice: 100, field: "pendaftaran", icon: "fa-book-quran" },
+  { id: "mengaji_bulanan", group: "1. KELAS MENGAJI", label: "Yuran Bulanan Mengaji", stdPrice: 130, field: "pengajianAlquran", icon: "fa-book-quran" },
+  { id: "mengaji_buku", group: "1. KELAS MENGAJI", label: "Buku Mengaji", stdPrice: 20, field: "bukuRekodModul", icon: "fa-book-open" },
+
+  // 2. KELAS MENGAJI ONLINE
+  { id: "online_pendaftaran", group: "2. KELAS MENGAJI ONLINE", label: "Pendaftaran Online", stdPrice: 50, field: "pendaftaran", icon: "fa-laptop" },
+  { id: "online_bulanan", group: "2. KELAS MENGAJI ONLINE", label: "Yuran Bulanan Online", stdPrice: 150, field: "pengajianAlquran", icon: "fa-laptop" },
+
+  // 3. TUISYEN AKADEMIK
+  { id: "akademik_pendaftaran", group: "3. TUISYEN AKADEMIK", label: "Pendaftaran Akademik", stdPrice: 50, field: "pendaftaran", icon: "fa-graduation-cap" },
+  { id: "akademik_1", group: "3. TUISYEN AKADEMIK", label: "Tuisyen Akademik 1 Subjek", stdPrice: 40, field: "kelasAkademik", icon: "fa-book" },
+  { id: "akademik_4", group: "3. TUISYEN AKADEMIK", label: "Tuisyen Akademik 4 Subjek", stdPrice: 110, field: "kelasAkademik", icon: "fa-layer-group" },
+
+  // 4. TUISYEN KAFA
+  { id: "kafa_pendaftaran", group: "4. TUISYEN KAFA (THN 2-6)", label: "Pendaftaran KAFA", stdPrice: 100, field: "pendaftaran", icon: "fa-mosque" },
+  { id: "kafa_bulanan", group: "4. TUISYEN KAFA (THN 2-6)", label: "Yuran Bulanan KAFA", stdPrice: 100, field: "kelasKafa", icon: "fa-mosque" },
+  { id: "kafa_buku", group: "4. TUISYEN KAFA (THN 2-6)", label: "Buku KAFA", stdPrice: 60, field: "bukuRekodModul", icon: "fa-book-open" },
+
+  // 5. KELAS KHAS JAWI
+  { id: "jawi_pendaftaran", group: "5. KELAS KHAS JAWI", label: "Pendaftaran Jawi", stdPrice: 100, field: "pendaftaran", icon: "fa-pen-nib" },
+  { id: "jawi_bulanan", group: "5. KELAS KHAS JAWI", label: "Yuran Bulanan Jawi", stdPrice: 100, field: "kelasKhasJawi", icon: "fa-pen-nib" },
+  { id: "jawi_buku", group: "5. KELAS KHAS JAWI", label: "Buku Jawi", stdPrice: 60, field: "bukuRekodModul", icon: "fa-book-open" },
+
+  // 6. KELAS UPKK
+  { id: "upkk_pendaftaran", group: "6. KELAS UPKK", label: "Pendaftaran UPKK", stdPrice: 100, field: "pendaftaran", icon: "fa-award" },
+  { id: "upkk_bulanan", group: "6. KELAS UPKK", label: "Yuran Bulanan UPKK", stdPrice: 100, field: "kelasUpkk", icon: "fa-award" },
+  { id: "upkk_buku", group: "6. KELAS UPKK", label: "Buku UPKK", stdPrice: 64, field: "bukuRekodModul", icon: "fa-book-open" },
+
+  // 7. KELAS PSRA
+  { id: "psra_pendaftaran", group: "7. KELAS PSRA", label: "Pendaftaran PSRA", stdPrice: 100, field: "pendaftaran", icon: "fa-certificate" },
+  { id: "psra_bulanan", group: "7. KELAS PSRA", label: "Yuran Bulanan PSRA", stdPrice: 100, field: "kelasPsra", icon: "fa-certificate" },
+  { id: "psra_buku", group: "7. KELAS PSRA", label: "Buku PSRA", stdPrice: 60, field: "bukuRekodModul", icon: "fa-book-open" },
+
+  // 8. TRANSIT FQC
+  { id: "transit_pendaftaran", group: "8. TRANSIT FQC", label: "Pendaftaran Transit", stdPrice: 150, field: "pendaftaran", icon: "fa-bus" },
+  { id: "transit_biasa", group: "8. TRANSIT FQC", label: "Transit Biasa", stdPrice: 260, field: "transit", icon: "fa-bus" },
+  { id: "transit_petang", group: "8. TRANSIT FQC", label: "Transit Sampai Petang", stdPrice: 310, field: "transit", icon: "fa-clock" },
+  { id: "transit_mengaji", group: "8. TRANSIT FQC", label: "Tambahan Mengaji", stdPrice: 50, field: "transit", icon: "fa-plus-circle" },
+  { id: "transit_ot", group: "8. TRANSIT FQC", label: "Tambahan OT Sebulan", stdPrice: 40, field: "transit", icon: "fa-user-clock" },
+
+  // 9. LAIN-LAIN / SUMBANGAN
+  { id: "sumbangan", group: "9. SUMBANGAN & LAIN-LAIN", label: "Sumbangan / Modul / Lain-lain", stdPrice: 50, field: "sumbangan", icon: "fa-hand-holding-heart" }
+];
+
+function renderCheckboxFeeGroups() {
+  const container = document.getElementById("fee-checkbox-groups-container");
+  if (!container) return;
+
+  const groupsMap = {};
+  FEE_CHECKBOX_ITEMS.forEach(item => {
+    if (!groupsMap[item.group]) groupsMap[item.group] = [];
+    groupsMap[item.group].push(item);
   });
+
+  let html = "";
+  Object.keys(groupsMap).forEach(groupName => {
+    const items = groupsMap[groupName];
+    const groupIcon = items[0]?.icon || "fa-list";
+
+    html += `
+      <div class="fee-group-block">
+        <div class="fee-group-header">
+          <i class="fa-solid ${groupIcon}"></i> ${groupName}
+        </div>
+        <div class="fee-checkbox-grid">
+    `;
+
+    items.forEach(item => {
+      html += `
+        <div class="fee-checkbox-card" id="card-${item.id}" onclick="toggleFeeCard('${item.id}', event)">
+          <div class="fee-card-left">
+            <input type="checkbox" id="chk-${item.id}" class="fee-card-checkbox" onchange="onFeeCheckChange('${item.id}', this.checked, event)">
+            <span class="fee-card-label">${item.label}</span>
+          </div>
+          <div class="fee-card-price-group" onclick="event.stopPropagation()">
+            <span class="fee-card-price-prefix">RM</span>
+            <input type="number" id="price-${item.id}" class="fee-card-price-input" min="0" value="${item.stdPrice}" oninput="onFeePriceInput('${item.id}')" onclick="event.stopPropagation()">
+          </div>
+        </div>
+      `;
+    });
+
+    html += `
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+function toggleFeeCard(itemId, event) {
+  const chk = document.getElementById(`chk-${itemId}`);
+  if (!chk) return;
+  chk.checked = !chk.checked;
+  onFeeCheckChange(itemId, chk.checked, event);
+}
+
+function onFeeCheckChange(itemId, isChecked, event) {
+  if (event) event.stopPropagation();
+  const card = document.getElementById(`card-${itemId}`);
+  if (card) {
+    if (isChecked) card.classList.add("checked");
+    else card.classList.remove("checked");
+  }
+  updateTotalAmount();
+}
+
+function onFeePriceInput(itemId) {
+  const chk = document.getElementById(`chk-${itemId}`);
+  const card = document.getElementById(`card-${itemId}`);
+  if (chk && !chk.checked) {
+    chk.checked = true;
+    if (card) card.classList.add("checked");
+  }
+  updateTotalAmount();
 }
 
 // Fee Input & Automatic Calculations
 function initFeeCalculations() {
-  const feeInputs = document.querySelectorAll(".input-fee");
-  feeInputs.forEach(input => {
-    input.addEventListener("input", () => {
-      updateTotalAmount();
-      renderReceiptPreview();
-    });
-  });
+  renderCheckboxFeeGroups();
 
-  // Listener for optional program / month
-  document.getElementById("akademik-kelas")?.addEventListener("input", renderReceiptPreview);
-  document.getElementById("akademik-bulan")?.addEventListener("change", renderReceiptPreview);
   document.getElementById("pay-date")?.addEventListener("change", renderReceiptPreview);
   document.getElementById("pay-month")?.addEventListener("change", renderReceiptPreview);
 
@@ -303,32 +408,21 @@ function calculateTotal() {
     return parseFloat(customTotalEl.value) || 0;
   }
 
-  let dynamicSum = 0;
-  if (Array.isArray(appState.dynamicItems)) {
-    appState.dynamicItems.forEach(i => { dynamicSum += (parseFloat(i.hargaDibayar) || 0); });
-  }
-
-  const feeInputs = document.querySelectorAll(".input-fee");
-  let staticSum = 0;
-  feeInputs.forEach(input => {
-    staticSum += (parseFloat(input.value) || 0);
+  let totalSum = 0;
+  FEE_CHECKBOX_ITEMS.forEach(item => {
+    const chk = document.getElementById(`chk-${item.id}`);
+    const priceEl = document.getElementById(`price-${item.id}`);
+    if (chk && chk.checked && priceEl) {
+      totalSum += (parseFloat(priceEl.value) || 0);
+    }
   });
 
-  return dynamicSum + staticSum;
+  return totalSum;
 }
 
 function updateTotalAmount() {
   const customTotalEl = document.getElementById("fee-total-custom");
-  let calculatedSum = 0;
-
-  if (Array.isArray(appState.dynamicItems)) {
-    appState.dynamicItems.forEach(i => { calculatedSum += (parseFloat(i.hargaDibayar) || 0); });
-  }
-
-  const feeInputs = document.querySelectorAll(".input-fee");
-  feeInputs.forEach(input => {
-    calculatedSum += (parseFloat(input.value) || 0);
-  });
+  const calculatedSum = calculateTotal();
 
   if (!isTotalCustomEdited && customTotalEl) {
     customTotalEl.value = calculatedSum > 0 ? calculatedSum : "";
@@ -420,83 +514,25 @@ function renderReceiptPreview() {
   const tableBody = document.getElementById("rc-table-body");
   if (!tableBody) return;
 
-  const categories = [
-    { key: "pendaftaran", label: "1. PENDAFTARAN", inputId: "fee-pendaftaran" },
-    { key: "pengajianAlquran", label: "2. PENGAJIAN ALQURAN", inputId: "fee-alquran" },
-    { key: "kelasUpkk", label: "3. KELAS UPKK", inputId: "fee-upkk" },
-    { key: "kelasPsra", label: "4. KELAS PSRA", inputId: "fee-psra" },
-    { key: "kelasKhasJawi", label: "5. KELAS KHAS JAWI", inputId: "fee-jawi" },
-    { key: "bukuRekodModul", label: "6. BUKU REKOD / MODUL", inputId: "fee-buku" },
-    { key: "sumbangan", label: "7. SUMBANGAN", inputId: "fee-sumbangan" },
-    { key: "kelasKafa", label: "8. KELAS KAFA", inputId: "fee-kafa" },
-    { key: "kelasAkademik", label: "9. KELAS AKADEMIK", inputId: "fee-akademik", isAkademik: true },
-    { key: "transit", label: "10. TRANSIT", inputId: "fee-transit" }
-  ];
-
   let html = "";
   let totalAmount = 0;
   let hasItems = false;
-  const showDiscount = document.getElementById("show-discount-on-receipt")?.checked;
 
-  const akademikKelas = document.getElementById("akademik-kelas")?.value || "";
-  const akademikBulan = document.getElementById("akademik-bulan")?.value || "";
-
-  // 1. Render Dynamic Fee Items if any
-  if (Array.isArray(appState.dynamicItems) && appState.dynamicItems.length > 0) {
-    appState.dynamicItems.forEach(item => {
+  // Render ONLY items that are checked (TICKED) by Admin
+  FEE_CHECKBOX_ITEMS.forEach(item => {
+    const chk = document.getElementById(`chk-${item.id}`);
+    const priceEl = document.getElementById(`price-${item.id}`);
+    if (chk && chk.checked && priceEl) {
+      const priceVal = parseFloat(priceEl.value) || 0;
       hasItems = true;
-      const paid = parseFloat(item.hargaDibayar) || 0;
-      totalAmount += paid;
-
-      if (showDiscount && item.isCustomDiscount && item.diskaun > 0) {
-        html += `
-          <tr class="active-item">
-            <td>${item.namaYuran} <br><small style="color:#d97706; font-size:0.7rem;">Standard: RM${item.hargaStandard}</small></td>
-            <td style="text-align:center;">-</td>
-            <td style="text-align:center;">${bulan}</td>
-            <td class="amount-cell">RM${item.hargaStandard}</td>
-          </tr>
-          <tr class="discount-item-row" style="background:#fffbeb; color:#b45309;">
-            <td style="font-size:0.75rem; font-style:italic; padding-left:15px;">↳ Diskaun (${item.sebabDiskaun})</td>
-            <td style="text-align:center;">-</td>
-            <td style="text-align:center;">-</td>
-            <td class="amount-cell" style="color:#dc2626;">-RM${item.diskaun}</td>
-          </tr>
-        `;
-      } else {
-        html += `
-          <tr class="active-item">
-            <td>${item.namaYuran}</td>
-            <td style="text-align:center;">-</td>
-            <td style="text-align:center;">${bulan}</td>
-            <td class="amount-cell">${paid.toFixed(0)}</td>
-          </tr>
-        `;
-      }
-    });
-  }
-
-  // 2. Render 10 Quick Categories
-  categories.forEach(cat => {
-    const val = parseFloat(document.getElementById(cat.inputId)?.value) || 0;
-    if (val > 0) {
-      hasItems = true;
-      totalAmount += val;
-
-      let kelasCol = "";
-      let bulanCol = "";
-
-      if (cat.isAkademik) {
-        kelasCol = akademikKelas;
-        bulanCol = akademikBulan || bulan;
-      }
+      totalAmount += priceVal;
 
       html += `
         <tr class="active-item">
-          <td>${cat.label}</td>
-          <td style="text-align:center;">${kelasCol}</td>
-          <td style="text-align:center;">${bulanCol}</td>
-          <td class="amount-cell">${val.toFixed(0)}</td>
+          <td>${item.label}</td>
+          <td style="text-align:center;">-</td>
+          <td style="text-align:center;">${bulan}</td>
+          <td class="amount-cell">${priceVal.toFixed(0)}</td>
         </tr>
       `;
     }
@@ -506,7 +542,7 @@ function renderReceiptPreview() {
     html = `
       <tr>
         <td colspan="4" style="text-align:center; color:var(--text-muted); font-style:italic; padding:12px;">
-          Sila masukkan bayaran yuran di sebelah kiri
+          Sila tick kotak bayaran yuran di sebelah kiri
         </td>
       </tr>
     `;
@@ -598,17 +634,40 @@ async function actionSimpanPembayaran() {
 
     let hargaStandardTotal = 0;
     let jumlahDiskaunTotal = 0;
-    let sebabDiskaunArr = [];
+    const checkedItems = [];
+    const categoryTotals = {
+      pendaftaran: 0,
+      pengajianAlquran: 0,
+      kelasUpkk: 0,
+      kelasPsra: 0,
+      kelasKhasJawi: 0,
+      bukuRekodModul: 0,
+      sumbangan: 0,
+      kelasKafa: 0,
+      kelasAkademik: 0,
+      transit: 0
+    };
 
-    if (Array.isArray(appState.dynamicItems)) {
-      appState.dynamicItems.forEach(item => {
-        hargaStandardTotal += (parseFloat(item.hargaStandard) || 0);
-        jumlahDiskaunTotal += (parseFloat(item.diskaun) || 0);
-        if (item.isCustomDiscount && item.sebabDiskaun) {
-          sebabDiskaunArr.push(`${item.namaYuran}: ${item.sebabDiskaun}`);
+    FEE_CHECKBOX_ITEMS.forEach(item => {
+      const chk = document.getElementById(`chk-${item.id}`);
+      const priceEl = document.getElementById(`price-${item.id}`);
+      if (chk && chk.checked && priceEl) {
+        const paidPrice = parseFloat(priceEl.value) || 0;
+        hargaStandardTotal += item.stdPrice;
+        if (item.stdPrice > paidPrice) {
+          jumlahDiskaunTotal += (item.stdPrice - paidPrice);
         }
-      });
-    }
+        if (categoryTotals[item.field] !== undefined) {
+          categoryTotals[item.field] += paidPrice;
+        }
+        checkedItems.push({
+          id: item.id,
+          label: item.label,
+          stdPrice: item.stdPrice,
+          paidPrice: paidPrice
+        });
+      }
+    });
 
     const paymentObj = {
       noResit: appState.currentReceiptNo,
@@ -616,20 +675,20 @@ async function actionSimpanPembayaran() {
       bulan: monthVal,
       namaMurid: studentName,
       noWhatsapp: phone,
-      pendaftaran: parseFloat(document.getElementById("fee-pendaftaran")?.value) || 0,
-      pengajianAlquran: parseFloat(document.getElementById("fee-alquran")?.value) || 0,
-      kelasUpkk: parseFloat(document.getElementById("fee-upkk")?.value) || 0,
-      kelasPsra: parseFloat(document.getElementById("fee-psra")?.value) || 0,
-      kelasKhasJawi: parseFloat(document.getElementById("fee-jawi")?.value) || 0,
-      bukuRekodModul: parseFloat(document.getElementById("fee-buku")?.value) || 0,
-      sumbangan: parseFloat(document.getElementById("fee-sumbangan")?.value) || 0,
-      kelasKafa: parseFloat(document.getElementById("fee-kafa")?.value) || 0,
-      kelasAkademik: parseFloat(document.getElementById("fee-akademik")?.value) || 0,
-      transit: parseFloat(document.getElementById("fee-transit")?.value) || 0,
+      pendaftaran: categoryTotals.pendaftaran,
+      pengajianAlquran: categoryTotals.pengajianAlquran,
+      kelasUpkk: categoryTotals.kelasUpkk,
+      kelasPsra: categoryTotals.kelasPsra,
+      kelasKhasJawi: categoryTotals.kelasKhasJawi,
+      bukuRekodModul: categoryTotals.bukuRekodModul,
+      sumbangan: categoryTotals.sumbangan,
+      kelasKafa: categoryTotals.kelasKafa,
+      kelasAkademik: categoryTotals.kelasAkademik,
+      transit: categoryTotals.transit,
       hargaStandard: hargaStandardTotal,
       jumlahDiskaun: jumlahDiskaunTotal,
-      sebabDiskaun: sebabDiskaunArr.join(" | "),
-      butiranItem: JSON.stringify(appState.dynamicItems || []),
+      sebabDiskaun: jumlahDiskaunTotal > 0 ? "Harga Khas Murid" : "-",
+      butiranItem: JSON.stringify(checkedItems),
       jumlah: calculateTotal(),
       kaedahBayaran: methodVal,
       catatan: catatanVal,
@@ -876,7 +935,6 @@ async function actionCetakResit() {
 // Action: RESET BORANG
 function actionResetBorang() {
   appState.selectedStudent = null;
-  appState.dynamicItems = [];
   isTotalCustomEdited = false;
 
   const noticeBox = document.getElementById("special-rate-notice");
@@ -891,12 +949,18 @@ function actionResetBorang() {
   const phoneDisplay = document.getElementById("parent-phone-display");
   if (phoneDisplay) phoneDisplay.value = "";
 
-  document.querySelectorAll(".input-fee").forEach(input => input.value = "");
-  if (document.getElementById("akademik-kelas")) document.getElementById("akademik-kelas").value = "";
-  if (document.getElementById("akademik-bulan")) document.getElementById("akademik-bulan").value = "";
   if (document.getElementById("pay-catatan")) document.getElementById("pay-catatan").value = "";
 
-  renderDynamicFeeItems();
+  // Reset all fee checkboxes & prices
+  FEE_CHECKBOX_ITEMS.forEach(item => {
+    const chk = document.getElementById(`chk-${item.id}`);
+    const priceEl = document.getElementById(`price-${item.id}`);
+    const card = document.getElementById(`card-${item.id}`);
+    if (chk) chk.checked = false;
+    if (priceEl) priceEl.value = item.stdPrice;
+    if (card) card.classList.remove("checked");
+  });
+
   initDateAndMonth();
   updateTotalAmount();
   renderReceiptPreview();

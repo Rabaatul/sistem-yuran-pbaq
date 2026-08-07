@@ -258,11 +258,11 @@
               <div class="card">
                 <div class="card-header">
                   <div class="card-title">
-                    <i class="fa-solid fa-list-check"></i> Butiran Pembayaran Yuran (Master Yuran FQC)
+                    <i class="fa-solid fa-square-check"></i> Butiran Pembayaran Yuran (Kotak Tick)
                   </div>
-                  <button type="button" class="btn btn-sm btn-primary" onclick="addDynamicFeeItem()">
-                    <i class="fa-solid fa-plus"></i> TAMBAH YURAN
-                  </button>
+                  <div style="font-size:0.78rem; font-weight:700; color:var(--primary-dark);">
+                    Tick item yang dibayar. Harga RM boleh diedit secara LIVE.
+                  </div>
                 </div>
                 <div class="card-body">
                   
@@ -272,124 +272,13 @@
                     <div id="special-rate-notice-text">Harga khas murid dikesan!</div>
                   </div>
 
-                  <!-- Dynamic Fee Items List -->
-                  <div id="dynamic-fee-items-list" class="dynamic-fee-items-list">
-                    <!-- Dynamic Fee Items Rendered Here -->
+                  <!-- Container Grouped Checkbox Fee Cards -->
+                  <div id="fee-checkbox-groups-container">
+                    <!-- Checkbox fee cards will be rendered here dynamically -->
                   </div>
 
-                  <div style="font-size:0.78rem; font-weight:700; color:var(--text-muted); margin: 0.75rem 0 0.4rem 0;">
-                    <i class="fa-solid fa-bars"></i> Atau masukkan bayaran borang ringkas 10 kategori di bawah:
-                  </div>
-
-                  <div class="fee-categories-box">
-                    
-                    <div class="category-row">
-                      <div class="category-name">1. PENDAFTARAN</div>
-                      <div class="input-rm-group">
-                        <span class="input-rm-prefix">RM</span>
-                        <input type="number" id="fee-pendaftaran" class="form-control input-rm-control input-fee" min="0" placeholder="0">
-                      </div>
-                    </div>
-
-                    <div class="category-row">
-                      <div class="category-name">2. PENGAJIAN ALQURAN</div>
-                      <div class="input-rm-group">
-                        <span class="input-rm-prefix">RM</span>
-                        <input type="number" id="fee-alquran" class="form-control input-rm-control input-fee" min="0" placeholder="0">
-                      </div>
-                    </div>
-
-                    <div class="category-row">
-                      <div class="category-name">3. KELAS UPKK</div>
-                      <div class="input-rm-group">
-                        <span class="input-rm-prefix">RM</span>
-                        <input type="number" id="fee-upkk" class="form-control input-rm-control input-fee" min="0" placeholder="0">
-                      </div>
-                    </div>
-
-                    <div class="category-row">
-                      <div class="category-name">4. KELAS PSRA</div>
-                      <div class="input-rm-group">
-                        <span class="input-rm-prefix">RM</span>
-                        <input type="number" id="fee-psra" class="form-control input-rm-control input-fee" min="0" placeholder="0">
-                      </div>
-                    </div>
-
-                    <div class="category-row">
-                      <div class="category-name">5. KELAS KHAS JAWI</div>
-                      <div class="input-rm-group">
-                        <span class="input-rm-prefix">RM</span>
-                        <input type="number" id="fee-jawi" class="form-control input-rm-control input-fee" min="0" placeholder="0">
-                      </div>
-                    </div>
-
-                    <div class="category-row">
-                      <div class="category-name">6. BUKU REKOD / MODUL</div>
-                      <div class="input-rm-group">
-                        <span class="input-rm-prefix">RM</span>
-                        <input type="number" id="fee-buku" class="form-control input-rm-control input-fee" min="0" placeholder="0">
-                      </div>
-                    </div>
-
-                    <div class="category-row">
-                      <div class="category-name">7. SUMBANGAN</div>
-                      <div class="input-rm-group">
-                        <span class="input-rm-prefix">RM</span>
-                        <input type="number" id="fee-sumbangan" class="form-control input-rm-control input-fee" min="0" placeholder="0">
-                      </div>
-                    </div>
-
-                    <div class="category-row">
-                      <div class="category-name">8. KELAS KAFA</div>
-                      <div class="input-rm-group">
-                        <span class="input-rm-prefix">RM</span>
-                        <input type="number" id="fee-kafa" class="form-control input-rm-control input-fee" min="0" placeholder="0">
-                      </div>
-                    </div>
-
-                    <div class="category-row">
-                      <div class="category-name">9. KELAS AKADEMIK</div>
-                      <div class="input-rm-group">
-                        <span class="input-rm-prefix">RM</span>
-                        <input type="number" id="fee-akademik" class="form-control input-rm-control input-fee" min="0" placeholder="0">
-                      </div>
-                      
-                      <!-- Sub Fields Options -->
-                      <div class="sub-fields-box">
-                        <div>
-                          <label style="font-size:0.75rem; font-weight:700; color:var(--primary-dark);">Kelas / Program (Optional):</label>
-                          <input type="text" id="akademik-kelas" class="form-control" placeholder="Contoh: MPT4">
-                        </div>
-                        <div>
-                          <label style="font-size:0.75rem; font-weight:700; color:var(--primary-dark);">Bulan (Optional):</label>
-                          <select id="akademik-bulan" class="form-control">
-                            <option value="">Ikut Bulan Bayaran</option>
-                            <option value="JANUARI">JANUARI</option>
-                            <option value="FEBRUARI">FEBRUARI</option>
-                            <option value="MAC">MAC</option>
-                            <option value="APRIL">APRIL</option>
-                            <option value="MEI">MEI</option>
-                            <option value="JUN">JUN</option>
-                            <option value="JULAI">JULAI</option>
-                            <option value="OGOS">OGOS</option>
-                            <option value="SEPTEMBER">SEPTEMBER</option>
-                            <option value="OKTOBER">OKTOBER</option>
-                            <option value="NOVEMBER">NOVEMBER</option>
-                            <option value="DISEMBER">DISEMBER</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="category-row">
-                      <div class="category-name">10. TRANSIT</div>
-                      <div class="input-rm-group">
-                        <span class="input-rm-prefix">RM</span>
-                        <input type="number" id="fee-transit" class="form-control input-rm-control input-fee" min="0" placeholder="0">
-                      </div>
-                    </div>
-
-                  </div>
+                </div>
+              </div>
 
                   <!-- Kaedah Bayaran & Catatan -->
                   <div style="margin-top:1.25rem;">
