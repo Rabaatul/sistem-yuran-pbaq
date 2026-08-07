@@ -54,12 +54,18 @@ const MASTER_STUDENTS = [
 function getSpreadsheet() {
   if (CONFIG.spreadsheetId) {
     try {
-      return SpreadsheetApp.openById(CONFIG.spreadsheetId);
+      var ss = SpreadsheetApp.openById(CONFIG.spreadsheetId);
+      if (ss) return ss;
     } catch (e) {
       Logger.log("Error opening by ID: " + e.toString());
     }
   }
-  return SpreadsheetApp.getActiveSpreadsheet();
+  try {
+    return SpreadsheetApp.getActiveSpreadsheet();
+  } catch (e) {
+    Logger.log("Error getActiveSpreadsheet: " + e.toString());
+    return null;
+  }
 }
 
 /**
@@ -359,7 +365,7 @@ function checkDuplicateReceipt(noResit) {
 function savePayment(data) {
   var lock = LockService.getScriptLock();
   try {
-    lock.waitLock(2000);
+    lock.waitLock(10000);
 
     var ss = getSpreadsheet();
     var sheet = ss.getSheetByName(CONFIG.paymentSheet);
