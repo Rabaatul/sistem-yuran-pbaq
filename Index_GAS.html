@@ -725,6 +725,9 @@ function renderCheckboxFeeGroups() {
 }
 
 function toggleFeeCard(itemId, event) {
+  if (event && event.target && (event.target.tagName === 'INPUT' || event.target.classList.contains('fee-card-checkbox'))) {
+    return;
+  }
   const chk = document.getElementById(`chk-${itemId}`);
   if (!chk) return;
   chk.checked = !chk.checked;
@@ -732,7 +735,7 @@ function toggleFeeCard(itemId, event) {
 }
 
 function onFeeCheckChange(itemId, isChecked, event) {
-  if (event) event.stopPropagation();
+  if (event && event.stopPropagation) event.stopPropagation();
   const card = document.getElementById(`card-${itemId}`);
   if (card) {
     if (isChecked) card.classList.add("checked");
