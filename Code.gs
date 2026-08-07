@@ -10,7 +10,7 @@ const CONFIG = {
   spreadsheetId: "1ahZXkijsmqPD5MDHcBGSXgp4HR0R1NDi4rUx4NH-nho",
   studentSheet: "MURID",
   paymentSheet: "PEMBAYARAN",
-  centreName: "FATHUL QURANIC CENTRE (FQC)",
+  centreName: "Fathul Quranic Centre (FQC) (NS0326067-A)",
   receiptPrefix: "FQC-",
   startReceiptNo: 1100
 };
