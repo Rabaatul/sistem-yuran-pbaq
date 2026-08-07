@@ -45,8 +45,7 @@ const MASTER_STUDENTS = [
   { id: 25, nama: "Izarra Khaiyrra Bt Mohd Aris", phone: "0199872971", status: "AKTIF" },
   { id: 26, nama: "Ahmad Aariz Dayyan B. Mohd Kamalludin", phone: "0132315660", status: "AKTIF" },
   { id: 27, nama: "Nur Aisya' Qaseh Bt Aziman", phone: "0179890260", status: "AKTIF" },
-  { id: 28, nama: "NAJIHAH", phone: "0134565245", status: "AKTIF" },
-  { id: 29, nama: "FUDLAA", phone: "0139436009", status: "AKTIF" }
+  { id: 28, nama: "NAJIHAH", phone: "0134565245", status: "AKTIF" }
 ];
 
 /**
