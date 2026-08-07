@@ -553,31 +553,27 @@ async function actionSimpanPembayaran() {
   }
 }
 
-// Action: HANTAR WHATSAPP (Berasingan)
+// Action: HANTAR WHATSAPP (Direct Launch, No Popup Blocker Delay)
 async function actionHantarWhatsapp() {
   if (!validateForm()) return;
 
-  const studentName = appState.selectedStudent ? appState.selectedStudent.nama : (document.getElementById("student-search-input")?.value || "Murid");
-  const phone = document.getElementById("parent-phone-display")?.value || (appState.selectedStudent ? appState.selectedStudent.phone : "");
+  const studentSearchEl = document.getElementById("student-search-input");
+  const phoneEl = document.getElementById("parent-phone-display");
+  const dateEl = document.getElementById("pay-date");
+  const monthEl = document.getElementById("pay-month");
+
+  const studentName = appState.selectedStudent ? appState.selectedStudent.nama : (studentSearchEl ? studentSearchEl.value : "Murid");
+  const rawPhone = phoneEl ? phoneEl.value : (appState.selectedStudent ? appState.selectedStudent.phone : "");
   const noResit = appState.currentReceiptNo || "FQC-1100";
-  const tarikh = formatDateDisplay(document.getElementById("pay-date")?.value || new Date().toISOString().split("T")[0]);
-  const bulan = document.getElementById("pay-month")?.value || "";
-  const jumlah = calculateTotalAmount();
-  const kaedah = document.querySelector("input[name='kaedahBayaran']:checked")?.value || "TUNAI";
+  const rawDate = dateEl ? dateEl.value : new Date().toISOString().split("T")[0];
+  const tarikh = typeof formatDateDisplay === "function" ? formatDateDisplay(rawDate) : rawDate;
+  const bulan = monthEl ? monthEl.value : "";
+  const jumlah = typeof calculateTotalAmount === "function" ? calculateTotalAmount() : 0;
+  const kaedahRadio = document.querySelector("input[name='kaedahBayaran']:checked");
+  const kaedah = kaedahRadio ? kaedahRadio.value : "TUNAI";
 
-  try {
-    showLoading(true, "Menjana gambar resit PNG untuk WhatsApp...");
-    const canvas = await generateReceiptCanvas();
-    const studentNameClean = studentName.replace(/[^a-zA-Z0-9]/g, "_");
-    const fileName = `FQC_Resit_${noResit}_${studentNameClean}.png`;
-
-    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-    const file = new File([blob], fileName, { type: 'image/png' });
-
-    showLoading(false);
-
-    const formattedPhone = formatWhatsAppPhone(phone);
-    const msg = `Assalamualaikum / Salam sejahtera.
+  const formattedPhone = typeof formatWhatsAppPhone === "function" ? formatWhatsAppPhone(rawPhone) : rawPhone.replace(/[^0-9]/g, '');
+  const msg = `Assalamualaikum / Salam sejahtera.
 
 Resit Pembayaran Yuran Fathul Quranic Centre (FQC)
 
@@ -593,29 +589,26 @@ Resit rasmi dilampirkan untuk rujukan.
 Terima kasih.
 Fathul Quranic Centre (FQC)`;
 
-    const encodedMsg = encodeURIComponent(msg);
-    const waUrl = formattedPhone ? `https://wa.me/${formattedPhone}?text=${encodedMsg}` : `https://wa.me/?text=${encodedMsg}`;
+  const encodedMsg = encodeURIComponent(msg);
+  const waUrl = formattedPhone ? `https://wa.me/${formattedPhone}?text=${encodedMsg}` : `https://wa.me/?text=${encodedMsg}`;
 
-    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-      try {
-        await navigator.share({
-          files: [file],
-          title: `Resit FQC ${noResit}`,
-          text: msg
-        });
-        showToast("Resit berjaya dikongsi ke WhatsApp!", "success");
-        return;
-      } catch (err) {
-        console.log("Web Share fallback:", err);
-      }
-    }
+  // Buka WhatsApp serta-merta tanpa disekat oleh browser Pop-up Blocker
+  window.open(waUrl, "_blank");
 
+  // Jana gambar PNG resit secara latar belakang
+  try {
+    showLoading(true, "Menjana resit PNG...");
+    const canvas = await generateReceiptCanvas();
+    const studentNameClean = studentName.replace(/[^a-zA-Z0-9]/g, "_");
+    const fileName = `FQC_Resit_${noResit}_${studentNameClean}.png`;
+
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
     triggerDownloadBlob(blob, fileName);
-    window.open(waUrl, "_blank");
-    showToast("WhatsApp dibuka & gambar resit dimuat turun!", "success");
+    showLoading(false);
+    showToast("WhatsApp dibuka & resit PNG dimuat turun!", "success");
   } catch (err) {
     showLoading(false);
-    showToast("Gagal hantar WhatsApp: " + err.message, "error");
+    showToast("WhatsApp dibuka! (Muat turun PNG: " + err.message + ")", "warning");
   }
 }
 
