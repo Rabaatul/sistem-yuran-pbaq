@@ -532,6 +532,7 @@ async function actionSimpanPembayaran() {
 
     // Save locally
     appState.payments.unshift(paymentObj);
+    appState.lastSavedPayment = paymentObj;
     saveLocalStoragePayments();
 
     showLoading(false);
@@ -564,13 +565,23 @@ async function actionHantarWhatsapp() {
 
   const studentName = appState.selectedStudent ? appState.selectedStudent.nama : (studentSearchEl ? studentSearchEl.value : "Murid");
   const rawPhone = phoneEl ? phoneEl.value : (appState.selectedStudent ? appState.selectedStudent.phone : "");
-  const noResit = appState.currentReceiptNo || "FQC-1100";
   const rawDate = dateEl ? dateEl.value : new Date().toISOString().split("T")[0];
-  const tarikh = typeof formatDateDisplay === "function" ? formatDateDisplay(rawDate) : rawDate;
-  const bulan = monthEl ? monthEl.value : "";
-  const jumlah = typeof calculateTotalAmount === "function" ? calculateTotalAmount() : 0;
   const kaedahRadio = document.querySelector("input[name='kaedahBayaran']:checked");
-  const kaedah = kaedahRadio ? kaedahRadio.value : "TUNAI";
+
+  let noResit = appState.currentReceiptNo || "FQC-1100";
+  let tarikh = typeof formatDateDisplay === "function" ? formatDateDisplay(rawDate) : rawDate;
+  let bulan = monthEl ? monthEl.value : "";
+  let jumlah = typeof calculateTotalAmount === "function" ? calculateTotalAmount() : 0;
+  let kaedah = kaedahRadio ? kaedahRadio.value : "TUNAI";
+
+  // Sekiranya rekod pembayaran murid ini baru disimpan, guna data tepat dari rekod simpanan!
+  if (appState.lastSavedPayment && appState.lastSavedPayment.namaMurid === studentName) {
+    noResit = appState.lastSavedPayment.noResit;
+    if (appState.lastSavedPayment.tarikh) tarikh = appState.lastSavedPayment.tarikh;
+    if (appState.lastSavedPayment.bulan) bulan = appState.lastSavedPayment.bulan;
+    if (appState.lastSavedPayment.jumlah) jumlah = appState.lastSavedPayment.jumlah;
+    if (appState.lastSavedPayment.kaedahBayaran) kaedah = appState.lastSavedPayment.kaedahBayaran;
+  }
 
   const formattedPhone = typeof formatWhatsAppPhone === "function" ? formatWhatsAppPhone(rawPhone) : rawPhone.replace(/[^0-9]/g, '');
   const msg = `Assalamualaikum / Salam sejahtera.
