@@ -171,38 +171,26 @@ function setupDatabase() {
       sheetMurid = ss.insertSheet(CONFIG.studentSheet);
     }
     
-    // Set Header Sheet Murid jika kosong
-    if (sheetMurid.getLastRow() === 0) {
-      var headersMurid = ["ID", "NAMA MURID", "NO WHATSAPP PARENT", "STATUS"];
-      sheetMurid.appendRow(headersMurid);
-      
-      // Formatting Header Murid
-      var headerRangeMurid = sheetMurid.getRange(1, 1, 1, 4);
-      headerRangeMurid.setBackground("#1b5e20")
-                        .setFontColor("#ffffff")
-                        .setFontWeight("bold")
-                        .setHorizontalAlignment("center");
-      sheetMurid.setFrozenRows(1);
-    }
-
-    // Semak jika data murid telah diisi
-    var existingStudents = [];
-    if (sheetMurid.getLastRow() > 1) {
-      var data = sheetMurid.getRange(2, 2, sheetMurid.getLastRow() - 1, 1).getValues();
-      existingStudents = data.map(function(row) { return row[0].toString().trim().toLowerCase(); });
-    }
+    // Format semula Sheet MURID dengan susunan kolom rasmi: ID | NAMA MURID | NO WHATSAPP PARENT | STATUS
+    sheetMurid.clearContents();
+    
+    var headersMurid = ["ID", "NAMA MURID", "NO WHATSAPP PARENT", "STATUS"];
+    sheetMurid.appendRow(headersMurid);
+    
+    var headerRangeMurid = sheetMurid.getRange(1, 1, 1, 4);
+    headerRangeMurid.setBackground("#1b5e20")
+                      .setFontColor("#ffffff")
+                      .setFontWeight("bold")
+                      .setHorizontalAlignment("center");
+    sheetMurid.setFrozenRows(1);
 
     // Format Kolom C (No WhatsApp) sebagai Text '@' untuk simpan 0 di hadapan
     sheetMurid.getRange("C:C").setNumberFormat("@");
 
-    // Masukkan data murid yang belum wujud
-    var addedCount = 0;
+    // Masukkan data 38 murid master lengkap
     for (var i = 0; i < MASTER_STUDENTS.length; i++) {
       var s = MASTER_STUDENTS[i];
-      if (existingStudents.indexOf(s.nama.toLowerCase()) === -1) {
-        sheetMurid.appendRow([s.id, s.nama, s.phone, s.status]);
-        addedCount++;
-      }
+      sheetMurid.appendRow([s.id, s.nama, "'" + s.phone, s.status]);
     }
 
     // Auto Column Width Murid
@@ -233,14 +221,13 @@ function setupDatabase() {
                           .setHorizontalAlignment("center");
       sheetPayment.setFrozenRows(1);
 
-      // Set Number Format untuk No WhatsApp & Tarikh
       sheetPayment.getRange("F:F").setNumberFormat("@");
       sheetPayment.getRange("B:B").setNumberFormat("@");
     }
 
     return {
       success: true,
-      message: "Database FQC berjaya disediakan! (" + addedCount + " murid baharu ditambah)."
+      message: "Database FQC berjaya dikemaskini & 38 data murid lengkap dimasukkan!"
     };
   } catch (err) {
     return { success: false, message: "Ralat Setup: " + err.toString() };
@@ -250,7 +237,6 @@ function setupDatabase() {
 /**
  * 2. getStudents()
  * Mengambil senarai murid aktif dari Sheet MURID
- * (Secara pintar mendeteksi sama ada Kolom A = ID atau Kolom A = Nama Murid)
  */
 function getStudents() {
   try {
@@ -277,17 +263,24 @@ function getStudents() {
       var studentPhone = "";
       var studentStatus = "AKTIF";
 
-      // Detect layout: Sekiranya colB kelihatan seperti nombor telefon, colA ialah Nama Murid
-      var cleanPhoneB = colB.replace(/[^0-9]/g, '');
-      if (cleanPhoneB.length >= 8 && (cleanPhoneB.indexOf("01") === 0 || cleanPhoneB.indexOf("601") === 0)) {
+      // Detect layout pintar:
+      var cleanB = colB.replace(/[^0-9]/g, '');
+      if (cleanB.length >= 8 && (cleanB.indexOf("01") === 0 || cleanB.indexOf("601") === 0)) {
+        // Kes A: colA = Nama, colB = Phone
         studentNama = colA;
         studentPhone = colB;
         studentStatus = colC || "AKTIF";
-      } else {
+      } else if (colB && isNaN(colB)) {
+        // Kes B: colA = ID, colB = Nama, colC = Phone
         studentId = colA || (i + 1);
-        studentNama = colB || colA;
+        studentNama = colB;
         studentPhone = colC;
         studentStatus = colD || "AKTIF";
+      } else if (colA && isNaN(colA)) {
+        // Kes C: colA = Nama
+        studentNama = colA;
+        studentPhone = colB;
+        studentStatus = colC || "AKTIF";
       }
 
       if (studentNama && studentStatus.toUpperCase() !== "TIDAK AKTIF") {
