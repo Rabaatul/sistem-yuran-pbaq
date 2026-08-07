@@ -678,6 +678,64 @@ function triggerDownloadBlob(blob, fileName) {
 
 // Action: PRINT RESIT
 function actionCetakResit() {
+  const receiptCard = document.getElementById("receipt-card-printable");
+  if (!receiptCard) {
+    showToast("Paparan resit tidak ditemui.", "error");
+    return;
+  }
+
+  try {
+    const printWin = window.open("", "_blank", "width=850,height=1000");
+    if (printWin) {
+      const noResit = appState.lastSavedPayment ? appState.lastSavedPayment.noResit : (appState.currentReceiptNo || "FQC-1100");
+
+      printWin.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Resit Rasmi FQC - ${noResit}</title>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+            <style>
+              @page { size: A4 portrait; margin: 8mm; }
+              body {
+                font-family: 'Inter', system-ui, -apple-system, sans-serif;
+                background: #ffffff;
+                margin: 0;
+                padding: 10px;
+                display: flex;
+                justify-content: center;
+              }
+              .receipt-card {
+                width: 100% !important;
+                max-width: 800px !important;
+                box-shadow: none !important;
+                border: 1.5px solid #1b5e20 !important;
+                margin: 0 auto !important;
+              }
+              @media print {
+                body { padding: 0 !important; }
+              }
+            </style>
+          </head>
+          <body>
+            ${receiptCard.outerHTML}
+            <script>
+              setTimeout(function() {
+                window.focus();
+                window.print();
+                window.close();
+              }, 400);
+            </script>
+          </body>
+        </html>
+      `);
+      printWin.document.close();
+      return;
+    }
+  } catch (e) {
+    console.log("Fallback print:", e);
+  }
+
   window.print();
 }
 
