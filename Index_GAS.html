@@ -407,22 +407,14 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-gradie
                   <div class="card-title"><i class="fa-solid fa-credit-card"></i> Kaedah Pembayaran</div>
                 </div>
                 <div class="card-body">
-                  <div class="payment-method-grid">
+                  <div class="payment-method-grid" style="grid-template-columns: 1fr 1fr;">
                     <label class="method-radio-label selected" id="lbl-tunai">
                       <input type="radio" name="kaedahBayaran" value="TUNAI" checked>
                       <i class="fa-solid fa-money-bill-wave"></i> TUNAI
                     </label>
                     <label class="method-radio-label" id="lbl-transfer">
                       <input type="radio" name="kaedahBayaran" value="ONLINE TRANSFER">
-                      <i class="fa-solid fa-building-columns"></i> TRANSFER
-                    </label>
-                    <label class="method-radio-label" id="lbl-qr">
-                      <input type="radio" name="kaedahBayaran" value="QR CODE / E-WALLET">
-                      <i class="fa-solid fa-qrcode"></i> QR CODE
-                    </label>
-                    <label class="method-radio-label" id="lbl-cek">
-                      <input type="radio" name="kaedahBayaran" value="CEK">
-                      <i class="fa-solid fa-money-check"></i> CEK
+                      <i class="fa-solid fa-building-columns"></i> ONLINE TRANSFER
                     </label>
                   </div>
                 </div>
@@ -782,7 +774,13 @@ function initFeeCalculations() {
   renderCheckboxFeeGroups();
   document.getElementById("pay-date")?.addEventListener("change", renderReceiptPreview);
   document.getElementById("pay-month")?.addEventListener("change", renderReceiptPreview);
-  document.querySelectorAll('input[name="kaedahBayaran"]').forEach(radio => radio.addEventListener("change", renderReceiptPreview));
+  document.querySelectorAll('input[name="kaedahBayaran"]').forEach(radio => {
+    radio.addEventListener("change", (e) => {
+      document.querySelectorAll('.method-radio-label').forEach(lbl => lbl.classList.remove('selected'));
+      e.target.closest('.method-radio-label')?.classList.add('selected');
+      renderReceiptPreview();
+    });
+  });
 }
 
 let isTotalCustomEdited = false;

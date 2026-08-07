@@ -290,7 +290,13 @@ function initFeeCalculations() {
   renderCheckboxFeeGroups();
   document.getElementById("pay-date")?.addEventListener("change", renderReceiptPreview);
   document.getElementById("pay-month")?.addEventListener("change", renderReceiptPreview);
-  document.querySelectorAll('input[name="kaedahBayaran"]').forEach(radio => radio.addEventListener("change", renderReceiptPreview));
+  document.querySelectorAll('input[name="kaedahBayaran"]').forEach(radio => {
+    radio.addEventListener("change", (e) => {
+      document.querySelectorAll('.method-radio-label').forEach(lbl => lbl.classList.remove('selected'));
+      e.target.closest('.method-radio-label')?.classList.add('selected');
+      renderReceiptPreview();
+    });
+  });
 }
 
 let isTotalCustomEdited = false;
