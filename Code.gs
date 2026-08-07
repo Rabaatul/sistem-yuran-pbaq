@@ -10,6 +10,7 @@ const CONFIG = {
   spreadsheetId: "1ahZXkijsmqPD5MDHcBGSXgp4HR0R1NDi4rUx4NH-nho",
   studentSheet: "MURID",
   paymentSheet: "PEMBAYARAN",
+  specialRatesSheet: "HARGA_KHAS",
   centreName: "Fathul Quranic Centre (FQC) (NS0326067-A)",
   receiptPrefix: "FQC-",
   startReceiptNo: 1100
@@ -82,6 +83,8 @@ function doGet(e) {
     return createJsonResponse({ success: true, data: getStudents() });
   } else if (action === "getPayments" || action === "getPaymentHistory") {
     return createJsonResponse({ success: true, data: getPaymentHistory() });
+  } else if (action === "getSpecialRates") {
+    return createJsonResponse({ success: true, data: getSpecialRates() });
   } else if (action === "getNextReceiptNumber") {
     return createJsonResponse({ success: true, data: getNextReceiptNumber() });
   } else if (action === "getDashboardData") {
@@ -200,38 +203,67 @@ function setupDatabase() {
     sheetMurid.setColumnWidth(3, 180);
     sheetMurid.setColumnWidth(4, 100);
 
-    // --- SETUP SHEET PEMBAYARAN ---
-    var sheetPayment = ss.getSheetByName(CONFIG.paymentSheet);
-    if (!sheetPayment) {
-      sheetPayment = ss.insertSheet(CONFIG.paymentSheet);
+    // --- SETUP SHEET HARGA_KHAS ---
+    var sheetHargaKhas = ss.getSheetByName(CONFIG.specialRatesSheet);
+    if (!sheetHargaKhas) {
+      sheetHargaKhas = ss.insertSheet(CONFIG.specialRatesSheet);
     }
-
-    if (sheetPayment.getLastRow() === 0) {
-      var headersPayment = [
-        "TIMESTAMP", "NO RESIT", "TARIKH", "BULAN", "NAMA MURID", "NO WHATSAPP",
-        "PENDAFTARAN", "PENGAJIAN ALQURAN", "KELAS UPKK", "KELAS PSRA", "KELAS KHAS JAWI",
-        "BUKU REKOD / MODUL", "SUMBANGAN", "KELAS KAFA", "KELAS AKADEMIK", "TRANSIT",
-        "JUMLAH", "KAEDAH BAYARAN", "CATATAN", "STATUS", "LINK / ID RESIT"
+    if (sheetHargaKhas.getLastRow() === 0) {
+      var headersHargaKhas = [
+        "NAMA MURID", "JENIS YURAN", "HARGA STANDARD", "HARGA KHAS", "DISKAUN", "SEBAB", "TARIKH MULA", "TARIKH TAMAT", "STATUS"
       ];
-      sheetPayment.appendRow(headersPayment);
+      sheetHargaKhas.appendRow(headersHargaKhas);
+      var headerRangeHK = sheetHargaKhas.getRange(1, 1, 1, headersHargaKhas.length);
+      headerRangeHK.setBackground("#d97706")
+                   .setFontColor("#ffffff")
+                   .setFontWeight("bold")
+                   .setHorizontalAlignment("center");
+      sheetHargaKhas.setFrozenRows(1);
 
-      var headerRangePayment = sheetPayment.getRange(1, 1, 1, headersPayment.length);
-      headerRangePayment.setBackground("#2e7d32")
-                          .setFontColor("#ffffff")
-                          .setFontWeight("bold")
-                          .setHorizontalAlignment("center");
-      sheetPayment.setFrozenRows(1);
-
-      sheetPayment.getRange("F:F").setNumberFormat("@");
-      sheetPayment.getRange("B:B").setNumberFormat("@");
+      // Contoh rekod awal
+      sheetHargaKhas.appendRow(["Nur A", "Kelas Mengaji", 130, 100, 30, "Harga Khas Murid", "01/08/2026", "", "AKTIF"]);
+      sheetHargaKhas.appendRow(["Nur B", "Transit FQC", 260, 200, 60, "Diskaun Pengurusan", "01/08/2026", "", "AKTIF"]);
     }
 
     return {
       success: true,
-      message: "Database FQC berjaya dikemaskini & 38 data murid lengkap dimasukkan!"
+      message: "Database FQC & Sheet HARGA_KHAS berjaya dikemaskini!"
     };
   } catch (err) {
     return { success: false, message: "Ralat Setup: " + err.toString() };
+  }
+}
+
+/**
+ * Dapatkan senarai harga khas murid dari Sheet HARGA_KHAS
+ */
+function getSpecialRates() {
+  try {
+    var ss = getSpreadsheet();
+    var sheet = ss.getSheetByName(CONFIG.specialRatesSheet);
+    if (!sheet || sheet.getLastRow() <= 1) return [];
+
+    var values = sheet.getRange(2, 1, sheet.getLastRow() - 1, 9).getValues();
+    var list = [];
+    for (var i = 0; i < values.length; i++) {
+      var row = values[i];
+      if (row[0] && (row[8] ? row[8].toString().toUpperCase() : "AKTIF") !== "TIDAK AKTIF") {
+        list.push({
+          namaMurid: row[0].toString().trim(),
+          jenisYuran: row[1].toString().trim(),
+          hargaStandard: parseFloat(row[2]) || 0,
+          hargaKhas: parseFloat(row[3]) || 0,
+          diskaun: parseFloat(row[4]) || 0,
+          sebab: row[5] ? row[5].toString().trim() : "",
+          tarikhMula: row[6] ? row[6].toString().trim() : "",
+          tarikhTamat: row[7] ? row[7].toString().trim() : "",
+          status: row[8] ? row[8].toString().trim() : "AKTIF"
+        });
+      }
+    }
+    return list;
+  } catch (e) {
+    return [];
   }
 }
 

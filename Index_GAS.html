@@ -285,9 +285,27 @@ body { font-family: var(--font-main); background: var(--bg-gradient); color: var
             <div class="stat-card gold">
               <div class="stat-icon"><i class="fa-solid fa-calendar-check"></i></div>
               <div>
-                <div class="stat-label">Jumlah Bayaran Bulan Ini</div>
+                <div class="stat-label">Kutipan Bulan Ini</div>
                 <div class="stat-value" id="dash-total-month">RM 0.00</div>
                 <div class="stat-subtext">Kutipan bulan ini</div>
+              </div>
+            </div>
+
+            <div class="stat-card red" style="border-left:4px solid #d97706;">
+              <div class="stat-icon" style="background:#fef3c7; color:#d97706;"><i class="fa-solid fa-tags"></i></div>
+              <div>
+                <div class="stat-label">Diskaun Bulan Ini</div>
+                <div class="stat-value" id="dash-total-discount-month" style="color:#d97706;">RM 0.00</div>
+                <div class="stat-subtext">Diskaun diberikan</div>
+              </div>
+            </div>
+
+            <div class="stat-card green" style="border-left:4px solid #0284c7;">
+              <div class="stat-icon" style="background:#e0f2fe; color:#0369a1;"><i class="fa-solid fa-user-tag"></i></div>
+              <div>
+                <div class="stat-label">Murid Harga Khas</div>
+                <div class="stat-value" id="dash-special-rate-count" style="color:#0369a1;">0</div>
+                <div class="stat-subtext">Rekod aktif HARGA_KHAS</div>
               </div>
             </div>
 
@@ -304,7 +322,7 @@ body { font-family: var(--font-main); background: var(--bg-gradient); color: var
               <div class="stat-icon"><i class="fa-solid fa-user-graduate"></i></div>
               <div>
                 <div class="stat-label">Jumlah Murid</div>
-                <div class="stat-value" id="dash-total-students">38</div>
+                <div class="stat-value" id="dash-total-students">39</div>
                 <div class="stat-subtext">Database FQC</div>
               </div>
             </div>
@@ -394,13 +412,24 @@ body { font-family: var(--font-main); background: var(--bg-gradient); color: var
               <div class="card">
                 <div class="card-header">
                   <div class="card-title">
-                    <i class="fa-solid fa-list-check"></i> Butiran Pembayaran Yuran
+                    <i class="fa-solid fa-list-check"></i> Butiran Pembayaran Yuran (Master Yuran FQC)
                   </div>
-                  <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">
-                    Ruangan kosong dianggap RM0
-                  </div>
+                  <button type="button" class="btn btn-sm btn-primary" onclick="addDynamicFeeItem()">
+                    <i class="fa-solid fa-plus"></i> TAMBAH YURAN
+                  </button>
                 </div>
                 <div class="card-body">
+
+                  <div class="special-rate-notice-box" id="special-rate-notice" style="display:none;">
+                    <i class="fa-solid fa-star" style="color:#d97706; font-size:1.1rem;"></i>
+                    <div id="special-rate-notice-text">Harga khas murid dikesan!</div>
+                  </div>
+
+                  <div id="dynamic-fee-items-list" class="dynamic-fee-items-list"></div>
+
+                  <div style="font-size:0.78rem; font-weight:700; color:var(--text-muted); margin:0.75rem 0 0.4rem 0;">
+                    <i class="fa-solid fa-bars"></i> Atau masukkan bayaran borang ringkas 10 kategori di bawah:
+                  </div>
                   <div class="fee-categories-box">
                     <div class="category-row"><div class="category-name">1. PENDAFTARAN</div><div class="input-rm-group"><span class="input-rm-prefix">RM</span><input type="number" id="fee-pendaftaran" class="form-control input-rm-control input-fee" min="0" placeholder="0"></div></div>
                     <div class="category-row"><div class="category-name">2. PENGAJIAN ALQURAN</div><div class="input-rm-group"><span class="input-rm-prefix">RM</span><input type="number" id="fee-alquran" class="form-control input-rm-control input-fee" min="0" placeholder="0"></div></div>
@@ -468,6 +497,12 @@ body { font-family: var(--font-main); background: var(--bg-gradient); color: var
                   <span class="badge badge-success" id="receipt-no-display">FQC-1100</span>
                 </div>
                 <div class="card-body" style="background:#525659; padding:1.25rem;">
+                  <div style="margin-bottom:10px; background:rgba(255,255,255,0.1); padding:8px 12px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+                    <label style="color:#ffffff; font-size:0.78rem; font-weight:700; display:flex; align-items:center; gap:8px; cursor:pointer;">
+                      <input type="checkbox" id="show-discount-on-receipt" onchange="renderReceiptPreview()" style="width:16px; height:16px; cursor:pointer;">
+                      <span><i class="fa-solid fa-percent" style="color:#fef08a;"></i> Paparkan diskaun dalam resit</span>
+                    </label>
+                  </div>
                   <div class="receipt-wrapper">
                     <div id="receipt-card-printable" class="receipt-card-container">
                       <img src="assets/pbaq-bg.png" class="receipt-watermark img-target-bg" alt="Watermark" onError="this.src=DEFAULT_PLACEHOLDERS.background">
@@ -650,9 +685,31 @@ function safeSetStorage(key, val) {
   try { if (typeof localStorage !== "undefined") localStorage.setItem(key, val); } catch (e) {}
 }
 
+// Master Yuran FQC Catalog (Standard Catalog Prices)
+const MASTER_YURAN_CATALOG = [
+  { id: "mengaji", name: "1. KELAS MENGAJI", category: "mengaji", hargaStandard: 130, pendaftaran: 100, bulanan: 130, buku: 20 },
+  { id: "mengaji_online", name: "2. KELAS MENGAJI ONLINE", category: "mengaji_online", hargaStandard: 150, pendaftaran: 50, bulanan: 150, buku: 0 },
+  { id: "akademik_1", name: "3. TUISYEN AKADEMIK (1 SUBJEK)", category: "akademik", hargaStandard: 40, pendaftaran: 50, bulanan: 40, buku: 0 },
+  { id: "akademik_4", name: "3. TUISYEN AKADEMIK (4 SUBJEK)", category: "akademik", hargaStandard: 110, pendaftaran: 50, bulanan: 110, buku: 0 },
+  { id: "kafa", name: "4. TUISYEN KAFA (THN 2-6)", category: "kafa", hargaStandard: 100, pendaftaran: 100, bulanan: 100, buku: 60 },
+  { id: "jawi", name: "5. KELAS KHAS JAWI", category: "jawi", hargaStandard: 100, pendaftaran: 100, bulanan: 100, buku: 60 },
+  { id: "upkk", name: "6. KELAS UPKK", category: "upkk", hargaStandard: 100, pendaftaran: 100, bulanan: 100, buku: 64 },
+  { id: "psra", name: "7. KELAS PSRA", category: "psra", hargaStandard: 100, pendaftaran: 100, bulanan: 100, buku: 60 },
+  { id: "transit_biasa", name: "8. TRANSIT FQC (BIASA)", category: "transit", hargaStandard: 260, pendaftaran: 150, bulanan: 260, buku: 0 },
+  { id: "transit_petang", name: "8. TRANSIT FQC (SEHINGGA PETANG)", category: "transit", hargaStandard: 310, pendaftaran: 150, bulanan: 310, buku: 0 },
+  { id: "transit_mengaji", name: "8. TRANSIT (TAMBAHAN MENGAJI)", category: "transit", hargaStandard: 50, pendaftaran: 0, bulanan: 50, buku: 0 },
+  { id: "transit_ot", name: "8. TRANSIT (TAMBAHAN OT)", category: "transit", hargaStandard: 40, pendaftaran: 0, bulanan: 40, buku: 0 },
+  { id: "buku_umum", name: "BUKU REKOD / MODUL", category: "buku", hargaStandard: 50, pendaftaran: 0, bulanan: 0, buku: 50 },
+  { id: "pendaftaran_umum", name: "PENDAFTARAN UMUM", category: "pendaftaran", hargaStandard: 100, pendaftaran: 100, bulanan: 0, buku: 0 },
+  { id: "sumbangan", name: "SUMBANGAN", category: "sumbangan", hargaStandard: 0, pendaftaran: 0, bulanan: 0, buku: 0 },
+  { id: "lain", name: "LAIN-LAIN", category: "lain", hargaStandard: 0, pendaftaran: 0, bulanan: 0, buku: 0 }
+];
+
 let appState = {
   students: [...MASTER_STUDENTS_DEFAULT],
   payments: [],
+  specialRates: [],
+  dynamicItems: [],
   selectedStudent: null,
   currentReceiptNo: "FQC-1100",
   appsScriptUrl: safeGetStorage("fqc_apps_script_url", "https://script.google.com/macros/s/AKfycbwtcUcbZ4y8dMRZmlnY8fNTC6wMcBamt9SepigfN7uoNhrZ4x3UMumr0KIKUHZDsmE/exec"),

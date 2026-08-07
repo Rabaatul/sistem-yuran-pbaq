@@ -66,10 +66,32 @@ function safeSetStorage(key, val) {
   } catch (e) {}
 }
 
+// Master Yuran FQC Catalog (Standard Catalog Prices)
+const MASTER_YURAN_CATALOG = [
+  { id: "mengaji", name: "1. KELAS MENGAJI", category: "mengaji", hargaStandard: 130, pendaftaran: 100, bulanan: 130, buku: 20 },
+  { id: "mengaji_online", name: "2. KELAS MENGAJI ONLINE", category: "mengaji_online", hargaStandard: 150, pendaftaran: 50, bulanan: 150, buku: 0 },
+  { id: "akademik_1", name: "3. TUISYEN AKADEMIK (1 SUBJEK)", category: "akademik", hargaStandard: 40, pendaftaran: 50, bulanan: 40, buku: 0 },
+  { id: "akademik_4", name: "3. TUISYEN AKADEMIK (4 SUBJEK)", category: "akademik", hargaStandard: 110, pendaftaran: 50, bulanan: 110, buku: 0 },
+  { id: "kafa", name: "4. TUISYEN KAFA (THN 2-6)", category: "kafa", hargaStandard: 100, pendaftaran: 100, bulanan: 100, buku: 60 },
+  { id: "jawi", name: "5. KELAS KHAS JAWI", category: "jawi", hargaStandard: 100, pendaftaran: 100, bulanan: 100, buku: 60 },
+  { id: "upkk", name: "6. KELAS UPKK", category: "upkk", hargaStandard: 100, pendaftaran: 100, bulanan: 100, buku: 64 },
+  { id: "psra", name: "7. KELAS PSRA", category: "psra", hargaStandard: 100, pendaftaran: 100, bulanan: 100, buku: 60 },
+  { id: "transit_biasa", name: "8. TRANSIT FQC (BIASA)", category: "transit", hargaStandard: 260, pendaftaran: 150, bulanan: 260, buku: 0 },
+  { id: "transit_petang", name: "8. TRANSIT FQC (SEHINGGA PETANG)", category: "transit", hargaStandard: 310, pendaftaran: 150, bulanan: 310, buku: 0 },
+  { id: "transit_mengaji", name: "8. TRANSIT (TAMBAHAN MENGAJI)", category: "transit", hargaStandard: 50, pendaftaran: 0, bulanan: 50, buku: 0 },
+  { id: "transit_ot", name: "8. TRANSIT (TAMBAHAN OT)", category: "transit", hargaStandard: 40, pendaftaran: 0, bulanan: 40, buku: 0 },
+  { id: "buku_umum", name: "BUKU REKOD / MODUL", category: "buku", hargaStandard: 50, pendaftaran: 0, bulanan: 0, buku: 50 },
+  { id: "pendaftaran_umum", name: "PENDAFTARAN UMUM", category: "pendaftaran", hargaStandard: 100, pendaftaran: 100, bulanan: 0, buku: 0 },
+  { id: "sumbangan", name: "SUMBANGAN", category: "sumbangan", hargaStandard: 0, pendaftaran: 0, bulanan: 0, buku: 0 },
+  { id: "lain", name: "LAIN-LAIN", category: "lain", hargaStandard: 0, pendaftaran: 0, bulanan: 0, buku: 0 }
+];
+
 // App State
 let appState = {
   students: [...MASTER_STUDENTS_DEFAULT],
   payments: [],
+  specialRates: [],
+  dynamicItems: [],
   selectedStudent: null,
   currentReceiptNo: "FQC-1100",
   appsScriptUrl: safeGetStorage("fqc_apps_script_url", "https://script.google.com/macros/s/AKfycbwtcUcbZ4y8dMRZmlnY8fNTC6wMcBamt9SepigfN7uoNhrZ4x3UMumr0KIKUHZDsmE/exec"),
@@ -98,6 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
   calculateNextReceiptNo();
   fetchStudentsFromBackend();
   fetchPaymentHistoryFromBackend();
+  fetchSpecialRatesFromBackend();
   renderDashboard();
   renderHistoryTable();
   renderReceiptPreview();
@@ -224,6 +247,7 @@ function initStudentSearch() {
         searchInput.value = student.nama;
         if (phoneDisplay) phoneDisplay.value = student.phone || '';
         dropdown.classList.remove("show");
+        checkSpecialRatesForStudent(student.nama);
         renderReceiptPreview();
       };
       dropdown.appendChild(item);
@@ -238,6 +262,9 @@ function initStudentSearch() {
   searchInput.addEventListener("input", (e) => {
     renderOptions(e.target.value);
     dropdown.classList.add("show");
+    if (e.target.value) {
+      checkSpecialRatesForStudent(e.target.value);
+    }
   });
 
   document.addEventListener("click", (e) => {
@@ -276,19 +303,29 @@ function calculateTotal() {
     return parseFloat(customTotalEl.value) || 0;
   }
 
+  let dynamicSum = 0;
+  if (Array.isArray(appState.dynamicItems)) {
+    appState.dynamicItems.forEach(i => { dynamicSum += (parseFloat(i.hargaDibayar) || 0); });
+  }
+
   const feeInputs = document.querySelectorAll(".input-fee");
-  let total = 0;
+  let staticSum = 0;
   feeInputs.forEach(input => {
-    const val = parseFloat(input.value) || 0;
-    total += val;
+    staticSum += (parseFloat(input.value) || 0);
   });
-  return total;
+
+  return dynamicSum + staticSum;
 }
 
 function updateTotalAmount() {
   const customTotalEl = document.getElementById("fee-total-custom");
-  const feeInputs = document.querySelectorAll(".input-fee");
   let calculatedSum = 0;
+
+  if (Array.isArray(appState.dynamicItems)) {
+    appState.dynamicItems.forEach(i => { calculatedSum += (parseFloat(i.hargaDibayar) || 0); });
+  }
+
+  const feeInputs = document.querySelectorAll(".input-fee");
   feeInputs.forEach(input => {
     calculatedSum += (parseFloat(input.value) || 0);
   });
@@ -399,10 +436,47 @@ function renderReceiptPreview() {
   let html = "";
   let totalAmount = 0;
   let hasItems = false;
+  const showDiscount = document.getElementById("show-discount-on-receipt")?.checked;
 
   const akademikKelas = document.getElementById("akademik-kelas")?.value || "";
   const akademikBulan = document.getElementById("akademik-bulan")?.value || "";
 
+  // 1. Render Dynamic Fee Items if any
+  if (Array.isArray(appState.dynamicItems) && appState.dynamicItems.length > 0) {
+    appState.dynamicItems.forEach(item => {
+      hasItems = true;
+      const paid = parseFloat(item.hargaDibayar) || 0;
+      totalAmount += paid;
+
+      if (showDiscount && item.isCustomDiscount && item.diskaun > 0) {
+        html += `
+          <tr class="active-item">
+            <td>${item.namaYuran} <br><small style="color:#d97706; font-size:0.7rem;">Standard: RM${item.hargaStandard}</small></td>
+            <td style="text-align:center;">-</td>
+            <td style="text-align:center;">${bulan}</td>
+            <td class="amount-cell">RM${item.hargaStandard}</td>
+          </tr>
+          <tr class="discount-item-row" style="background:#fffbeb; color:#b45309;">
+            <td style="font-size:0.75rem; font-style:italic; padding-left:15px;">↳ Diskaun (${item.sebabDiskaun})</td>
+            <td style="text-align:center;">-</td>
+            <td style="text-align:center;">-</td>
+            <td class="amount-cell" style="color:#dc2626;">-RM${item.diskaun}</td>
+          </tr>
+        `;
+      } else {
+        html += `
+          <tr class="active-item">
+            <td>${item.namaYuran}</td>
+            <td style="text-align:center;">-</td>
+            <td style="text-align:center;">${bulan}</td>
+            <td class="amount-cell">${paid.toFixed(0)}</td>
+          </tr>
+        `;
+      }
+    });
+  }
+
+  // 2. Render 10 Quick Categories
   categories.forEach(cat => {
     const val = parseFloat(document.getElementById(cat.inputId)?.value) || 0;
     if (val > 0) {
@@ -436,6 +510,12 @@ function renderReceiptPreview() {
         </td>
       </tr>
     `;
+  }
+
+  // If custom total is edited, override totalAmount display
+  const customTotalVal = document.getElementById("fee-total-custom")?.value;
+  if (isTotalCustomEdited && customTotalVal !== "") {
+    totalAmount = parseFloat(customTotalVal) || 0;
   }
 
   tableBody.innerHTML = html;
@@ -516,6 +596,20 @@ async function actionSimpanPembayaran() {
     const methodVal = document.querySelector('input[name="kaedahBayaran"]:checked')?.value;
     const catatanVal = document.getElementById("pay-catatan")?.value || "";
 
+    let hargaStandardTotal = 0;
+    let jumlahDiskaunTotal = 0;
+    let sebabDiskaunArr = [];
+
+    if (Array.isArray(appState.dynamicItems)) {
+      appState.dynamicItems.forEach(item => {
+        hargaStandardTotal += (parseFloat(item.hargaStandard) || 0);
+        jumlahDiskaunTotal += (parseFloat(item.diskaun) || 0);
+        if (item.isCustomDiscount && item.sebabDiskaun) {
+          sebabDiskaunArr.push(`${item.namaYuran}: ${item.sebabDiskaun}`);
+        }
+      });
+    }
+
     const paymentObj = {
       noResit: appState.currentReceiptNo,
       tarikh: dateFormatted,
@@ -532,6 +626,10 @@ async function actionSimpanPembayaran() {
       kelasKafa: parseFloat(document.getElementById("fee-kafa")?.value) || 0,
       kelasAkademik: parseFloat(document.getElementById("fee-akademik")?.value) || 0,
       transit: parseFloat(document.getElementById("fee-transit")?.value) || 0,
+      hargaStandard: hargaStandardTotal,
+      jumlahDiskaun: jumlahDiskaunTotal,
+      sebabDiskaun: sebabDiskaunArr.join(" | "),
+      butiranItem: JSON.stringify(appState.dynamicItems || []),
       jumlah: calculateTotal(),
       kaedahBayaran: methodVal,
       catatan: catatanVal,
@@ -778,7 +876,12 @@ async function actionCetakResit() {
 // Action: RESET BORANG
 function actionResetBorang() {
   appState.selectedStudent = null;
+  appState.dynamicItems = [];
   isTotalCustomEdited = false;
+
+  const noticeBox = document.getElementById("special-rate-notice");
+  if (noticeBox) noticeBox.style.display = "none";
+
   const customTotal = document.getElementById("fee-total-custom");
   if (customTotal) customTotal.value = "";
 
@@ -789,10 +892,11 @@ function actionResetBorang() {
   if (phoneDisplay) phoneDisplay.value = "";
 
   document.querySelectorAll(".input-fee").forEach(input => input.value = "");
-  document.getElementById("akademik-kelas").value = "";
-  document.getElementById("akademik-bulan").value = "";
-  document.getElementById("pay-catatan").value = "";
+  if (document.getElementById("akademik-kelas")) document.getElementById("akademik-kelas").value = "";
+  if (document.getElementById("akademik-bulan")) document.getElementById("akademik-bulan").value = "";
+  if (document.getElementById("pay-catatan")) document.getElementById("pay-catatan").value = "";
 
+  renderDynamicFeeItems();
   initDateAndMonth();
   updateTotalAmount();
   renderReceiptPreview();
@@ -809,6 +913,7 @@ function renderDashboard() {
 
   let totalToday = 0;
   let totalMonth = 0;
+  let discountMonth = 0;
 
   appState.payments.forEach(p => {
     if (p.tarikh === todayStr) {
@@ -816,18 +921,22 @@ function renderDashboard() {
     }
     if (p.bulan && p.bulan.toUpperCase() === currentMonth) {
       totalMonth += p.jumlah || 0;
+      discountMonth += (p.jumlahDiskaun || 0);
     }
   });
 
   const elToday = document.getElementById("dash-total-today");
   const elMonth = document.getElementById("dash-total-month");
+  const elDiscount = document.getElementById("dash-total-discount-month");
+  const elSpecialCount = document.getElementById("dash-special-rate-count");
   const elCount = document.getElementById("dash-total-transactions");
   const elStudents = document.getElementById("dash-total-students");
 
   if (elToday) elToday.innerText = `RM ${totalToday.toFixed(2)}`;
   if (elMonth) elMonth.innerText = `RM ${totalMonth.toFixed(2)}`;
-  if (elCount) elCount.innerText = appState.payments.length;
-  if (elStudents) elStudents.innerText = appState.students.length;
+  if (elDiscount) elDiscount.innerText = `RM ${discountMonth.toFixed(2)}`;
+  if (elSpecialCount) elSpecialCount.innerText = Array.isArray(appState.specialRates) ? appState.specialRates.length : 0;
+  if (elCount) elCount.innerText = appState.students.length;
 
   // Recent 5 Payments Table
   const tbody = document.getElementById("dash-recent-tbody");

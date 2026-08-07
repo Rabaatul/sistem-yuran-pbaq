@@ -115,9 +115,27 @@
             <div class="stat-card gold">
               <div class="stat-icon"><i class="fa-solid fa-calendar-check"></i></div>
               <div>
-                <div class="stat-label">Jumlah Bayaran Bulan Ini</div>
+                <div class="stat-label">Kutipan Bulan Ini</div>
                 <div class="stat-value" id="dash-total-month">RM 0.00</div>
                 <div class="stat-subtext">Kutipan bulan ini</div>
+              </div>
+            </div>
+
+            <div class="stat-card red" style="border-left:4px solid #d97706;">
+              <div class="stat-icon" style="background:#fef3c7; color:#d97706;"><i class="fa-solid fa-tags"></i></div>
+              <div>
+                <div class="stat-label">Diskaun Bulan Ini</div>
+                <div class="stat-value" id="dash-total-discount-month" style="color:#d97706;">RM 0.00</div>
+                <div class="stat-subtext">Diskaun diberikan</div>
+              </div>
+            </div>
+
+            <div class="stat-card green" style="border-left:4px solid #0284c7;">
+              <div class="stat-icon" style="background:#e0f2fe; color:#0369a1;"><i class="fa-solid fa-user-tag"></i></div>
+              <div>
+                <div class="stat-label">Murid Harga Khas</div>
+                <div class="stat-value" id="dash-special-rate-count" style="color:#0369a1;">0</div>
+                <div class="stat-subtext">Rekod aktif HARGA_KHAS</div>
               </div>
             </div>
 
@@ -134,7 +152,7 @@
               <div class="stat-icon"><i class="fa-solid fa-user-graduate"></i></div>
               <div>
                 <div class="stat-label">Jumlah Murid</div>
-                <div class="stat-value" id="dash-total-students">38</div>
+                <div class="stat-value" id="dash-total-students">39</div>
                 <div class="stat-subtext">Database FQC</div>
               </div>
             </div>
@@ -240,14 +258,29 @@
               <div class="card">
                 <div class="card-header">
                   <div class="card-title">
-                    <i class="fa-solid fa-list-check"></i> Butiran Pembayaran Yuran
+                    <i class="fa-solid fa-list-check"></i> Butiran Pembayaran Yuran (Master Yuran FQC)
                   </div>
-                  <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">
-                    Ruangan kosong dianggap RM0
-                  </div>
+                  <button type="button" class="btn btn-sm btn-primary" onclick="addDynamicFeeItem()">
+                    <i class="fa-solid fa-plus"></i> TAMBAH YURAN
+                  </button>
                 </div>
                 <div class="card-body">
                   
+                  <!-- Special Rate Notice Box (Auto Detect) -->
+                  <div class="special-rate-notice-box" id="special-rate-notice" style="display:none;">
+                    <i class="fa-solid fa-star" style="color:#d97706; font-size:1.1rem;"></i>
+                    <div id="special-rate-notice-text">Harga khas murid dikesan!</div>
+                  </div>
+
+                  <!-- Dynamic Fee Items List -->
+                  <div id="dynamic-fee-items-list" class="dynamic-fee-items-list">
+                    <!-- Dynamic Fee Items Rendered Here -->
+                  </div>
+
+                  <div style="font-size:0.78rem; font-weight:700; color:var(--text-muted); margin: 0.75rem 0 0.4rem 0;">
+                    <i class="fa-solid fa-bars"></i> Atau masukkan bayaran borang ringkas 10 kategori di bawah:
+                  </div>
+
                   <div class="fee-categories-box">
                     
                     <div class="category-row">
@@ -425,6 +458,14 @@
                 </div>
                 <div class="card-body" style="background:#525659; padding:1.25rem;">
                   
+                  <!-- Option: Show Discount on Receipt Toggle -->
+                  <div style="margin-bottom: 10px; background: rgba(255,255,255,0.1); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                    <label style="color: #ffffff; font-size: 0.78rem; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                      <input type="checkbox" id="show-discount-on-receipt" onchange="renderReceiptPreview()" style="width: 16px; height: 16px; cursor: pointer;">
+                      <span><i class="fa-solid fa-percent" style="color: #fef08a;"></i> Paparkan diskaun dalam resit</span>
+                    </label>
+                  </div>
+
                   <div class="receipt-wrapper">
                     
                     <!-- Official FQC Receipt Printable Container -->
