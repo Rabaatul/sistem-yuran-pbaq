@@ -88,7 +88,7 @@ let appState = {
   payments: [],
   selectedStudent: null,
   currentReceiptNo: "FQC-1100",
-  appsScriptUrl: safeGetStorage("fqc_apps_script_url", "https://script.google.com/macros/s/AKfycbwQIF-Z9UYikdll4Ohl81mPCq9hWYDk39TcHPHRmLg/exec"),
+  appsScriptUrl: safeGetStorage("fqc_apps_script_url", "https://script.google.com/macros/s/AKfycbx5Tc9OJfzfMRWx_nTpSDPAGWUwuZfwimJCrCxVwzmuQv4o02hu60xzEv2v0v6A32yf-w/exec"),
   config: {
     logoUrl: safeGetStorage("fqc_logo_url", "assets/logo.png"),
     signatureUrl: safeGetStorage("fqc_signature_url", "assets/signature.png"),
