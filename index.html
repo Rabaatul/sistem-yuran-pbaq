@@ -3,18 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Pembayaran Yuran & Resit Digital - Fathul Quranic Centre (FQC)</title>
-
-  <!-- Google Fonts & Font Awesome Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>Sistem Pembayaran Yuran - Fathul Quranic Centre (FQC)</title>
   
-  <!-- html2canvas Library for Image Export -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-  <!-- Custom Stylesheet -->
+  <!-- FontAwesome & Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -33,11 +25,11 @@
 
   <!-- Mobile Top Bar -->
   <div class="mobile-nav-bar no-print">
-    <div class="mobile-brand">
-      <img src="assets/logo.png" class="img-target-logo" alt="FQC Logo" style="width:30px; height:30px; border-radius:4px;" onError="this.src=DEFAULT_PLACEHOLDERS.logo">
-      <span>FATHUL QURANIC CENTRE</span>
+    <div class="mobile-brand" style="display:flex; align-items:center; gap:0.5rem;">
+      <img src="assets/logo.png" class="img-target-logo" alt="FQC Logo" style="width:32px; height:32px; border-radius:4px;" onError="this.src=DEFAULT_PLACEHOLDERS.logo">
+      <span style="font-weight:800; font-size:0.9rem;">FATHUL QURANIC CENTRE</span>
     </div>
-    <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">
+    <button class="btn btn-outline" style="padding:4px 10px; color:#fff; border-color:rgba(255,255,255,0.3);" onclick="toggleMobileSidebar()">
       <i class="fa-solid fa-bars"></i>
     </button>
   </div>
@@ -68,15 +60,11 @@
           <i class="fa-solid fa-receipt"></i>
           <span>Rekod Bayaran</span>
         </button>
-        <button class="nav-link" id="nav-tetapan" onclick="switchView('tetapan')">
-          <i class="fa-solid fa-gear"></i>
-          <span>Tetapan</span>
-        </button>
       </nav>
 
       <div class="sidebar-footer">
         <div>Fathul Quranic Centre (FQC)</div>
-        <div style="margin-top:2px; color:var(--accent-gold);">Selangor, Malaysia</div>
+        <div style="margin-top:2px; color:var(--accent-gold);">Batu Caves, Selangor</div>
       </div>
     </aside>
 
@@ -86,105 +74,65 @@
       <!-- Top Header Bar -->
       <header class="top-header no-print">
         <div class="header-title-box">
-          <h1>FATHUL QURANIC CENTRE (FQC)</h1>
-          <div class="header-subtitle">Pusat Perdagangan Selaseh, 68100 Batu Caves, Selangor</div>
+          <h1>Sistem Yuran & Resit Digital FQC</h1>
+          <div class="header-subtitle">Pengurusan Pembayaran Yuran Mengaji, KAFA, UPKK, PSRA & Transit</div>
         </div>
         <div class="header-badge">
-          <i class="fa-solid fa-shield-halved"></i>
-          <span>Portal Admin FQC</span>
+          <i class="fa-solid fa-shield-halved"></i> Google Sheets Backend Connected
         </div>
       </header>
 
-      <div class="page-body">
-
+      <!-- Content Body Area -->
+      <div class="content-body">
+        
         <!-- ===================================================================
-             VIEW 1: DASHBOARD
+             VIEW 1: DASHBOARD ANALITIK
              =================================================================== -->
         <section id="view-dashboard" class="tab-view active">
           
-          <div class="dashboard-grid">
-            <div class="stat-card">
-              <div class="stat-icon"><i class="fa-solid fa-calendar-day"></i></div>
-              <div>
-                <div class="stat-label">Jumlah Bayaran Hari Ini</div>
-                <div class="stat-value" id="dash-total-today">RM 0.00</div>
-                <div class="stat-subtext">Transaksi hari ini</div>
+          <div class="dashboard-metrics-grid">
+            <div class="metric-card">
+              <div class="metric-info">
+                <h3>Jumlah Kutipan</h3>
+                <div class="metric-value" id="dash-total-kutipan">RM 0</div>
+              </div>
+              <div class="metric-icon">
+                <i class="fa-solid fa-wallet"></i>
               </div>
             </div>
 
-            <div class="stat-card gold">
-              <div class="stat-icon"><i class="fa-solid fa-calendar-check"></i></div>
-              <div>
-                <div class="stat-label">Kutipan Bulan Ini</div>
-                <div class="stat-value" id="dash-total-month">RM 0.00</div>
-                <div class="stat-subtext">Kutipan bulan ini</div>
+            <div class="metric-card">
+              <div class="metric-info">
+                <h3>Jumlah Murid FQC</h3>
+                <div class="metric-value" id="dash-total-murid">39</div>
+              </div>
+              <div class="metric-icon">
+                <i class="fa-solid fa-user-graduate"></i>
               </div>
             </div>
 
-            <div class="stat-card red" style="border-left:4px solid #d97706;">
-              <div class="stat-icon" style="background:#fef3c7; color:#d97706;"><i class="fa-solid fa-tags"></i></div>
-              <div>
-                <div class="stat-label">Diskaun Bulan Ini</div>
-                <div class="stat-value" id="dash-total-discount-month" style="color:#d97706;">RM 0.00</div>
-                <div class="stat-subtext">Diskaun diberikan</div>
+            <div class="metric-card">
+              <div class="metric-info">
+                <h3>Resit Dikeluarkan</h3>
+                <div class="metric-value" id="dash-total-resit">0</div>
               </div>
-            </div>
-
-            <div class="stat-card green" style="border-left:4px solid #0284c7;">
-              <div class="stat-icon" style="background:#e0f2fe; color:#0369a1;"><i class="fa-solid fa-user-tag"></i></div>
-              <div>
-                <div class="stat-label">Murid Harga Khas</div>
-                <div class="stat-value" id="dash-special-rate-count" style="color:#0369a1;">0</div>
-                <div class="stat-subtext">Rekod aktif HARGA_KHAS</div>
-              </div>
-            </div>
-
-            <div class="stat-card blue">
-              <div class="stat-icon"><i class="fa-solid fa-receipt"></i></div>
-              <div>
-                <div class="stat-label">Jumlah Transaksi</div>
-                <div class="stat-value" id="dash-total-transactions">0</div>
-                <div class="stat-subtext">Rekod disimpan</div>
-              </div>
-            </div>
-
-            <div class="stat-card purple">
-              <div class="stat-icon"><i class="fa-solid fa-user-graduate"></i></div>
-              <div>
-                <div class="stat-label">Jumlah Murid</div>
-                <div class="stat-value" id="dash-total-students">39</div>
-                <div class="stat-subtext">Database FQC</div>
+              <div class="metric-icon">
+                <i class="fa-solid fa-file-invoice"></i>
               </div>
             </div>
           </div>
 
+          <!-- Quick Action -->
           <div class="card">
             <div class="card-header">
               <div class="card-title">
-                <i class="fa-solid fa-clock-rotate-left"></i> Transaksi Pembayaran Terkini
+                <i class="fa-solid fa-bolt"></i> Tindakan Pantas
               </div>
-              <button class="btn btn-primary" onclick="switchView('bayaran')">
-                <i class="fa-solid fa-plus"></i> Pembayaran Baru
-              </button>
             </div>
-            <div class="card-body" style="padding:0;">
-              <div class="table-responsive">
-                <table class="custom-table">
-                  <thead>
-                    <tr>
-                      <th>No Resit</th>
-                      <th>Tarikh</th>
-                      <th>Nama Murid</th>
-                      <th>Bulan</th>
-                      <th>Jumlah (RM)</th>
-                      <th>Kaedah</th>
-                    </tr>
-                  </thead>
-                  <tbody id="dash-recent-tbody">
-                    <!-- Dynamic -->
-                  </tbody>
-                </table>
-              </div>
+            <div class="card-body">
+              <button class="btn btn-primary" onclick="switchView('bayaran')">
+                <i class="fa-solid fa-plus-circle"></i> Buat Pembayaran Yuran Baru
+              </button>
             </div>
           </div>
 
@@ -210,226 +158,176 @@
                 <div class="card-body">
                   <div class="form-group">
                     <label class="form-label">
-                      Nama Murid <span class="required">*</span>
-                      <button type="button" class="btn-refresh-students" onclick="fetchStudentsFromBackend(true)" title="Kemaskini Senarai Murid dari Google Sheets">
+                      Nama Murid <span style="color:red;">*</span> 
+                      <button type="button" class="btn-refresh-students" onclick="fetchStudentsFromBackend(true)" title="Kemaskini Senarai Murid">
                         <i class="fa-solid fa-rotate"></i> Kemaskini
                       </button>
                     </label>
                     <div class="searchable-select">
-                      <input type="text" id="student-search-input" class="select-search-input" placeholder="Cari atau pilih nama murid..." autocomplete="off">
-                      <i class="fa-solid fa-magnifying-glass select-search-icon"></i>
+                      <input type="text" id="student-search-input" class="form-control" placeholder="Taip nama murid..." autocomplete="off">
                       <div id="student-dropdown-options" class="dropdown-options"></div>
                     </div>
                   </div>
 
-                  <div class="form-row">
+                  <div class="grid-2">
                     <div class="form-group">
-                      <label class="form-label">No. WhatsApp Parent</label>
-                      <input type="text" id="parent-phone-display" class="form-control" placeholder="017xxxxxxx" readonly>
+                      <label class="form-label">No. WhatsApp Ibu Bapa</label>
+                      <input type="text" id="parent-phone-display" class="form-control" placeholder="Contoh: 0145366009">
                     </div>
-
                     <div class="form-group">
-                      <label class="form-label">Tarikh <span class="required">*</span></label>
+                      <label class="form-label">Tarikh Pembayaran</label>
                       <input type="date" id="pay-date" class="form-control">
                     </div>
+                  </div>
 
-                    <div class="form-group">
-                      <label class="form-label">Bulan Bayaran <span class="required">*</span></label>
-                      <select id="pay-month" class="form-control">
-                        <option value="JANUARI">JANUARI</option>
-                        <option value="FEBRUARI">FEBRUARI</option>
-                        <option value="MAC">MAC</option>
-                        <option value="APRIL">APRIL</option>
-                        <option value="MEI">MEI</option>
-                        <option value="JUN">JUN</option>
-                        <option value="JULAI">JULAI</option>
-                        <option value="OGOS">OGOS</option>
-                        <option value="SEPTEMBER">SEPTEMBER</option>
-                        <option value="OKTOBER">OKTOBER</option>
-                        <option value="NOVEMBER">NOVEMBER</option>
-                        <option value="DISEMBER">DISEMBER</option>
-                      </select>
-                    </div>
+                  <div class="form-group">
+                    <label class="form-label">Bulan Bayaran Yuran</label>
+                    <select id="pay-month" class="form-select">
+                      <option value="JANUARI">JANUARI</option>
+                      <option value="FEBRUARI">FEBRUARI</option>
+                      <option value="MAC">MAC</option>
+                      <option value="APRIL">APRIL</option>
+                      <option value="MEI">MEI</option>
+                      <option value="JUN">JUN</option>
+                      <option value="JULAI">JULAI</option>
+                      <option value="OGOS" selected>OGOS</option>
+                      <option value="SEPTEMBER">SEPTEMBER</option>
+                      <option value="OKTOBER">OKTOBER</option>
+                      <option value="NOVEMBER">NOVEMBER</option>
+                      <option value="DISEMBER">DISEMBER</option>
+                    </select>
                   </div>
                 </div>
               </div>
 
-              <!-- Card Butiran Pembayaran -->
+              <!-- Card Checkbox Fee Cards Container -->
               <div class="card">
                 <div class="card-header">
                   <div class="card-title">
-                    <i class="fa-solid fa-square-check"></i> Butiran Pembayaran Yuran (Kotak Tick)
-                  </div>
-                  <div style="font-size:0.78rem; font-weight:700; color:var(--primary-dark);">
-                    Tick item yang dibayar. Harga RM boleh diedit secara LIVE.
+                    <i class="fa-solid fa-list-check"></i> Pilih Yuran & Harga RM (Kotak Tick)
                   </div>
                 </div>
                 <div class="card-body">
-                  
-                  <!-- Special Rate Notice Box (Auto Detect) -->
-                  <div class="special-rate-notice-box" id="special-rate-notice" style="display:none;">
-                    <i class="fa-solid fa-star" style="color:#d97706; font-size:1.1rem;"></i>
-                    <div id="special-rate-notice-text">Harga khas murid dikesan!</div>
-                  </div>
-
-                  <!-- Container Grouped Checkbox Fee Cards -->
                   <div id="fee-checkbox-groups-container">
-                    <!-- Checkbox fee cards will be rendered here dynamically -->
+                    <!-- Dynamic Checkbox Fee Cards rendered by app.js -->
                   </div>
 
+                  <div class="total-summary-card">
+                    <div class="total-summary-label">JUMLAH KESELURUHAN</div>
+                    <div class="total-summary-input-group">
+                      <span class="total-summary-prefix">RM</span>
+                      <input type="number" id="fee-total-custom" class="total-summary-input" placeholder="0" oninput="onCustomTotalInput()">
+                    </div>
+                  </div>
                 </div>
               </div>
 
-                  <!-- Kaedah Bayaran & Catatan -->
-                  <div style="margin-top:1.25rem;">
-                    <label class="form-label">Kaedah Bayaran <span class="required">*</span></label>
-                    <div class="payment-methods">
-                      <label class="radio-card">
-                        <input type="radio" name="kaedahBayaran" value="TUNAI" checked>
-                        <span><i class="fa-solid fa-money-bill-wave" style="color:var(--primary-main);"></i> TUNAI</span>
-                      </label>
-                      <label class="radio-card">
-                        <input type="radio" name="kaedahBayaran" value="TRANSFER">
-                        <span><i class="fa-solid fa-building-columns" style="color:#0284c7;"></i> TRANSFER</span>
-                      </label>
-                    </div>
+              <!-- Card Kaedah Bayaran -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">
+                    <i class="fa-solid fa-credit-card"></i> Kaedah Pembayaran
                   </div>
-
-                  <div style="margin-top:1rem;">
-                    <label class="form-label">Catatan (Optional)</label>
-                    <input type="text" id="pay-catatan" class="form-control" placeholder="Catatan tambahan jika ada...">
-                  </div>
-
-                  <!-- Total Ringkasan (Editable) -->
-                  <div class="total-summary-box">
-                    <div class="total-title">
-                      JUMLAH KESELURUHAN
-                      <small style="font-weight:600; font-size:0.68rem; color:#fef08a; text-transform:none; display:block; margin-top:2px;">(Boleh diedit secara manual)</small>
-                    </div>
-                    <div class="total-amount-input-group">
-                      <span class="total-currency-prefix">RM</span>
-                      <input type="number" id="fee-total-custom" class="form-control total-custom-input" min="0" step="1" placeholder="0" oninput="onCustomTotalInput()">
-                    </div>
-                  </div>
-
-                  <!-- Toolbar Butang Sistem -->
-                  <div class="action-buttons-toolbar">
-                    <button id="btn-simpan" class="btn btn-primary" onclick="actionSimpanPembayaran()">
-                      <i class="fa-solid fa-floppy-disk"></i> SIMPAN REKOD
-                    </button>
-                    <button id="btn-whatsapp" class="btn btn-whatsapp" onclick="actionHantarWhatsapp()">
-                      <i class="fa-brands fa-whatsapp"></i> HANTAR WHATSAPP
-                    </button>
-                    <button class="btn btn-gold" onclick="actionDownloadPng()">
-                      <i class="fa-solid fa-file-image"></i> DOWNLOAD PNG
-                    </button>
-                    <button class="btn btn-outline" onclick="actionCetakResit()">
-                      <i class="fa-solid fa-print"></i> CETAK
-                    </button>
-                    <button class="btn btn-danger-outline" onclick="actionResetBorang()">
-                      <i class="fa-solid fa-rotate-left"></i> RESET
-                    </button>
-                  </div>
-
                 </div>
+                <div class="card-body">
+                  <div class="payment-method-grid">
+                    <label class="method-radio-label selected" id="lbl-tunai">
+                      <input type="radio" name="kaedahBayaran" value="TUNAI" checked>
+                      <i class="fa-solid fa-money-bill-wave"></i> TUNAI
+                    </label>
+                    <label class="method-radio-label" id="lbl-transfer">
+                      <input type="radio" name="kaedahBayaran" value="ONLINE TRANSFER">
+                      <i class="fa-solid fa-building-columns"></i> TRANSFER
+                    </label>
+                    <label class="method-radio-label" id="lbl-qr">
+                      <input type="radio" name="kaedahBayaran" value="QR CODE / E-WALLET">
+                      <i class="fa-solid fa-qrcode"></i> QR CODE
+                    </label>
+                    <label class="method-radio-label" id="lbl-cek">
+                      <input type="radio" name="kaedahBayaran" value="CEK">
+                      <i class="fa-solid fa-money-check"></i> CEK
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Buttons Toolbar -->
+              <div class="action-toolbar no-print">
+                <button class="btn btn-primary" id="btn-simpan" onclick="actionSimpanPembayaran()">
+                  <i class="fa-solid fa-floppy-disk"></i> Simpan Resit
+                </button>
+                <button class="btn btn-whatsapp" id="btn-whatsapp" onclick="actionHantarWhatsapp()">
+                  <i class="fa-brands fa-whatsapp"></i> Simpan & Hantar WA
+                </button>
+                <button class="btn btn-outline" onclick="actionCetakResit()">
+                  <i class="fa-solid fa-print"></i> Cetak
+                </button>
+                <button class="btn btn-outline" style="color:red;" onclick="actionResetBorang()">
+                  <i class="fa-solid fa-rotate-left"></i> Reset
+                </button>
               </div>
 
             </div>
 
-            <!-- Digital Receipt Preview Panel -->
+            <!-- Preview Resit Digital (A4 Format) -->
             <div class="receipt-preview-section">
-              <div class="card" style="position:sticky; top:1rem;">
-                <div class="card-header">
-                  <div class="card-title">
-                    <i class="fa-solid fa-receipt"></i> Paparan Resit Rasmi Digital FQC
-                  </div>
-                  <span class="badge badge-success" id="receipt-no-display">FQC-1100</span>
-                </div>
-                <div class="card-body" style="background:#525659; padding:1.25rem;">
-                  
-                  <!-- Option: Show Discount on Receipt Toggle -->
-                  <div style="margin-bottom: 10px; background: rgba(255,255,255,0.1); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
-                    <label style="color: #ffffff; font-size: 0.78rem; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                      <input type="checkbox" id="show-discount-on-receipt" onchange="renderReceiptPreview()" style="width: 16px; height: 16px; cursor: pointer;">
-                      <span><i class="fa-solid fa-percent" style="color: #fef08a;"></i> Paparkan diskaun dalam resit</span>
-                    </label>
-                  </div>
-
-                  <div class="receipt-wrapper">
-                    
-                    <!-- Official FQC Receipt Printable Container -->
-                    <div id="receipt-card-printable" class="receipt-card-container">
-                      
-                      <!-- Watermark Image Background -->
-                      <img src="assets/pbaq-bg.png" class="receipt-watermark img-target-bg" alt="Watermark" onError="this.src=DEFAULT_PLACEHOLDERS.background">
-                      
-                      <div class="receipt-content">
-                        
-                        <!-- Header -->
-                        <div class="receipt-header-row">
-                          <img src="assets/logo.png" class="receipt-logo-img img-target-logo" alt="Logo FQC" onError="this.src=DEFAULT_PLACEHOLDERS.logo">
-                          <div class="receipt-header-text">
-                            <div class="receipt-org-title">Fathul Quranic Centre (FQC) (NS0326067-A)</div>
-                            <div class="receipt-org-address">
-                              5-2, 2ND FLOOR, JLN PPS-1,<br>
-                              PUSAT PERDAGANGAN SELASEH,<br>
-                              68100 BATU CAVES, SELANGOR
-                            </div>
-                            <div class="receipt-org-tel">TEL (H/P): 014-5366009 / 03 6187 8543</div>
-                          </div>
-                        </div>
-
-                        <!-- Subheader & Metadata -->
-                        <div class="receipt-title-banner">RESIT RASMI</div>
-
-                        <div class="receipt-meta-grid">
-                          <div class="receipt-meta-item"><span>TARIKH:</span> <strong id="rc-date">05/08/2026</strong></div>
-                          <div class="receipt-meta-item"><span>BULAN:</span> <strong id="rc-month">OGOS</strong></div>
-                          <div class="receipt-meta-item"><span>NO:</span> <span id="rc-no" class="receipt-no-red">FQC-1100</span></div>
-                        </div>
-
-                        <div class="receipt-student-line">
-                          NAMA: <span id="rc-student-name">NUR AIMY SAFIY BINTI SHAIFUL AZMI</span>
-                        </div>
-
-                        <!-- Category Table -->
-                        <table class="receipt-table">
-                          <thead>
-                            <tr>
-                              <th>BUTIRAN</th>
-                              <th style="text-align:center; width:65px;">KELAS</th>
-                              <th style="text-align:center; width:65px;">BULAN</th>
-                              <th style="text-align:right; width:55px;">RM</th>
-                            </tr>
-                          </thead>
-                          <tbody id="rc-table-body">
-                            <!-- Dynamic Table Rows -->
-                          </tbody>
-                          <tfoot>
-                            <tr class="total-row">
-                              <td colspan="3" style="text-align:right;">JUMLAH</td>
-                              <td style="text-align:right;" id="rc-total-amount">RM170</td>
-                            </tr>
-                          </tfoot>
-                        </table>
-
-                        <!-- Footer & Signature -->
-                        <div class="receipt-footer-grid">
-                          <div>
-                            <div class="receipt-payment-method-badge" id="rc-payment-method">TUNAI</div>
-                            <div class="receipt-thankyou-text">TERIMA KASIH</div>
-                          </div>
-                          <div class="receipt-signature-box">
-                            <img src="assets/signature.png" class="receipt-signature-img img-target-signature" alt="Tandatangan" onError="this.src=DEFAULT_PLACEHOLDERS.signature">
-                            <div class="receipt-signature-line">TANDATANGAN</div>
-                          </div>
-                        </div>
-
-                      </div>
+              <div class="receipt-paper">
+                <div class="receipt-header">
+                  <div class="receipt-header-left">
+                    <img src="assets/logo.png" class="receipt-logo img-target-logo" alt="FQC Logo" onError="this.src=DEFAULT_PLACEHOLDERS.logo">
+                    <div>
+                      <div class="receipt-centre-title">FATHUL QURANIC CENTRE</div>
+                      <div class="receipt-centre-address">5-2, 2ND FLOOR, JLN PPS-1, PUSAT PERDAGANGAN SELASEH, 68100 BATU CAVES, SELANGOR<br>Tel: 014-5366009 / 03 6187 8543</div>
                     </div>
-
                   </div>
+                  <div class="receipt-title-badge">
+                    <h2>RESIT RASMI</h2>
+                    <div class="receipt-no-tag" id="rc-no">FQC-1100</div>
+                  </div>
+                </div>
 
+                <div class="receipt-meta-grid">
+                  <div class="receipt-meta-item">
+                    <span class="receipt-meta-label">NAMA MURID:</span>
+                    <span class="receipt-meta-value" id="rc-student-name">NAMA MURID</span>
+                  </div>
+                  <div class="receipt-meta-item">
+                    <span class="receipt-meta-label">TARIKH:</span>
+                    <span class="receipt-meta-value" id="rc-date">07/08/2026</span>
+                  </div>
+                  <div class="receipt-meta-item">
+                    <span class="receipt-meta-label">BULAN BAYARAN:</span>
+                    <span class="receipt-meta-value" id="rc-month">OGOS</span>
+                  </div>
+                  <div class="receipt-meta-item">
+                    <span class="receipt-meta-label">KAEDAH BAYARAN:</span>
+                    <span class="receipt-meta-value" id="rc-payment-method">TUNAI</span>
+                  </div>
+                </div>
+
+                <table class="receipt-table">
+                  <thead>
+                    <tr>
+                      <th>PERKARA / YURAN</th>
+                      <th style="text-align:center;">SUBJEK/KELAS</th>
+                      <th style="text-align:center;">BULAN</th>
+                      <th style="text-align:right;">JUMLAH (RM)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="rc-table-body">
+                    <!-- Dynamic Receipt Items -->
+                  </tbody>
+                </table>
+
+                <div class="receipt-footer-section">
+                  <div class="receipt-signature-box">
+                    <img src="assets/signature.png" class="receipt-signature-img img-target-signature" alt="Tandatangan FQC" onError="this.src=DEFAULT_PLACEHOLDERS.signature">
+                    <div class="receipt-signature-title">Pentadbir / Pengurusan FQC</div>
+                  </div>
+                  <div class="receipt-total-box">
+                    <div class="receipt-total-label">JUMLAH BAYARAN</div>
+                    <div class="receipt-total-value" id="rc-total-amount">RM0</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -442,145 +340,39 @@
              VIEW 3: REKOD BAYARAN (HISTORY TABLE)
              =================================================================== -->
         <section id="view-rekod" class="tab-view">
-          
           <div class="card">
             <div class="card-header">
               <div class="card-title">
-                <i class="fa-solid fa-receipt"></i> Rekod Pembayaran Yuran FQC
+                <i class="fa-solid fa-receipt"></i> Sejarah Rekod Pembayaran Yuran
               </div>
             </div>
             <div class="card-body">
-              
-              <!-- Search & Filter Controls -->
-              <div class="search-filter-bar">
-                <div class="search-input-wrapper">
-                  <i class="fa-solid fa-magnifying-glass"></i>
-                  <input type="text" id="history-search-input" class="form-control" placeholder="Cari nama murid / no resit / no whatsapp..." oninput="renderHistoryTable()">
-                </div>
-                <div style="width:200px;">
-                  <select id="history-month-filter" class="form-control" onchange="renderHistoryTable()">
-                    <option value="">Semua Bulan</option>
-                    <option value="JANUARI">JANUARI</option>
-                    <option value="FEBRUARI">FEBRUARI</option>
-                    <option value="MAC">MAC</option>
-                    <option value="APRIL">APRIL</option>
-                    <option value="MEI">MEI</option>
-                    <option value="JUN">JUN</option>
-                    <option value="JULAI">JULAI</option>
-                    <option value="OGOS">OGOS</option>
-                    <option value="SEPTEMBER">SEPTEMBER</option>
-                    <option value="OKTOBER">OKTOBER</option>
-                    <option value="NOVEMBER">NOVEMBER</option>
-                    <option value="DISEMBER">DISEMBER</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Table -->
-              <div class="table-responsive">
-                <table class="custom-table">
+              <div class="data-table-container">
+                <table class="data-table">
                   <thead>
                     <tr>
-                      <th>No Resit</th>
-                      <th>Tarikh</th>
-                      <th>Nama Murid</th>
-                      <th>Bulan</th>
-                      <th>Jumlah</th>
-                      <th>Kaedah</th>
-                      <th>WhatsApp Parent</th>
-                      <th>Tindakan</th>
+                      <th>NO. RESIT</th>
+                      <th>TARIKH</th>
+                      <th>NAMA MURID</th>
+                      <th>BULAN</th>
+                      <th>JUMLAH (RM)</th>
+                      <th>KAEDAH</th>
+                      <th>TINDAKAN</th>
                     </tr>
                   </thead>
-                  <tbody id="history-tbody">
-                    <!-- Dynamic -->
+                  <tbody id="history-table-body">
+                    <!-- Dynamic history rows -->
                   </tbody>
                 </table>
               </div>
-
             </div>
           </div>
-
-        </section>
-
-        <!-- ===================================================================
-             VIEW 4: TETAPAN & CONFIGURATION
-             =================================================================== -->
-        <section id="view-tetapan" class="tab-view">
-          
-          <div class="card" style="max-width:800px;">
-            <div class="card-header">
-              <div class="card-title">
-                <i class="fa-solid fa-sliders"></i> Tetapan Sistem & Database
-              </div>
-            </div>
-            <div class="card-body">
-              
-              <div class="form-group">
-                <label class="form-label">Google Apps Script Web App URL</label>
-                <input type="text" id="setting-script-url" class="form-control" placeholder="https://script.google.com/macros/s/.../exec">
-                <small style="color:var(--text-muted);">Tampal URL Web App Google Apps Script anda di sini untuk sync dengan Google Sheets.</small>
-              </div>
-
-              <div style="margin: 1.5rem 0; padding-top: 1rem; border-top: 1px solid var(--border-color);">
-                <h3 style="font-size:1rem; font-weight:800; color:var(--primary-dark); margin-bottom:1rem;">Muat Naik Gambar Resit (Logo / Tandatangan / Watermark)</h3>
-                
-                <div class="form-group" style="background:#f8fafc; padding:1rem; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
-                  <label class="form-label"><i class="fa-solid fa-image"></i> LOGO_URL (Logo FQC)</label>
-                  <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
-                    <input type="file" id="setting-logo-file" accept="image/*" class="form-control" style="flex:1;">
-                    <input type="text" id="setting-logo-url" class="form-control" placeholder="assets/logo.png atau URL Gambar" style="flex:1;">
-                  </div>
-                </div>
-
-                <div class="form-group" style="background:#f8fafc; padding:1rem; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
-                  <label class="form-label"><i class="fa-solid fa-signature"></i> SIGNATURE_URL (Tandatangan Admin)</label>
-                  <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
-                    <input type="file" id="setting-sig-file" accept="image/*" class="form-control" style="flex:1;">
-                    <input type="text" id="setting-sig-url" class="form-control" placeholder="assets/signature.png atau URL Gambar" style="flex:1;">
-                  </div>
-                </div>
-
-                <div class="form-group" style="background:#f8fafc; padding:1rem; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
-                  <label class="form-label"><i class="fa-solid fa-stamp"></i> BACKGROUND_URL (Background Watermark PBAQ/FQC)</label>
-                  <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
-                    <input type="file" id="setting-bg-file" accept="image/*" class="form-control" style="flex:1;">
-                    <input type="text" id="setting-bg-url" class="form-control" placeholder="assets/pbaq-bg.png atau URL Gambar" style="flex:1;">
-                  </div>
-                </div>
-              </div>
-
-              <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-                <button class="btn btn-primary" onclick="saveSettings()">
-                  <i class="fa-solid fa-floppy-disk"></i> Simpan Tetapan
-                </button>
-                <button class="btn btn-gold" onclick="runDatabaseSetup()">
-                  <i class="fa-solid fa-database"></i> Jalankan setupDatabase()
-                </button>
-              </div>
-
-            </div>
-          </div>
-
         </section>
 
       </div>
     </main>
-
   </div>
 
-  <!-- Modal View Receipt -->
-  <div id="receipt-modal" class="modal-backdrop">
-    <div class="modal-content-card">
-      <button class="modal-close-btn" onclick="closeModal()">&times;</button>
-      <div id="modal-receipt-container"></div>
-      <div style="display:flex; gap:0.5rem; margin-top:1rem; justify-content:flex-end;">
-        <button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Cetak</button>
-        <button class="btn btn-outline" onclick="closeModal()">Tutup</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Main JavaScript File -->
   <script src="js/app.js"></script>
 </body>
 </html>
