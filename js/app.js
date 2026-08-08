@@ -80,7 +80,7 @@ let appState = {
   selectedStudent: null,
   currentReceiptNo: "FQC-1100",
   lastUpdated: new Date().toLocaleString("ms-MY"),
-  appsScriptUrl: safeGetStorage("fqc_apps_script_url", "https://script.google.com/macros/s/AKfycbyku9YGRoiwVEGWOdGLrbXX7STxLgY-8W6atCGkH601/exec")
+  appsScriptUrl: safeGetStorage("fqc_apps_script_url", "")
 };
 
 function safeGetStorage(key, defaultVal = "") {
@@ -93,6 +93,10 @@ function safeSetStorage(key, val) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Pastikan loading overlay TIDAK aktif saat pertama kali dibuka
+  const loadingEl = document.getElementById("loading");
+  if (loadingEl) loadingEl.classList.remove("show");
+
   initDateAndMonth();
   initStudentLiveSearch();
   initFeeCalculations();
@@ -100,8 +104,11 @@ document.addEventListener("DOMContentLoaded", () => {
   loadLocalStoragePayments();
   loadLocalStorageStudents();
   calculateNextReceiptNo();
-  fetchStudentsFromBackend();
-  fetchPaymentHistoryFromBackend();
+  // Hanya sync dari backend jika ada URL dikonfigurasi
+  if (appState.appsScriptUrl) {
+    fetchStudentsFromBackend();
+    fetchPaymentHistoryFromBackend();
+  }
   renderDashboard();
   renderHistoryTable();
   renderStudentTable();
@@ -1137,8 +1144,11 @@ async function fetchStudentsFromBackend(showToastMsg = false) {
   }
 
   if (!appState.appsScriptUrl) return;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000); // 8-saat timeout
   try {
-    const res = await fetch(`${appState.appsScriptUrl}?action=getStudents`);
+    const res = await fetch(`${appState.appsScriptUrl}?action=getStudents`, { signal: controller.signal });
+    clearTimeout(timeoutId);
     const data = await res.json();
     if (showToastMsg) showLoading(false);
     if (data.success && Array.isArray(data.data) && data.data.length > 0) {
@@ -1149,6 +1159,7 @@ async function fetchStudentsFromBackend(showToastMsg = false) {
       if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik!`, "success");
     }
   } catch (err) {
+    clearTimeout(timeoutId);
     if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid.", "error"); }
   }
 }
@@ -1170,8 +1181,11 @@ async function fetchPaymentHistoryFromBackend() {
   }
 
   if (!appState.appsScriptUrl) return;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000); // 8-saat timeout
   try {
-    const res = await fetch(`${appState.appsScriptUrl}?action=getPaymentHistory`);
+    const res = await fetch(`${appState.appsScriptUrl}?action=getPaymentHistory`, { signal: controller.signal });
+    clearTimeout(timeoutId);
     const data = await res.json();
     if (data.success && Array.isArray(data.data) && data.data.length > 0) {
       appState.payments = data.data;
@@ -1180,7 +1194,7 @@ async function fetchPaymentHistoryFromBackend() {
       renderDashboard();
       renderHistoryTable();
     }
-  } catch (err) {}
+  } catch (err) { clearTimeout(timeoutId); }
 }
 
 function initDatabaseSettings() {
