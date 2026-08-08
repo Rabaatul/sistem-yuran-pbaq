@@ -2139,8 +2139,104 @@ async function actionHantarWhatsapp() {
 }
 
 // --- FUNGSI CETAK RESIT (EXACT 1 MUKA SURAT A4 RESIT SAHAJA) ---
+// --- FUNGSI CETAK RESIT (IFRAME DEDICATED - EXACT 1 PAGE A4 RESIT SAHAJA) ---
 function actionCetakResit() {
-  window.print();
+  try {
+    const receiptEl = document.querySelector(".receipt-paper");
+    if (!receiptEl) {
+      window.print();
+      return;
+    }
+
+    const receiptHtml = receiptEl.outerHTML;
+
+    let iframe = document.getElementById("print-receipt-iframe");
+    if (iframe) {
+      document.body.removeChild(iframe);
+    }
+
+    iframe = document.createElement("iframe");
+    iframe.id = "print-receipt-iframe";
+    iframe.style.position = "fixed";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.width = "0px";
+    iframe.style.height = "0px";
+    iframe.style.border = "none";
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentWindow.document;
+    doc.open();
+    doc.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Resit Pembayaran - Fathul Quranic Centre (NS0326067-A)</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+          @page {
+            size: A4 portrait;
+            margin: 10mm;
+          }
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body {
+            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+            background: #ffffff;
+            color: #0f172a;
+            padding: 0;
+            margin: 0;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+          .receipt-paper {
+            width: 100%;
+            max-width: 100%;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+          .receipt-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #2e7d32; padding-bottom: 0.75rem; margin-bottom: 0.75rem; }
+          .receipt-header-left { display: flex; align-items: center; gap: 0.75rem; }
+          .receipt-logo { width: 52px; height: 52px; object-fit: contain; }
+          .receipt-centre-title { font-size: 1.05rem; font-weight: 800; color: #1b4d2e; line-height: 1.2; }
+          .receipt-centre-address { font-size: 0.68rem; color: #64748b; margin-top: 2px; max-width: 320px; }
+          .receipt-title-badge { text-align: right; }
+          .receipt-title-badge h2 { font-size: 1.15rem; font-weight: 800; color: #1b4d2e; margin: 0; }
+          .receipt-no-tag { font-size: 0.78rem; font-weight: 700; color: #2e7d32; background: #e8f5e9; padding: 0.15rem 0.5rem; border-radius: 4px; display: inline-block; margin-top: 3px; }
+          .receipt-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 0.75rem; background: #f8fafc; padding: 0.65rem 0.85rem; border-radius: 6px; font-size: 0.8rem; border: 1px solid #e2e8f0; }
+          .receipt-meta-item { display: flex; gap: 0.4rem; }
+          .receipt-meta-label { font-weight: 700; color: #64748b; }
+          .receipt-meta-value { font-weight: 700; color: #0f172a; }
+          .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.85rem; font-size: 0.8rem; }
+          .receipt-table th { background: #1b4d2e; color: #ffffff; padding: 0.5rem 0.7rem; font-weight: 700; text-align: left; }
+          .receipt-table td { padding: 0.5rem 0.7rem; border-bottom: 1px solid #e2e8f0; }
+          .receipt-table tr.active-item { font-weight: 600; }
+          .receipt-table .amount-cell { text-align: right; font-weight: 700; }
+          .receipt-footer-section { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 0.85rem; padding-top: 0.75rem; border-top: 1px solid #e2e8f0; }
+          .receipt-signature-box { text-align: center; }
+          .receipt-signature-img { height: 42px; object-fit: contain; margin-bottom: 2px; }
+          .receipt-signature-title { font-size: 0.68rem; font-weight: 700; color: #64748b; border-top: 1px dashed #64748b; padding-top: 3px; }
+          .receipt-total-box { text-align: right; }
+          .receipt-total-label { font-size: 0.78rem; font-weight: 700; color: #64748b; }
+          .receipt-total-value { font-size: 1.4rem; font-weight: 800; color: #1b4d2e; }
+        </style>
+      </head>
+      <body>
+        ${receiptHtml}
+      </body>
+      </html>
+    `);
+    doc.close();
+
+    setTimeout(() => {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    }, 300);
+  } catch (err) {
+    window.print();
+  }
 }
 if (typeof window !== "undefined") window.actionCetakResit = actionCetakResit;const printWin = window.open("", "_blank", "width=800,height=900");
     if (!printWin) {
