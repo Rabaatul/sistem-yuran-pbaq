@@ -731,7 +731,7 @@ async function actionHantarWhatsapp() {
   window.open(`https://wa.me/${phoneFormatted}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-// --- FUNGSI JANA GAMBAR RESIT (PNG AUTOMATIK) ---
+// --- FUNGSI JANA GAMBAR RESIT (BULLETPROOF PNG AUTOMATIK) ---
 function actionSimpanGambar() {
   try {
     const receiptEl = document.querySelector(".receipt-paper");
@@ -741,19 +741,28 @@ function actionSimpanGambar() {
     }
 
     if (typeof html2canvas === "undefined") {
-      if (typeof showToast === "function") showToast("Pustaka html2canvas sedang dimuatkan, sila cuba sebentar lagi.", "info");
+      if (typeof showToast === "function") showToast("Pustaka penjana gambar sedang dimuatkan, sila cuba sebentar lagi.", "info");
       return;
     }
 
     if (typeof showLoading === "function") showLoading(true, "Menjana gambar resit PNG...");
 
+    // Safety auto-dismiss loading overlay after 3.5 seconds
+    const safetyTimer = setTimeout(() => {
+      if (typeof showLoading === "function") showLoading(false);
+    }, 3500);
+
     html2canvas(receiptEl, {
       scale: 2,
       useCORS: true,
+      allowTaint: true,
+      imageTimeout: 2500,
       logging: false,
       backgroundColor: "#ffffff"
     }).then(canvas => {
+      clearTimeout(safetyTimer);
       if (typeof showLoading === "function") showLoading(false);
+
       const studentName = document.getElementById("rc-student-name")?.innerText || "MURID";
       const receiptNo = document.getElementById("rc-no")?.innerText || "FQC-1100";
       const cleanStudentName = studentName.trim().replace(/[^a-zA-Z0-9]/g, '_');
@@ -768,8 +777,9 @@ function actionSimpanGambar() {
       link.click();
       setTimeout(() => { if (document.body.contains(link)) document.body.removeChild(link); }, 1000);
 
-      if (typeof showToast === "function") showToast(`Gambar resit PNG (${fileName}) berjaya dimuat turun!`, "success");
+      if (typeof showToast === "function") showToast(`Gambar resit (${fileName}) berjaya dimuat turun!`, "success");
     }).catch(err => {
+      clearTimeout(safetyTimer);
       if (typeof showLoading === "function") showLoading(false);
       if (typeof showToast === "function") showToast("Gagal menjana gambar: " + err.message, "error");
     });
