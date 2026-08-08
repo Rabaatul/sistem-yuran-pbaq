@@ -3,11 +3,11 @@
  * SISTEM PEMBAYARAN YURAN & RESIT DIGITAL FATHUL QURANIC CENTRE (FQC)
  * ==============================================================================
  * Backend Google Apps Script (Code.gs)
- * Spreadsheet ID: 1ahZXkijsmqPD5MDHcBGSXgp4HR0R1NDi4rUx4NH-nho
+ * Spreadsheet ID: 1DsLcgM7PHMpgVd1MkPCtzCuKDWk0g007SgrDvBv3MTk
  */
 
 const CONFIG = {
-  spreadsheetId: "1ahZXkijsmqPD5MDHcBGSXgp4HR0R1NDi4rUx4NH-nho",
+  spreadsheetId: "1DsLcgM7PHMpgVd1MkPCtzCuKDWk0g007SgrDvBv3MTk",
   studentSheet: "MURID",
   paymentSheet: "PEMBAYARAN",
   specialRatesSheet: "HARGA_KHAS",
