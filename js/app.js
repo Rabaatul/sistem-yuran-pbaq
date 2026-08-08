@@ -117,14 +117,34 @@ function showToast(message, type = "success") {
   setTimeout(() => { toast.className = `toast ${type}`; }, 3500);
 }
 
+let loadingSafetyTimeout = null;
+
 function showLoading(show, text = "Memproses data...") {
   const loading = document.getElementById("loading");
   const textEl = document.getElementById("loading-text");
   if (!loading) return;
+
+  if (loadingSafetyTimeout) {
+    clearTimeout(loadingSafetyTimeout);
+    loadingSafetyTimeout = null;
+  }
   
   if (textEl) textEl.innerText = text;
-  if (show) loading.classList.add("show");
-  else loading.classList.remove("show");
+
+  // Klik di mana-mana pada loading overlay untuk tutup secara manual
+  loading.onclick = () => {
+    loading.classList.remove("show");
+  };
+
+  if (show) {
+    loading.classList.add("show");
+    // Penutup keselamatan automatik selepas 5 saat jika sebarang request gagal/hang
+    loadingSafetyTimeout = setTimeout(() => {
+      loading.classList.remove("show");
+    }, 5000);
+  } else {
+    loading.classList.remove("show");
+  }
 }
 
 function switchView(viewId) {
@@ -679,10 +699,15 @@ async function actionRefreshAllData() {
   const stampEl = document.getElementById("dash-last-updated");
   if (stampEl) stampEl.innerText = `Dikemaskini terakhir: ${appState.lastUpdated}`;
 
-  await fetchStudentsFromBackend(false);
-  await fetchPaymentHistoryFromBackend(false);
+  try {
+    await fetchStudentsFromBackend(false);
+    await fetchPaymentHistoryFromBackend(false);
+  } catch (err) {
+    console.error("Ralat kemaskini data:", err);
+  } finally {
+    showLoading(false);
+  }
 
-  showLoading(false);
   renderDashboard();
   renderHistoryTable();
   renderUnpaidSection();

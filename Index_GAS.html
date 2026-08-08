@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ms">
 <head>
   <meta charset="UTF-8">
@@ -1721,9 +1721,10 @@ body {
     <span id="toast-msg">Notifikasi</span>
   </div>
 
-  <div id="loading" class="loading-overlay">
+  <div id="loading" class="loading-overlay" title="Klik di mana-mana untuk tutup">
     <div class="spinner"></div>
     <div style="font-weight: 700; color: var(--primary-dark);" id="loading-text">Memproses data...</div>
+    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">(Klik di mana-mana untuk tutup)</div>
   </div>
 
   <!-- Application JavaScript -->
@@ -1847,14 +1848,34 @@ function showToast(message, type = "success") {
   setTimeout(() => { toast.className = `toast ${type}`; }, 3500);
 }
 
+let loadingSafetyTimeout = null;
+
 function showLoading(show, text = "Memproses data...") {
   const loading = document.getElementById("loading");
   const textEl = document.getElementById("loading-text");
   if (!loading) return;
-  
+
+  if (loadingSafetyTimeout) {
+    clearTimeout(loadingSafetyTimeout);
+    loadingSafetyTimeout = null;
+  }
+
   if (textEl) textEl.innerText = text;
-  if (show) loading.classList.add("show");
-  else loading.classList.remove("show");
+
+  // Klik di mana-mana pada loading overlay untuk tutup secara manual
+  loading.onclick = () => {
+    loading.classList.remove("show");
+  };
+
+  if (show) {
+    loading.classList.add("show");
+    // Penutup keselamatan automatik selepas 5 saat jika sebarang request gagal/hang
+    loadingSafetyTimeout = setTimeout(() => {
+      loading.classList.remove("show");
+    }, 5000);
+  } else {
+    loading.classList.remove("show");
+  }
 }
 
 function switchView(viewId) {
