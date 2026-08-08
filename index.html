@@ -89,6 +89,16 @@
              VIEW 1: DASHBOARD ANALITIK
              =================================================================== -->
         <section id="view-dashboard" class="tab-view active">
+          <!-- Header Bar Kemaskini Data -->
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; background:#ffffff; padding:0.85rem 1.15rem; border-radius:var(--radius-md); border:1px solid var(--border-color); box-shadow:var(--shadow-sm);">
+            <div>
+              <h2 style="font-size:1.15rem; font-weight:800; color:var(--primary-dark); margin:0;">Dashboard Analitik FQC</h2>
+              <div style="font-size:0.78rem; color:var(--text-muted);">Status Pembayaran Yuran & Rekod Terkini</div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="actionRefreshDashboardData()" style="padding:0.45rem 1rem; font-size:0.85rem; display:flex; align-items:center; gap:0.4rem;">
+              <i class="fa-solid fa-rotate"></i> KEMASKINI DATA
+            </button>
+          </div>
           
           <div class="dashboard-metrics-grid">
             <div class="metric-card">

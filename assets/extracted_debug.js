@@ -1,5 +1,27 @@
 ﻿
 
+// --- FUNGSI KEMASKINI DATA DASHBOARD ---
+function actionRefreshDashboardData() {
+  showToast("Mengemaskini pangkalan data Google Sheets...", "info");
+  showLoading(true, "Mengemaskini data terkini dari Google Sheets...");
+  
+  setTimeout(() => {
+    if (typeof fetchStudentsFromBackend === "function") {
+      fetchStudentsFromBackend();
+    }
+    if (typeof fetchPaymentHistoryFromBackend === "function") {
+      fetchPaymentHistoryFromBackend();
+    }
+    if (typeof renderDashboard === "function") {
+      renderDashboard();
+    }
+    showLoading(false);
+    showToast("Data Dashboard berjaya dikemaskini!", "success");
+  }, 400);
+}
+if (typeof window !== "undefined") window.actionRefreshDashboardData = actionRefreshDashboardData;
+
+
 );
     }
 
