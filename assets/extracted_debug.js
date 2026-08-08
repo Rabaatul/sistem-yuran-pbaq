@@ -731,11 +731,92 @@ async function actionHantarWhatsapp() {
   window.open(`https://wa.me/${phoneFormatted}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
+// --- FUNGSI CETAK RESIT (EXACT 1 MUKA SURAT A4 RESIT SAHAJA) ---
 function actionCetakResit() {
-  window.print();
-}
+  try {
+    const receiptEl = document.querySelector(".receipt-paper");
+    if (!receiptEl) {
+      window.print();
+      return;
+    }
 
-function actionResetBorang() {
+    const printWin = window.open("", "_blank", "width=800,height=900");
+    if (!printWin) {
+      window.print();
+      return;
+    }
+
+    const receiptHtml = receiptEl.outerHTML;
+
+    const docContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Resit Pembayaran - Fathul Quranic Centre</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+          @page { size: A4 portrait; margin: 12mm; }
+          body {
+            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+            background: #ffffff;
+            color: #0f172a;
+            margin: 0;
+            padding: 0;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+          .receipt-paper {
+            width: 100%;
+            max-width: 100%;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+          .receipt-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #2e7d32; padding-bottom: 0.85rem; margin-bottom: 0.85rem; }
+          .receipt-header-left { display: flex; align-items: center; gap: 0.85rem; }
+          .receipt-logo { width: 56px; height: 56px; object-fit: contain; }
+          .receipt-centre-title { font-size: 1.1rem; font-weight: 800; color: #1b4d2e; line-height: 1.2; }
+          .receipt-centre-address { font-size: 0.7rem; color: #64748b; margin-top: 3px; max-width: 320px; }
+          .receipt-title-badge { text-align: right; }
+          .receipt-title-badge h2 { font-size: 1.2rem; font-weight: 800; color: #1b4d2e; margin: 0; }
+          .receipt-no-tag { font-size: 0.8rem; font-weight: 700; color: #2e7d32; background: #e8f5e9; padding: 0.15rem 0.5rem; border-radius: 4px; display: inline-block; margin-top: 4px; }
+          .receipt-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem; background: #f8fafc; padding: 0.75rem; border-radius: 6px; font-size: 0.82rem; }
+          .receipt-meta-item { display: flex; gap: 0.4rem; }
+          .receipt-meta-label { font-weight: 700; color: #64748b; }
+          .receipt-meta-value { font-weight: 700; color: #0f172a; }
+          .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; font-size: 0.82rem; }
+          .receipt-table th { background: #1b4d2e; color: #ffffff; padding: 0.55rem 0.75rem; font-weight: 700; text-align: left; }
+          .receipt-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid #e2e8f0; }
+          .receipt-footer-section { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 1rem; padding-top: 0.85rem; border-top: 1px solid #e2e8f0; }
+          .receipt-signature-box { text-align: center; }
+          .receipt-signature-img { height: 44px; object-fit: contain; margin-bottom: 2px; }
+          .receipt-signature-title { font-size: 0.7rem; font-weight: 700; color: #64748b; border-top: 1px dashed #64748b; padding-top: 3px; }
+          .receipt-total-box { text-align: right; }
+          .receipt-total-label { font-size: 0.8rem; font-weight: 700; color: #64748b; }
+          .receipt-total-value { font-size: 1.45rem; font-weight: 800; color: #1b4d2e; }
+        </style>
+      </head>
+      <body>
+        ${receiptHtml}
+        <` + `script>
+          window.onload = function() {
+            setTimeout(function() {
+              window.print();
+            }, 300);
+          };
+        <` + `/script>
+      </body>
+      </html>
+    `;
+
+    printWin.document.write(docContent);
+    printWin.document.close();
+  } catch (e) {
+    window.print();
+  }
+}
+if (typeof window !== "undefined") window.actionCetakResit = actionCetakResit;function actionResetBorang() {
   appState.selectedStudent = null;
   const searchInput = document.getElementById("student-search-input");
   if (searchInput) searchInput.value = "";
