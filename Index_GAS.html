@@ -1138,6 +1138,9 @@ body {
                   <option value="NOVEMBER">NOVEMBER</option>
                   <option value="DISEMBER">DISEMBER</option>
                 </select>
+                <button type="button" class="btn btn-primary" onclick="exportUnpaidToExcel()" style="padding:0.35rem 0.8rem; font-size:0.8rem; background:#15803d; border-color:#15803d; display:flex; align-items:center; gap:0.4rem;">
+                  <i class="fa-solid fa-file-excel"></i> Export Excel
+                </button>
               </div>
             </div>
             <div class="card-body">
@@ -1190,6 +1193,9 @@ body {
                     <select id="student-native-select" class="form-select" style="font-weight:700; color:var(--primary-dark); margin-bottom:8px;" onchange="onNativeStudentSelect(this.value)">
                       <option value="">-- Tekan Di Sini Untuk Pilih Murid --</option>
                     </select>
+                <button type="button" class="btn btn-primary" onclick="exportUnpaidToExcel()" style="padding:0.35rem 0.8rem; font-size:0.8rem; background:#15803d; border-color:#15803d; display:flex; align-items:center; gap:0.4rem;">
+                  <i class="fa-solid fa-file-excel"></i> Export Excel
+                </button>
                     <div class="searchable-select">
                       <input type="text" id="student-search-input" class="form-control" placeholder="🔍 ATAU Taip huruf nama / nombor telefon..." autocomplete="off">
                       <div id="student-dropdown-options" class="dropdown-options"></div>
@@ -1223,6 +1229,9 @@ body {
                       <option value="NOVEMBER">NOVEMBER</option>
                       <option value="DISEMBER">DISEMBER</option>
                     </select>
+                <button type="button" class="btn btn-primary" onclick="exportUnpaidToExcel()" style="padding:0.35rem 0.8rem; font-size:0.8rem; background:#15803d; border-color:#15803d; display:flex; align-items:center; gap:0.4rem;">
+                  <i class="fa-solid fa-file-excel"></i> Export Excel
+                </button>
                   </div>
                 </div>
               </div>
@@ -1393,6 +1402,53 @@ body {
   </div>
 
   <script>
+
+// --- EXPORT TO EXCEL (CSV) SENARAI MURID BELUM BAYAR ---
+function exportUnpaidToExcel() {
+  try {
+    const filterMonth = document.getElementById("dash-month-filter")?.value || "OGOS";
+    const paidNamesSet = new Set();
+    
+    appState.payments.forEach(p => {
+      if (p.bulan && p.bulan.toUpperCase() === filterMonth.toUpperCase() && p.namaMurid) {
+        paidNamesSet.add(p.namaMurid.trim().toLowerCase());
+      }
+    });
+
+    const unpaidStudents = appState.students.filter(s => !paidNamesSet.has(s.nama.trim().toLowerCase()));
+
+    if (unpaidStudents.length === 0) {
+      showToast(`Tahniah! Tiada murid yang belum bayar bagi bulan ${filterMonth}.`, "info");
+      return;
+    }
+
+    let csvContent = "\uFEFF";
+    csvContent += "Bil,Nama Murid,No. WhatsApp,Bulan,Status Pembayaran\n";
+
+    unpaidStudents.forEach((student, idx) => {
+      const cleanName = `"${(student.nama || '').replace(/"/g, '""')}"`;
+      const cleanPhone = `"${(student.phone || '-').replace(/"/g, '""')}"`;
+      csvContent += `${idx + 1},${cleanName},${cleanPhone},${filterMonth},BELUM BAYAR\n`;
+    });
+
+    const fileName = `Senarai_Murid_Belum_Bayar_${filterMonth}_FQC.csv`;
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", fileName);
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => { if (document.body.contains(link)) document.body.removeChild(link); }, 1000);
+
+    showToast(`Fail Excel (${fileName}) berjaya dimuat turun!`, "success");
+  } catch (err) {
+    showToast("Gagal memuat turun Excel: " + err.message, "error");
+  }
+}
+
 /**
  * ==============================================================================
  * SISTEM PEMBAYARAN YURAN & RESIT DIGITAL - FATHUL QURANIC CENTRE (FQC)
