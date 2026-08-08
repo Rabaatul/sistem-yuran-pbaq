@@ -80,7 +80,12 @@ let appState = {
   selectedStudent: null,
   currentReceiptNo: "FQC-1100",
   lastUpdated: new Date().toLocaleString("ms-MY"),
-  appsScriptUrl: safeGetStorage("fqc_apps_script_url", "https://script.google.com/macros/s/AKfycbzWfvXHS9oGeONbIe2B2P3UA3MCtnA1r7ENR-YAMEIYNbppLYtbE5VdD9nM55rjmZdySw/exec")
+  // URL Database terkini - sentiasa guna URL ini, override localStorage jika berbeza
+  appsScriptUrl: (function() {
+    const CURRENT_URL = "https://script.google.com/macros/s/AKfycbzWfvXHS9oGeONbIe2B2P3UA3MCtnA1r7ENR-YAMEIYNbppLYtbE5VdD9nM55rjmZdySw/exec";
+    try { if (typeof localStorage !== "undefined") { localStorage.setItem("fqc_apps_script_url", CURRENT_URL); } } catch(e) {}
+    return CURRENT_URL;
+  }())
 };
 
 function safeGetStorage(key, defaultVal = "") {
@@ -92,7 +97,7 @@ function safeSetStorage(key, val) {
   try { if (typeof localStorage !== "undefined") localStorage.setItem(key, val); } catch (e) {}
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   // Pastikan loading overlay TIDAK aktif saat pertama kali dibuka
   const loadingEl = document.getElementById("loading");
   if (loadingEl) loadingEl.classList.remove("show");
@@ -104,15 +109,28 @@ document.addEventListener("DOMContentLoaded", () => {
   loadLocalStoragePayments();
   loadLocalStorageStudents();
   calculateNextReceiptNo();
-  // Hanya sync dari backend jika ada URL dikonfigurasi
-  if (appState.appsScriptUrl) {
-    fetchStudentsFromBackend();
-    fetchPaymentHistoryFromBackend();
-  }
   renderDashboard();
   renderHistoryTable();
   renderStudentTable();
   renderReceiptPreview();
+
+  // Auto-connect ke database pada startup
+  if (appState.appsScriptUrl) {
+    try {
+      const stampEl = document.getElementById("dash-last-updated");
+      if (stampEl) stampEl.innerText = "Menyambung ke database...";
+      await fetchStudentsFromBackend(false);
+      await fetchPaymentHistoryFromBackend(false);
+      appState.lastUpdated = new Date().toLocaleString("ms-MY");
+      if (stampEl) stampEl.innerText = `Dikemaskini: ${appState.lastUpdated}`;
+      renderDashboard();
+      renderHistoryTable();
+      renderStudentTable();
+    } catch(e) {
+      const stampEl = document.getElementById("dash-last-updated");
+      if (stampEl) stampEl.innerText = "Gagal sambung database";
+    }
+  }
 });
 
 function showToast(message, type = "success") {
