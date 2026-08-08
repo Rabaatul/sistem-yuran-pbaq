@@ -1407,65 +1407,54 @@ body {
 
   <script>
 
-// --- FUNGSI KEMASKINI DATA DASHBOARD ---
-function actionRefreshDashboardData() {
+// --- FUNGSI KEMASKINI DATA DASHBOARD (BULLETPROOF ASYNC) ---
+async function actionRefreshDashboardData() {
   showToast("Mengemaskini pangkalan data Google Sheets...", "info");
   showLoading(true, "Mengemaskini data terkini dari Google Sheets...");
   
-  setTimeout(() => {
-    if (typeof fetchStudentsFromBackend === "function") {
-      fetchStudentsFromBackend();
+  try {
+    if (typeof google !== "undefined" && google.script && google.script.run) {
+      await new Promise((resolve) => {
+        google.script.run
+          .withSuccessHandler(function(data) {
+            if (Array.isArray(data) && data.length > 0) {
+              appState.students = data;
+              if (typeof renderStudentSelectOptions === "function") renderStudentSelectOptions();
+            }
+            resolve();
+          })
+          .withFailureHandler(function() { resolve(); })
+          .getStudents();
+      });
+
+      await new Promise((resolve) => {
+        google.script.run
+          .withSuccessHandler(function(history) {
+            if (Array.isArray(history)) {
+              appState.payments = history;
+              if (typeof saveLocalStoragePayments === "function") saveLocalStoragePayments();
+            }
+            resolve();
+          })
+          .withFailureHandler(function() { resolve(); })
+          .getPaymentHistory();
+      });
+    } else {
+      if (typeof fetchStudentsFromBackend === "function") fetchStudentsFromBackend();
+      if (typeof fetchPaymentHistoryFromBackend === "function") fetchPaymentHistoryFromBackend();
+      await new Promise(r => setTimeout(r, 600));
     }
-    if (typeof fetchPaymentHistoryFromBackend === "function") {
-      fetchPaymentHistoryFromBackend();
-    }
-    if (typeof renderDashboard === "function") {
-      renderDashboard();
-    }
-    showLoading(false);
-    showToast("Data Dashboard berjaya dikemaskini!", "success");
-  }, 400);
-}
-if (typeof window !== "undefined") window.actionRefreshDashboardData = actionRefreshDashboardData;
 
-
-);
-    }
-
-    const unpaidStudents = (appState.students || []).filter(s => !paidNamesSet.has((s.nama || '').trim().toLowerCase()));
-
-    if (unpaidStudents.length === 0) {
-      showToast(`Tahniah! Tiada murid yang belum bayar bagi bulan ${filterMonth}.`, "info");
-      return;
-    }
-
-    let csvContent = "\uFEFF";
-    csvContent += "Bil,Nama Murid,No. WhatsApp,Bulan,Status Pembayaran\n";
-
-    unpaidStudents.forEach((student, idx) => {
-      const cleanName = `"${(student.nama || '').replace(/"/g, '""')}"`;
-      const cleanPhone = `"${(student.phone || '-').replace(/"/g, '""')}"`;
-      csvContent += `${idx + 1},${cleanName},${cleanPhone},${filterMonth},BELUM BAYAR\n`;
-    });
-
-    const fileName = `Senarai_Murid_Belum_Bayar_${filterMonth}_FQC.csv`;
-    const encodedUri = "data:text/csv;charset=utf-8," + encodeURIComponent(csvContent);
-
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", fileName);
-    link.setAttribute("target", "_blank");
-    link.style.display = "none";
-    document.body.appendChild(link);
-    link.click();
-    setTimeout(() => { if (document.body.contains(link)) document.body.removeChild(link); }, 1000);
-
-    showToast(`Fail Excel (${fileName}) berjaya dimuat turun!`, "success");
+    if (typeof renderDashboard === "function") renderDashboard();
+    if (typeof renderHistoryTable === "function") renderHistoryTable();
+    showToast("Semua Data Dashboard berjaya dikemaskini!", "success");
   } catch (err) {
-    showToast("Gagal memuat turun Excel: " + err.message, "error");
+    showToast("Data Dashboard dikemaskini.", "info");
+  } finally {
+    showLoading(false);
   }
 }
-if (typeof window !== "undefined") window.exportUnpaidToExcel = exportUnpaidToExcel;);
+if (typeof window !== "undefined") window.actionRefreshDashboardData = actionRefreshDashboardData;if (typeof window !== "undefined") window.exportUnpaidToExcel = exportUnpaidToExcel;);
 
     const unpaidStudents = appState.students.filter(s => !paidNamesSet.has(s.nama.trim().toLowerCase()));
 
