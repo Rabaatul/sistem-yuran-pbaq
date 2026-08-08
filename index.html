@@ -509,6 +509,36 @@
 
         <!-- ================= VIEW 6: TETAPAN YURAN ================= -->
         <section id="view-tetapan" class="tab-view">
+
+          <!-- Database API Connection Setting Card -->
+          <div class="card" style="margin-bottom: 1.5rem; border: 2px solid var(--primary-main);">
+            <div class="card-header" style="background: var(--primary-soft);">
+              <div class="card-title" style="color: var(--primary-dark);"><i class="fa-solid fa-database"></i> Sambungan Database Google Sheets & AppSheet API</div>
+            </div>
+            <div class="card-body">
+              <p style="font-size:0.88rem; color:var(--text-medium); margin-bottom:1rem;">
+                Masukkan <strong>Google Apps Script Web App URL</strong> (berakhiran <code>/exec</code>) untuk menyambungkan aplikasi Vercel ini terus ke Google Sheets FQC:
+              </p>
+              
+              <div class="form-group">
+                <label class="form-label" style="font-weight:700;">Google Apps Script Web App URL (/exec)</label>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                  <input type="url" id="setting-apps-script-url" class="form-control" style="flex:1; min-width:280px;" placeholder="https://script.google.com/macros/s/.../exec">
+                  <button class="btn btn-primary" onclick="saveAndTestDatabaseConnection()">
+                    <i class="fa-solid fa-plug-circle-check"></i> SIMPAN & UJI SAMBUNGAN
+                  </button>
+                </div>
+              </div>
+
+              <div style="background: #fff9e6; border: 1px solid #ffe599; border-radius: var(--radius-sm); padding: 0.75rem; font-size: 0.82rem; color: #7f6000;">
+                <i class="fa-solid fa-circle-info"></i> <strong>Panduan Sambungan Vercel ke Google Sheets:</strong><br>
+                1. Buka Google Sheets ➔ Extensions ➔ Apps Script (Deploy ➔ New Deployment ➔ Web App).<br>
+                2. Setkan <strong>Execute as: Me</strong> dan <strong>Who has access: Anyone</strong>.<br>
+                3. Salin Web App URL dan tampal di atas, kemudian klik <strong>Simpan & Uji Sambungan</strong>.
+              </div>
+            </div>
+          </div>
+
           <div class="card">
             <div class="card-header">
               <div class="card-title"><i class="fa-solid fa-sliders"></i> Tetapan Yuran & Kategori FQC</div>

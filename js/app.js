@@ -96,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initDateAndMonth();
   initStudentLiveSearch();
   initFeeCalculations();
+  initDatabaseSettings();
   loadLocalStoragePayments();
   loadLocalStorageStudents();
   calculateNextReceiptNo();
@@ -1180,4 +1181,42 @@ async function fetchPaymentHistoryFromBackend() {
       renderHistoryTable();
     }
   } catch (err) {}
+}
+
+function initDatabaseSettings() {
+  const urlInput = document.getElementById("setting-apps-script-url");
+  if (urlInput) urlInput.value = appState.appsScriptUrl || "";
+}
+
+async function saveAndTestDatabaseConnection() {
+  const urlInput = document.getElementById("setting-apps-script-url");
+  if (!urlInput) return;
+  let newUrl = urlInput.value.trim();
+  if (!newUrl) {
+    showToast("Sila masukkan Web App URL Google Apps Script.", "warning");
+    return;
+  }
+
+  appState.appsScriptUrl = newUrl;
+  safeSetStorage("fqc_apps_script_url", newUrl);
+  showLoading(true, "Menguji sambungan ke Google Sheets Database...");
+
+  try {
+    const res = await fetch(`${newUrl}?action=getStudents`);
+    const data = await res.json();
+    showLoading(false);
+    if (data && data.success && Array.isArray(data.data)) {
+      showToast(`⚡ Sambungan Berjaya! Data ${data.data.length} murid ditarik dari Google Sheets!`, "success");
+      appState.students = data.data;
+      saveLocalStorageStudents();
+      renderDashboard();
+      renderStudentTable();
+      fetchPaymentHistoryFromBackend();
+    } else {
+      showToast("Sambungan gagal: Respons tidak sah daripada Web App.", "error");
+    }
+  } catch (err) {
+    showLoading(false);
+    showToast("Gagal menyambung! Pastikan Web App di-deploy dengan 'Who has access: Anyone'.", "error");
+  }
 }
