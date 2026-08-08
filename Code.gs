@@ -90,23 +90,24 @@ function doGet(e) {
 
   // Paparan Web App Google Apps Script
   try {
-    return HtmlService.createTemplateFromFile("Index")
+    return HtmlService.createTemplateFromFile("Index_GAS")
       .evaluate()
-      .setTitle("SISTEM PEMBAYARAN YURAN - FATHUL QURANIC CENTRE (FQC)")
+      .setTitle("SISTEM PEMBAYARAN YURAN - FATHUL QURANIC CENTRE (NS0326067-A)")
       .addMetaTag("viewport", "width=device-width, initial-scale=1.0")
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-  } catch (err) {
+  } catch (err1) {
     try {
-      return HtmlService.createTemplateFromFile("index")
+      return HtmlService.createTemplateFromFile("Index")
         .evaluate()
-        .setTitle("SISTEM PEMBAYARAN YURAN - FATHUL QURANIC CENTRE (FQC)")
+        .setTitle("SISTEM PEMBAYARAN YURAN - FATHUL QURANIC CENTRE (NS0326067-A)")
         .addMetaTag("viewport", "width=device-width, initial-scale=1.0")
         .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
     } catch (err2) {
-      return HtmlService.createHtmlOutput(
-        "<h2>SISTEM PEMBAYARAN YURAN FQC - API AKTIF</h2>" +
-        "<p>Web App API sedia menerima permintaan daripada aplikasi Web Pembayaran Yuran.</p>"
-      );
+      return HtmlService.createTemplateFromFile("index")
+        .evaluate()
+        .setTitle("SISTEM PEMBAYARAN YURAN - FATHUL QURANIC CENTRE (NS0326067-A)")
+        .addMetaTag("viewport", "width=device-width, initial-scale=1.0")
+        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
     }
   }
 }
