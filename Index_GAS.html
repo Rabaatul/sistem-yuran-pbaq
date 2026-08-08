@@ -1555,56 +1555,20 @@ function exportUnpaidToExcel() {
 if (typeof window !== "undefined") window.exportUnpaidToExcel = exportUnpaidToExcel;
 
 
-// --- FUNGSI KEMASKINI DATA DASHBOARD (BULLETPROOF ASYNC) ---
-async function actionRefreshDashboardData() {
-  showToast("Mengemaskini pangkalan data Google Sheets...", "info");
-  showLoading(true, "Mengemaskini data terkini dari Google Sheets...");
-  
+// --- FUNGSI KEMASKINI DATA DASHBOARD (INSTANT SINGLE CLICK) ---
+function actionRefreshDashboardData() {
   try {
-    if (typeof google !== "undefined" && google.script && google.script.run) {
-      await new Promise((resolve) => {
-        google.script.run
-          .withSuccessHandler(function(data) {
-            if (Array.isArray(data) && data.length > 0) {
-              appState.students = data;
-              if (typeof renderStudentSelectOptions === "function") renderStudentSelectOptions();
-            }
-            resolve();
-          })
-          .withFailureHandler(function() { resolve(); })
-          .getStudents();
-      });
-
-      await new Promise((resolve) => {
-        google.script.run
-          .withSuccessHandler(function(history) {
-            if (Array.isArray(history)) {
-              appState.payments = history;
-              if (typeof saveLocalStoragePayments === "function") saveLocalStoragePayments();
-            }
-            resolve();
-          })
-          .withFailureHandler(function() { resolve(); })
-          .getPaymentHistory();
-      });
-    } else {
-      if (typeof fetchStudentsFromBackend === "function") fetchStudentsFromBackend();
-      if (typeof fetchPaymentHistoryFromBackend === "function") fetchPaymentHistoryFromBackend();
-      await new Promise(r => setTimeout(r, 600));
+    if (typeof fetchStudentsFromBackend === "function") {
+      fetchStudentsFromBackend(true);
     }
-
-    if (typeof renderDashboard === "function") renderDashboard();
-    if (typeof renderHistoryTable === "function") renderHistoryTable();
-    showToast("Semua Data Dashboard berjaya dikemaskini!", "success");
+    if (typeof fetchPaymentHistoryFromBackend === "function") {
+      fetchPaymentHistoryFromBackend();
+    }
   } catch (err) {
-    showToast("Data Dashboard dikemaskini.", "info");
-  } finally {
-    showLoading(false);
+    if (typeof showToast === "function") showToast("Mengemaskini data...", "info");
   }
 }
-if (typeof window !== "undefined") window.actionRefreshDashboardData = actionRefreshDashboardData;
-
-/**
+if (typeof window !== "undefined") window.actionRefreshDashboardData = actionRefreshDashboardData;/**
  * ==============================================================================
  * SISTEM PEMBAYARAN YURAN & RESIT DIGITAL - FATHUL QURANIC CENTRE (FQC)
  * Clean Modular Application Logic (app.js)
