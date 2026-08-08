@@ -731,66 +731,26 @@ async function actionHantarWhatsapp() {
   window.open(`https://wa.me/${phoneFormatted}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-// --- FUNGSI JANA GAMBAR RESIT (BULLETPROOF PNG AUTOMATIK) ---
-function actionSimpanGambar() {
+// --- FUNGSI CETAK RESIT (BULLETPROOF 1 MUKA SURAT A4 RESIT SAHAJA) ---
+function actionCetakResit() {
   try {
-    const receiptEl = document.querySelector(".receipt-paper");
-    if (!receiptEl) {
-      if (typeof showToast === "function") showToast("Tiada resit untuk dijana.", "warning");
-      return;
+    if (typeof switchView === "function") {
+      switchView('bayaran');
     }
 
-    if (typeof html2canvas === "undefined") {
-      if (typeof showToast === "function") showToast("Pustaka penjana gambar sedang dimuatkan, sila cuba sebentar lagi.", "info");
-      return;
-    }
+    document.body.classList.add("printing-receipt-only");
 
-    if (typeof showLoading === "function") showLoading(true, "Menjana gambar resit PNG...");
-
-    // Safety auto-dismiss loading overlay after 3.5 seconds
-    const safetyTimer = setTimeout(() => {
-      if (typeof showLoading === "function") showLoading(false);
-    }, 3500);
-
-    html2canvas(receiptEl, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      imageTimeout: 2500,
-      logging: false,
-      backgroundColor: "#ffffff"
-    }).then(canvas => {
-      clearTimeout(safetyTimer);
-      if (typeof showLoading === "function") showLoading(false);
-
-      const studentName = document.getElementById("rc-student-name")?.innerText || "MURID";
-      const receiptNo = document.getElementById("rc-no")?.innerText || "FQC-1100";
-      const cleanStudentName = studentName.trim().replace(/[^a-zA-Z0-9]/g, '_');
-      const fileName = `Resit_${receiptNo}_${cleanStudentName}.png`;
-
-      const link = document.createElement("a");
-      link.download = fileName;
-      link.href = canvas.toDataURL("image/png");
-      link.target = "_blank";
-      link.style.display = "none";
-      document.body.appendChild(link);
-      link.click();
-      setTimeout(() => { if (document.body.contains(link)) document.body.removeChild(link); }, 1000);
-
-      if (typeof showToast === "function") showToast(`Gambar resit (${fileName}) berjaya dimuat turun!`, "success");
-    }).catch(err => {
-      clearTimeout(safetyTimer);
-      if (typeof showLoading === "function") showLoading(false);
-      if (typeof showToast === "function") showToast("Gagal menjana gambar: " + err.message, "error");
-    });
+    setTimeout(() => {
+      window.print();
+      setTimeout(() => {
+        document.body.classList.remove("printing-receipt-only");
+      }, 1000);
+    }, 200);
   } catch (err) {
-    if (typeof showLoading === "function") showLoading(false);
-    if (typeof showToast === "function") showToast("Ralat: " + err.message, "error");
+    window.print();
   }
 }
-if (typeof window !== "undefined") window.actionSimpanGambar = actionSimpanGambar;
-
-const printWin = window.open("", "_blank", "width=800,height=900");
+if (typeof window !== "undefined") window.actionCetakResit = actionCetakResit;const printWin = window.open("", "_blank", "width=800,height=900");
     if (!printWin) {
       window.print();
       return;
