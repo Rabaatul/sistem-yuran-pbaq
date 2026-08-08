@@ -146,13 +146,7 @@ function exportUnpaidToExcel() {
   }
 }
 if (typeof window !== "undefined") window.exportUnpaidToExcel = exportUnpaidToExcel;
-
-
-catch (err) {
-    if (typeof showToast === "function") showToast("Mengemaskini data...", "info");
-  }
-}
-if (typeof window !== "undefined") window.actionRefreshDashboardData = actionRefreshDashboardData;/**
+/**
  * ==============================================================================
  * SISTEM PEMBAYARAN YURAN & RESIT DIGITAL - FATHUL QURANIC CENTRE (FQC)
  * Clean Modular Application Logic (app.js)
