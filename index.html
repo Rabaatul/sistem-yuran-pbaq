@@ -1555,16 +1555,7 @@ function exportUnpaidToExcel() {
 if (typeof window !== "undefined") window.exportUnpaidToExcel = exportUnpaidToExcel;
 
 
-// --- FUNGSI KEMASKINI DATA DASHBOARD (INSTANT SINGLE CLICK) ---
-function actionRefreshDashboardData() {
-  try {
-    if (typeof fetchStudentsFromBackend === "function") {
-      fetchStudentsFromBackend(true);
-    }
-    if (typeof fetchPaymentHistoryFromBackend === "function") {
-      fetchPaymentHistoryFromBackend();
-    }
-  } catch (err) {
+catch (err) {
     if (typeof showToast === "function") showToast("Mengemaskini data...", "info");
   }
 }
@@ -2321,73 +2312,120 @@ function cetakResitRekod(idx) {
   showToast(`Melihat Resit ${p.noResit}`, "info");
 }
 
-async function fetchStudentsFromBackend(showToastMsg = false) {
+
+
+
+
+// --- FUNGSI PROMISE-BASED BACKEND FETCHING (GUARANTEED 1-CLICK REFRESH) ---
+function fetchStudentsFromBackend(showToastMsg = false) {
   if (showToastMsg) showLoading(true, "Memuat turun data murid terkini dari Google Sheets...");
 
-  if (typeof google !== "undefined" && google.script && google.script.run) {
-    google.script.run
-      .withSuccessHandler(function(studentsData) {
+  return new Promise((resolve) => {
+    if (typeof google !== "undefined" && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(function(studentsData) {
+          if (showToastMsg) showLoading(false);
+          if (Array.isArray(studentsData) && studentsData.length > 0) {
+            appState.students = studentsData;
+            if (typeof initStudentSearch === "function") initStudentSearch();
+            if (typeof renderStudentSelectOptions === "function") renderStudentSelectOptions();
+            if (typeof renderDashboard === "function") renderDashboard();
+            if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik dari Google Sheets!`, "success");
+          }
+          resolve(appState.students);
+        })
+        .withFailureHandler(function(err) {
+          if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid: " + err, "error"); }
+          resolve(appState.students);
+        })
+        .getStudents();
+      return;
+    }
+
+    if (!appState.appsScriptUrl) {
+      if (showToastMsg) showLoading(false);
+      resolve(appState.students);
+      return;
+    }
+
+    fetch(`${appState.appsScriptUrl}?action=getStudents`)
+      .then(res => res.json())
+      .then(data => {
         if (showToastMsg) showLoading(false);
-        if (Array.isArray(studentsData) && studentsData.length > 0) {
-          appState.students = studentsData;
-          initStudentSearch();
-          renderDashboard();
+        if (data && data.success && Array.isArray(data.data) && data.data.length > 0) {
+          appState.students = data.data;
+          if (typeof initStudentSearch === "function") initStudentSearch();
+          if (typeof renderStudentSelectOptions === "function") renderStudentSelectOptions();
+          if (typeof renderDashboard === "function") renderDashboard();
           if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik dari Google Sheets!`, "success");
         }
+        resolve(appState.students);
       })
-      .withFailureHandler(function(err) {
-        if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid: " + err, "error"); }
-      })
-      .getStudents();
-    return;
-  }
-
-  if (!appState.appsScriptUrl) return;
-  try {
-    const res = await fetch(`${appState.appsScriptUrl}?action=getStudents`);
-    const data = await res.json();
-    if (showToastMsg) showLoading(false);
-    if (data.success && Array.isArray(data.data) && data.data.length > 0) {
-      appState.students = data.data;
-      initStudentSearch();
-      renderDashboard();
-      if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik dari Google Sheets!`, "success");
-    }
-  } catch (err) {
-    if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid.", "error"); }
-  }
+      .catch(err => {
+        if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid.", "error"); }
+        resolve(appState.students);
+      });
+  });
 }
 
-async function fetchPaymentHistoryFromBackend() {
-  if (typeof google !== "undefined" && google.script && google.script.run) {
-    google.script.run
-      .withSuccessHandler(function(historyData) {
-        if (Array.isArray(historyData) && historyData.length > 0) {
-          appState.payments = historyData;
-          saveLocalStoragePayments();
-          calculateNextReceiptNo();
-          renderDashboard();
-          renderHistoryTable();
+function fetchPaymentHistoryFromBackend() {
+  return new Promise((resolve) => {
+    if (typeof google !== "undefined" && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(function(historyData) {
+          if (Array.isArray(historyData) && historyData.length > 0) {
+            appState.payments = historyData;
+            if (typeof saveLocalStoragePayments === "function") saveLocalStoragePayments();
+            if (typeof calculateNextReceiptNo === "function") calculateNextReceiptNo();
+            if (typeof renderDashboard === "function") renderDashboard();
+            if (typeof renderHistoryTable === "function") renderHistoryTable();
+          }
+          resolve(appState.payments);
+        })
+        .withFailureHandler(function() { resolve(appState.payments); })
+        .getPaymentHistory();
+      return;
+    }
+
+    if (!appState.appsScriptUrl) {
+      resolve(appState.payments);
+      return;
+    }
+
+    fetch(`${appState.appsScriptUrl}?action=getPaymentHistory`)
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.success && Array.isArray(data.data) && data.data.length > 0) {
+          appState.payments = data.data;
+          if (typeof saveLocalStoragePayments === "function") saveLocalStoragePayments();
+          if (typeof calculateNextReceiptNo === "function") calculateNextReceiptNo();
+          if (typeof renderDashboard === "function") renderDashboard();
+          if (typeof renderHistoryTable === "function") renderHistoryTable();
         }
+        resolve(appState.payments);
       })
-      .getPaymentHistory();
-    return;
-  }
-
-  if (!appState.appsScriptUrl) return;
-  try {
-    const res = await fetch(`${appState.appsScriptUrl}?action=getPaymentHistory`);
-    const data = await res.json();
-    if (data.success && Array.isArray(data.data) && data.data.length > 0) {
-      appState.payments = data.data;
-      saveLocalStoragePayments();
-      calculateNextReceiptNo();
-      renderDashboard();
-      renderHistoryTable();
-    }
-  } catch (err) {}
+      .catch(() => { resolve(appState.payments); });
+  });
 }
 
+async function actionRefreshDashboardData() {
+  showLoading(true, "Mengemaskini pangkalan data Google Sheets...");
+  try {
+    await Promise.all([
+      fetchStudentsFromBackend(false),
+      fetchPaymentHistoryFromBackend()
+    ]);
+    renderDashboard();
+    renderHistoryTable();
+    if (typeof renderStudentSelectOptions === "function") renderStudentSelectOptions();
+    showToast(`Berjaya! Data Dashboard & ${appState.students.length} murid dikemaskini dari Google Sheets!`, "success");
+  } catch (err) {
+    showToast("Mengemaskini data.", "info");
+  } finally {
+    showLoading(false);
+  }
+}
+if (typeof window !== "undefined") window.actionRefreshDashboardData = actionRefreshDashboardData;
 </script>
 </body>
 </html>
