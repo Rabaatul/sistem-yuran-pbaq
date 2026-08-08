@@ -1011,7 +1011,7 @@ body {
   <div class="mobile-nav-bar no-print">
     <div class="mobile-brand" style="display:flex; align-items:center; gap:0.5rem;">
       <img src="assets/logo.png" class="img-target-logo" alt="FQC Logo" style="width:32px; height:32px; border-radius:4px;" onError="this.src=DEFAULT_PLACEHOLDERS.logo">
-      <span style="font-weight:800; font-size:0.9rem;">FATHUL QURANIC CENTRE</span>
+      <span style="font-weight:800; font-size:0.9rem;">FATHUL QURANIC CENTRE (NS0326067-A)</span>
     </div>
     <button class="btn btn-outline" style="padding:4px 10px; color:#fff; border-color:rgba(255,255,255,0.3);" onclick="toggleMobileSidebar()">
       <i class="fa-solid fa-bars"></i>
@@ -1026,7 +1026,7 @@ body {
       <div class="brand-header">
         <img src="assets/logo.png" class="brand-logo-img img-target-logo" alt="FQC Logo" onError="this.src=DEFAULT_PLACEHOLDERS.logo">
         <div>
-          <div class="brand-title-text">FATHUL QURANIC CENTRE</div>
+          <div class="brand-title-text">FATHUL QURANIC CENTRE (NS0326067-A)</div>
           <div class="brand-subtitle-text">SISTEM PEMBAYARAN YURAN</div>
         </div>
       </div>
@@ -1047,7 +1047,7 @@ body {
       </nav>
 
       <div class="sidebar-footer">
-        <div>Fathul Quranic Centre (FQC)</div>
+        <div>Fathul Quranic Centre (NS0326067-A)</div>
         <div style="margin-top:2px; color:var(--accent-gold);">Batu Caves, Selangor</div>
       </div>
     </aside>
@@ -2126,7 +2126,7 @@ async function actionHantarWhatsapp() {
   }
 
   const itemsListText = JSON.parse(saved.butiranItem || "[]").map(i => `• ${i.label}: RM${i.paidPrice}`).join("\n");
-  const msg = `*RESIT PEMBAYARAN YURAN FATHUL QURANIC CENTRE (FQC)*\n\nNo. Resit: ${saved.noResit}\nNama Murid: ${saved.namaMurid}\nTarikh: ${saved.tarikh}\nBulan: ${saved.bulan}\nKaedah: ${saved.kaedahBayaran}\n\n*BUTIRAN YURAN:*\n${itemsListText}\n\n*JUMLAH KESELURUHAN: RM${saved.jumlah}*\n\nTerima kasih atas pembayaran yuran anak anda. Semoga dipertambahkan rezeki dan diberkati. Barokallahufik.`;
+  const msg = `*RESIT PEMBAYARAN YURAN FATHUL QURANIC CENTRE (NS0326067-A)*\n\nNo. Resit: ${saved.noResit}\nNama Murid: ${saved.namaMurid}\nTarikh: ${saved.tarikh}\nBulan: ${saved.bulan}\nKaedah: ${saved.kaedahBayaran}\n\n*BUTIRAN YURAN:*\n${itemsListText}\n\n*JUMLAH KESELURUHAN: RM${saved.jumlah}*\n\nTerima kasih atas pembayaran yuran anak anda. Semoga dipertambahkan rezeki dan diberkati. Barokallahufik.`;
   window.open(`https://wa.me/${phoneFormatted}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
@@ -2231,7 +2231,7 @@ function sendWaReminder(studentName, phone, month) {
     showToast("Nombor WhatsApp tidak sah untuk murid ini.", "warning");
     return;
   }
-  const msg = `*PERINGATAN MESRA BAYARAN YURAN FATHUL QURANIC CENTRE (FQC)*\n\nAssalamu'alaikum / Salam Sejahtera Ibu/Bapa ${studentName},\n\nIni adalah peringatan mesra berkenaan yuran pengajian bulan *${month}* bagi murid *${studentName}* yang belum dijelaskan.\n\nMohon ibu/bapa membuat makluman atau pembayaran yuran. Terima kasih atas kerjasama dan keprihatinan ibu/bapa.\n\nBarakallahufik,\n*Fathul Quranic Centre (FQC)*`;
+  const msg = `*PERINGATAN MESRA BAYARAN YURAN FATHUL QURANIC CENTRE (FQC)*\n\nAssalamu'alaikum / Salam Sejahtera Ibu/Bapa ${studentName},\n\nIni adalah peringatan mesra berkenaan yuran pengajian bulan *${month}* bagi murid *${studentName}* yang belum dijelaskan.\n\nMohon ibu/bapa membuat makluman atau pembayaran yuran. Terima kasih atas kerjasama dan keprihatinan ibu/bapa.\n\nBarakallahufik,\n*Fathul Quranic Centre (NS0326067-A)*`;
   window.open(`https://wa.me/${phoneFormatted}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
