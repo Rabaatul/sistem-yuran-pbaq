@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ms">
 <head>
   <meta charset="UTF-8">
@@ -7,6 +7,7 @@
   
   <!-- FontAwesome & Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
 /* Embedded Stylesheet for Google Apps Script */
 /* ==============================================================================
@@ -2138,26 +2139,56 @@ async function actionHantarWhatsapp() {
   window.open(`https://wa.me/${phoneFormatted}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-// --- FUNGSI CETAK RESIT (BULLETPROOF 1 MUKA SURAT A4 RESIT SAHAJA) ---
-function actionCetakResit() {
+// --- FUNGSI JANA GAMBAR RESIT (PNG AUTOMATIK) ---
+function actionSimpanGambar() {
   try {
-    if (typeof switchView === "function") {
-      switchView('bayaran');
+    const receiptEl = document.querySelector(".receipt-paper");
+    if (!receiptEl) {
+      if (typeof showToast === "function") showToast("Tiada resit untuk dijana.", "warning");
+      return;
     }
 
-    document.body.classList.add("printing-receipt-only");
+    if (typeof html2canvas === "undefined") {
+      if (typeof showToast === "function") showToast("Pustaka html2canvas sedang dimuatkan, sila cuba sebentar lagi.", "info");
+      return;
+    }
 
-    setTimeout(() => {
-      window.print();
-      setTimeout(() => {
-        document.body.classList.remove("printing-receipt-only");
-      }, 1000);
-    }, 200);
+    if (typeof showLoading === "function") showLoading(true, "Menjana gambar resit PNG...");
+
+    html2canvas(receiptEl, {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      backgroundColor: "#ffffff"
+    }).then(canvas => {
+      if (typeof showLoading === "function") showLoading(false);
+      const studentName = document.getElementById("rc-student-name")?.innerText || "MURID";
+      const receiptNo = document.getElementById("rc-no")?.innerText || "FQC-1100";
+      const cleanStudentName = studentName.trim().replace(/[^a-zA-Z0-9]/g, '_');
+      const fileName = `Resit_${receiptNo}_${cleanStudentName}.png`;
+
+      const link = document.createElement("a");
+      link.download = fileName;
+      link.href = canvas.toDataURL("image/png");
+      link.target = "_blank";
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => { if (document.body.contains(link)) document.body.removeChild(link); }, 1000);
+
+      if (typeof showToast === "function") showToast(`Gambar resit PNG (${fileName}) berjaya dimuat turun!`, "success");
+    }).catch(err => {
+      if (typeof showLoading === "function") showLoading(false);
+      if (typeof showToast === "function") showToast("Gagal menjana gambar: " + err.message, "error");
+    });
   } catch (err) {
-    window.print();
+    if (typeof showLoading === "function") showLoading(false);
+    if (typeof showToast === "function") showToast("Ralat: " + err.message, "error");
   }
 }
-if (typeof window !== "undefined") window.actionCetakResit = actionCetakResit;const printWin = window.open("", "_blank", "width=800,height=900");
+if (typeof window !== "undefined") window.actionSimpanGambar = actionSimpanGambar;
+
+const printWin = window.open("", "_blank", "width=800,height=900");
     if (!printWin) {
       window.print();
       return;
