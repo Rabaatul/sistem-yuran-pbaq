@@ -1,54 +1,4 @@
 ﻿
-
-// --- FUNGSI KEMASKINI DATA DASHBOARD (BULLETPROOF ASYNC) ---
-async function actionRefreshDashboardData() {
-  showToast("Mengemaskini pangkalan data Google Sheets...", "info");
-  showLoading(true, "Mengemaskini data terkini dari Google Sheets...");
-  
-  try {
-    if (typeof google !== "undefined" && google.script && google.script.run) {
-      await new Promise((resolve) => {
-        google.script.run
-          .withSuccessHandler(function(data) {
-            if (Array.isArray(data) && data.length > 0) {
-              appState.students = data;
-              if (typeof renderStudentSelectOptions === "function") renderStudentSelectOptions();
-            }
-            resolve();
-          })
-          .withFailureHandler(function() { resolve(); })
-          .getStudents();
-      });
-
-      await new Promise((resolve) => {
-        google.script.run
-          .withSuccessHandler(function(history) {
-            if (Array.isArray(history)) {
-              appState.payments = history;
-              if (typeof saveLocalStoragePayments === "function") saveLocalStoragePayments();
-            }
-            resolve();
-          })
-          .withFailureHandler(function() { resolve(); })
-          .getPaymentHistory();
-      });
-    } else {
-      if (typeof fetchStudentsFromBackend === "function") fetchStudentsFromBackend();
-      if (typeof fetchPaymentHistoryFromBackend === "function") fetchPaymentHistoryFromBackend();
-      await new Promise(r => setTimeout(r, 600));
-    }
-
-    if (typeof renderDashboard === "function") renderDashboard();
-    if (typeof renderHistoryTable === "function") renderHistoryTable();
-    showToast("Semua Data Dashboard berjaya dikemaskini!", "success");
-  } catch (err) {
-    showToast("Data Dashboard dikemaskini.", "info");
-  } finally {
-    showLoading(false);
-  }
-}
-if (typeof window !== "undefined") window.actionRefreshDashboardData = actionRefreshDashboardData;
-
 /**
  * ==============================================================================
  * SISTEM PEMBAYARAN YURAN & RESIT DIGITAL - FATHUL QURANIC CENTRE (FQC)
@@ -139,7 +89,7 @@ let appState = {
   payments: [],
   selectedStudent: null,
   currentReceiptNo: "FQC-1100",
-  appsScriptUrl: safeGetStorage("fqc_apps_script_url", "https://script.google.com/macros/s/AKfycbyku9YGRoiwVEGWOdGLrbXX7STxLgY-8W6atCGkH601/exec"),
+  appsScriptUrl: safeGetStorage("fqc_apps_script_url", "https://script.google.com/macros/s/AKfycbx5Tc9OJfzfMRWx_nTpSDPAGWUwuZfwimJCrCxVwzmuQv4o02hu60xzEv2v0v6A32yf-w/exec"),
   config: {
     logoUrl: safeGetStorage("fqc_logo_url", "assets/logo.png"),
     signatureUrl: safeGetStorage("fqc_signature_url", "assets/signature.png"),
