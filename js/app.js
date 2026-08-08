@@ -80,7 +80,7 @@ let appState = {
   selectedStudent: null,
   currentReceiptNo: "FQC-1100",
   lastUpdated: new Date().toLocaleString("ms-MY"),
-  appsScriptUrl: safeGetStorage("fqc_apps_script_url", "")
+  appsScriptUrl: safeGetStorage("fqc_apps_script_url", "https://script.google.com/macros/s/AKfycbzWfvXHS9oGeONbIe2B2P3UA3MCtnA1r7ENR-YAMEIYNbppLYtbE5VdD9nM55rjmZdySw/exec")
 };
 
 function safeGetStorage(key, defaultVal = "") {
