@@ -299,23 +299,25 @@ body {
   gap: 1.75rem;
 }
 
+/* Borang Pembayaran sentiasa kiri/atas, Resit sentiasa kanan/bawah */
 .receipt-column {
-  order: 1;
+  order: 2;
 }
 
 .form-column {
-  order: 2;
+  order: 1;
 }
 
 @media (max-width: 1024px) {
   .payment-grid {
     grid-template-columns: 1fr;
   }
-  .receipt-column {
-    order: 2;
-  }
+  /* Mobile: Borang atas, Resit bawah */
   .form-column {
     order: 1;
+  }
+  .receipt-column {
+    order: 2;
   }
 }
 
