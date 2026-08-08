@@ -1407,6 +1407,104 @@ body {
 
   <script>
 
+// --- FUNGSI JANA PDF SENARAI MURID BELUM BAYAR ---
+function exportUnpaidToPdf() {
+  try {
+    const filterMonth = document.getElementById("dash-month-filter")?.value || "OGOS";
+    const paidNamesSet = new Set();
+    
+    if (Array.isArray(appState.payments)) {
+      appState.payments.forEach(p => {
+        if (p.bulan && p.bulan.toUpperCase() === filterMonth.toUpperCase() && p.namaMurid) {
+          paidNamesSet.add(p.namaMurid.trim().toLowerCase());
+        }
+      });
+    }
+
+    const unpaidStudents = (appState.students || []).filter(s => !paidNamesSet.has((s.nama || '').trim().toLowerCase()));
+
+    if (unpaidStudents.length === 0) {
+      showToast(`Tahniah! Tiada murid yang belum bayar bagi bulan ${filterMonth}.`, "info");
+      return;
+    }
+
+    let rowsHtml = "";
+    unpaidStudents.forEach((student, idx) => {
+      rowsHtml += `
+        <tr>
+          <td style="text-align:center; padding:8px; border-bottom:1px solid #cbd5e1;">${idx + 1}</td>
+          <td style="padding:8px; border-bottom:1px solid #cbd5e1; font-weight:bold;">${student.nama}</td>
+          <td style="padding:8px; border-bottom:1px solid #cbd5e1;">${student.phone || '-'}</td>
+          <td style="text-align:center; padding:8px; border-bottom:1px solid #cbd5e1; color:#b91c1c; font-weight:bold;">BELUM BAYAR (${filterMonth})</td>
+        </tr>
+      `;
+    });
+
+    const printWin = window.open("", "_blank");
+    const docContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Senarai Murid Belum Bayar Yuran - ${filterMonth}</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; color: #0f172a; }
+          .header { text-align: center; border-bottom: 2px solid #1b4d2e; padding-bottom: 12px; margin-bottom: 16px; }
+          .title { font-size: 18px; font-weight: bold; color: #1b4d2e; margin-bottom: 4px; }
+          .subtitle { font-size: 12px; color: #475569; }
+          .meta-box { background: #f8fafc; border: 1px solid #cbd5e1; padding: 10px; border-radius: 6px; margin-bottom: 16px; font-size: 13px; display: flex; justify-content: space-between; }
+          table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+          th { background: #1b4d2e; color: #ffffff; padding: 8px; text-align: left; font-weight: bold; }
+          tr:nth-child(even) { background: #f8fafc; }
+          .footer { margin-top: 24px; text-align: right; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 8px; }
+          @media print { body { padding: 0; } }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="title">FATHUL QURANIC CENTRE (FQC)</div>
+          <div class="subtitle">5-2, 2ND FLOOR, JLN PPS-1, PUSAT PERDAGANGAN SELASEH, 68100 BATU CAVES, SELANGOR | TEL: 014-5366009</div>
+        </div>
+        <div class="meta-box">
+          <div><strong>SENARAI MURID BELUM BAYAR YURAN</strong></div>
+          <div>Bulan: <strong>${filterMonth}</strong> | Jumlah Murid: <strong>${unpaidStudents.length} Orang</strong></div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:40px; text-align:center;">#</th>
+              <th>NAMA MURID</th>
+              <th>NO. WHATSAPP IBU BAPA</th>
+              <th style="text-align:center;">STATUS PEMBAYARAN</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+        </table>
+        <div class="footer">
+          Dicetak secara automatik daripada Sistem Yuran Digital FQC pada ${new Date().toLocaleDateString('ms-MY')}
+        </div>
+        <` + `script>
+          window.onload = function() {
+            setTimeout(function() {
+              window.print();
+            }, 300);
+          };
+        <` + `/script>
+      </body>
+      </html>
+    `;
+
+    printWin.document.write(docContent);
+    printWin.document.close();
+    showToast(`Dokumen PDF bagi bulan ${filterMonth} sedia untuk diprint / disimpan!`, "success");
+  } catch (err) {
+    showToast("Gagal menjana PDF: " + err.message, "error");
+  }
+}
+if (typeof window !== "undefined") window.exportUnpaidToPdf = exportUnpaidToPdf;
+
+
 // --- FUNGSI EXPORT TO EXCEL (CSV) SENARAI MURID BELUM BAYAR ---
 function exportUnpaidToExcel() {
   try {
