@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Pembayaran Yuran - Fathul Quranic Centre (FQC)</title>
+  <title>Sistem Pembayaran Yuran & Resit Digital - Fathul Quranic Centre (FQC)</title>
   
-  <!-- FontAwesome & Fonts -->
+  <!-- FontAwesome & Libraries -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <!-- External Stylesheet for Local & GAS Embed -->
   <style>
-/* Embedded Stylesheet for Google Apps Script */
 /* ==============================================================================
    SISTEM PEMBAYARAN YURAN & RESIT DIGITAL - FATHUL QURANIC CENTRE (FQC)
    Aesthetic Design System & Stylesheet (styles.css)
@@ -208,6 +211,16 @@ body {
   gap: 0.4rem;
 }
 
+.last-updated-badge {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
 .content-body {
   padding: 1.75rem 2rem;
   flex-grow: 1;
@@ -230,7 +243,7 @@ body {
 /* Dashboard Cards Grid */
 .dashboard-metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   gap: 1.25rem;
   margin-bottom: 1.75rem;
 }
@@ -253,8 +266,8 @@ body {
 }
 
 .metric-info h3 {
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -286,9 +299,23 @@ body {
   gap: 1.75rem;
 }
 
+.receipt-column {
+  order: 1;
+}
+
+.form-column {
+  order: 2;
+}
+
 @media (max-width: 1024px) {
   .payment-grid {
     grid-template-columns: 1fr;
+  }
+  .receipt-column {
+    order: 2;
+  }
+  .form-column {
+    order: 1;
   }
 }
 
@@ -372,7 +399,7 @@ body {
   background: #ffffff;
   border: 1.5px solid var(--primary-main);
   border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-  max-height: 200px;
+  max-height: 220px;
   overflow-y: auto;
   z-index: 50;
   display: none;
@@ -384,10 +411,11 @@ body {
 }
 
 .option-item {
-  padding: 0.6rem 0.85rem;
+  padding: 0.65rem 0.85rem;
   font-size: 0.88rem;
   cursor: pointer;
   transition: background 0.15s ease;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .option-item:hover {
@@ -477,7 +505,6 @@ body {
   border: 1.5px solid #cbd5e1;
   border-radius: 6px;
   padding: 2px 6px;
-  width: 105px;
 }
 
 .fee-checkbox-card.checked .fee-card-price-group {
@@ -492,7 +519,7 @@ body {
 }
 
 .fee-card-price-input {
-  width: 100%;
+  width: 65px;
   border: none;
   background: transparent;
   text-align: right;
@@ -501,6 +528,16 @@ body {
   color: #1e293b;
   padding: 3px 2px;
   outline: none;
+}
+
+.fee-card-price-select {
+  border: none;
+  background: transparent;
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: #1e293b;
+  outline: none;
+  cursor: pointer;
 }
 
 .total-summary-card {
@@ -551,7 +588,7 @@ body {
 /* Payment Method Radios */
 .payment-method-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   gap: 0.6rem;
   margin-top: 0.5rem;
 }
@@ -586,10 +623,10 @@ body {
   color: var(--primary-dark);
 }
 
-/* Receipt Preview Styling (Exact A4 Printable Format) */
+/* Receipt Preview Styling (Exact Box Printable Format) */
 .receipt-paper {
   background: #ffffff;
-  border: 1px solid #cbd5e1;
+  border: 2px solid #1b4d2e;
   border-radius: var(--radius-md);
   padding: 2rem;
   box-shadow: var(--shadow-md);
@@ -663,6 +700,7 @@ body {
   padding: 0.85rem 1rem;
   border-radius: var(--radius-sm);
   font-size: 0.85rem;
+  border: 1px solid var(--border-color);
 }
 
 .receipt-meta-item {
@@ -686,6 +724,7 @@ body {
   border-collapse: collapse;
   margin-bottom: 1.5rem;
   font-size: 0.85rem;
+  border: 1px solid var(--border-color);
 }
 
 .receipt-table th {
@@ -756,6 +795,7 @@ body {
 /* Action Toolbar */
 .action-toolbar {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 1.25rem;
 }
@@ -795,6 +835,36 @@ body {
   box-shadow: 0 4px 12px rgba(37,211,102,0.3);
 }
 
+.btn-pdf {
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.btn-pdf:hover {
+  background: #b91c1c;
+  box-shadow: 0 4px 12px rgba(220,38,38,0.3);
+}
+
+.btn-image {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+.btn-image:hover {
+  background: #0369a1;
+  box-shadow: 0 4px 12px rgba(2,132,199,0.3);
+}
+
+.btn-excel {
+  background: #15803d;
+  color: #ffffff;
+}
+
+.btn-excel:hover {
+  background: #166534;
+  box-shadow: 0 4px 12px rgba(21,128,61,0.3);
+}
+
 .btn-outline {
   background: transparent;
   border: 1.5px solid var(--border-color);
@@ -806,23 +876,32 @@ body {
   background: var(--surface-subtle);
 }
 
-.btn-refresh-students {
-  background: transparent;
-  border: none;
-  color: var(--primary-main);
-  font-size: 0.78rem;
+/* Category Badges */
+.cat-tag {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
   font-weight: 700;
-  cursor: pointer;
-  margin-left: 6px;
+  margin-right: 4px;
+  margin-bottom: 4px;
 }
 
-.btn-refresh-students:hover {
-  text-decoration: underline;
-}
+.cat-mengaji { background: #dcfce7; color: #15803d; }
+.cat-transit { background: #fef3c7; color: #b45309; }
+.cat-jawi { background: #e0e7ff; color: #4338ca; }
+.cat-upkk { background: #fce7f3; color: #be185d; }
+.cat-psra { background: #fae8ff; color: #86198f; }
+.cat-kafa { background: #ccfbf1; color: #0f766e; }
+.cat-akademik { background: #dbeafe; color: #1d4ed8; }
+.cat-online { background: #ffedd5; color: #c2410c; }
 
 /* Data Table */
 .data-table-container {
   overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: #ffffff;
 }
 
 .data-table {
@@ -847,6 +926,60 @@ body {
 
 .data-table tr:hover {
   background: var(--primary-soft);
+}
+
+/* Modal Dialog */
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1500;
+  opacity: 0;
+  pointer-events: none;
+  transition: var(--transition);
+}
+
+.modal-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  width: 90%;
+  max-width: 650px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  padding: 1.5rem;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 1rem;
+}
+
+.modal-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: var(--text-muted);
 }
 
 /* Toast Notification & Loading Overlay */
@@ -944,6 +1077,9 @@ body {
   .payment-method-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+  .action-toolbar .btn {
+    width: 100%;
+  }
 }
 
 /* Printable Clean Styles */
@@ -995,146 +1131,135 @@ body {
 </head>
 <body>
 
-  <!-- Toast Notification -->
-  <div id="toast" class="toast">
-    <i id="toast-icon" class="fa-solid fa-circle-check"></i>
-    <span id="toast-msg">Notifikasi</span>
-  </div>
-
-  <!-- Loading Overlay -->
-  <div id="loading" class="loading-overlay">
-    <div class="spinner"></div>
-    <div style="font-weight: 700; color: var(--primary-dark);" id="loading-text">Memproses data...</div>
-  </div>
-
-  <!-- Mobile Top Bar -->
-  <div class="mobile-nav-bar no-print">
-    <div class="mobile-brand" style="display:flex; align-items:center; gap:0.5rem;">
-      <img src="assets/logo.png" class="img-target-logo" alt="FQC Logo" style="width:32px; height:32px; border-radius:4px;" onError="this.src=DEFAULT_PLACEHOLDERS.logo">
-      <span style="font-weight:800; font-size:0.9rem;">FATHUL QURANIC CENTRE (NS0326067-A)</span>
+  <!-- Mobile Top Nav -->
+  <div class="mobile-nav-bar">
+    <div style="display:flex; align-items:center; gap:0.5rem;">
+      <i class="fa-solid fa-graduation-cap" style="color:var(--accent-gold); font-size:1.2rem;"></i>
+      <span style="font-weight:800; font-size:0.95rem;">FQC YURAN DIGITAL</span>
     </div>
-    <button class="btn btn-outline" style="padding:4px 10px; color:#fff; border-color:rgba(255,255,255,0.3);" onclick="toggleMobileSidebar()">
+    <button class="btn btn-outline" style="color:#fff; border-color:rgba(255,255,255,0.3); padding:4px 10px;" onclick="toggleMobileSidebar()">
       <i class="fa-solid fa-bars"></i>
     </button>
   </div>
 
-  <!-- App Shell Container -->
   <div class="app-container">
-    
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar no-print">
-      <div class="brand-header">
-        <img src="assets/logo.png" class="brand-logo-img img-target-logo" alt="FQC Logo" onError="this.src=DEFAULT_PLACEHOLDERS.logo">
-        <div>
-          <div class="brand-title-text">FATHUL QURANIC CENTRE (NS0326067-A)</div>
-          <div class="brand-subtitle-text">SISTEM PEMBAYARAN YURAN</div>
+    <!-- Sidebar Menu Left (Desktop & Mobile Drawer) -->
+    <aside class="sidebar">
+      <div>
+        <div class="brand-header">
+          <div style="background:#fff; width:42px; height:42px; border-radius:8px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.2);">
+            <i class="fa-solid fa-book-quran" style="font-size:1.4rem; color:var(--primary-dark);"></i>
+          </div>
+          <div>
+            <div class="brand-title-text">FATHUL QURANIC</div>
+            <div class="brand-subtitle-text">CENTRE (FQC)</div>
+          </div>
         </div>
+
+        <nav class="nav-menu">
+          <button class="nav-link active" id="nav-dashboard" onclick="switchView('dashboard')">
+            <i class="fa-solid fa-chart-pie"></i> Dashboard
+          </button>
+          <button class="nav-link" id="nav-bayaran" onclick="switchView('bayaran')">
+            <i class="fa-solid fa-cash-register"></i> Pembayaran Baru
+          </button>
+          <button class="nav-link" id="nav-rekod" onclick="switchView('rekod')">
+            <i class="fa-solid fa-file-invoice-dollar"></i> Rekod Bayaran
+          </button>
+          <button class="nav-link" id="nav-belum-bayar" onclick="switchView('belum-bayar')">
+            <i class="fa-solid fa-user-clock"></i> Murid Belum Bayar
+          </button>
+          <button class="nav-link" id="nav-murid" onclick="switchView('murid')">
+            <i class="fa-solid fa-users"></i> Data Murid
+          </button>
+          <button class="nav-link" id="nav-tetapan" onclick="switchView('tetapan')">
+            <i class="fa-solid fa-sliders"></i> Tetapan Yuran
+          </button>
+        </nav>
       </div>
 
-      <nav class="nav-menu">
-        <button class="nav-link active" id="nav-dashboard" onclick="switchView('dashboard')">
-          <i class="fa-solid fa-chart-pie"></i>
-          <span>Dashboard</span>
-        </button>
-        <button class="nav-link" id="nav-bayaran" onclick="switchView('bayaran')">
-          <i class="fa-solid fa-file-invoice-dollar"></i>
-          <span>Pembayaran Baru</span>
-        </button>
-        <button class="nav-link" id="nav-rekod" onclick="switchView('rekod')">
-          <i class="fa-solid fa-receipt"></i>
-          <span>Rekod Bayaran</span>
-        </button>
-      </nav>
-
       <div class="sidebar-footer">
-        <div>Fathul Quranic Centre (NS0326067-A)</div>
-        <div style="margin-top:2px; color:var(--accent-gold);">Batu Caves, Selangor</div>
+        <div>Sistem Resit FQC v2.5</div>
+        <div style="color:var(--accent-gold); font-weight:700; margin-top:2px;">AppSheet & Sheets API</div>
       </div>
     </aside>
 
     <!-- Main Content Area -->
     <main class="main-content">
-      
-      <!-- Top Header Bar -->
-      <header class="top-header no-print">
+      <!-- Top Header -->
+      <header class="top-header">
         <div class="header-title-box">
-          <h1>Sistem Yuran & Resit Digital FQC</h1>
-          <div class="header-subtitle">Pengurusan Pembayaran Yuran Mengaji, KAFA, UPKK, PSRA & Transit</div>
+          <h1>Sistem Pembayaran Yuran & Resit Digital</h1>
+          <div class="header-subtitle">Pengurusan Pembayaran, Resit Digital, WhatsApp & Analitik Tunggakan</div>
         </div>
-        <div class="header-badge">
-          <i class="fa-solid fa-shield-halved"></i> Google Sheets Backend Connected
+
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+          <div class="last-updated-badge" id="dash-last-updated">
+            Dikemaskini terakhir: Loading...
+          </div>
+          <button class="btn btn-outline" style="border-color:var(--primary-main); color:var(--primary-dark);" onclick="actionRefreshAllData()">
+            <i class="fa-solid fa-rotate"></i> KEMASKINI DATA
+          </button>
         </div>
       </header>
 
-      <!-- Content Body Area -->
       <div class="content-body">
-        
-        <!-- ===================================================================
-             VIEW 1: DASHBOARD ANALITIK
-             =================================================================== -->
+
+        <!-- ================= VIEW 1: DASHBOARD ================= -->
         <section id="view-dashboard" class="tab-view active">
-          <!-- Header Bar Kemaskini Data -->
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; background:#ffffff; padding:0.85rem 1.15rem; border-radius:var(--radius-md); border:1px solid var(--border-color); box-shadow:var(--shadow-sm);">
-            <div>
-              <h2 style="font-size:1.15rem; font-weight:800; color:var(--primary-dark); margin:0;">Dashboard Analitik FQC</h2>
-              <div style="font-size:0.78rem; color:var(--text-muted);">Status Pembayaran Yuran & Rekod Terkini</div>
-            </div>
-            <button type="button" class="btn btn-primary" onclick="actionRefreshDashboardData()" style="padding:0.45rem 1rem; font-size:0.85rem; display:flex; align-items:center; gap:0.4rem;">
-              <i class="fa-solid fa-rotate"></i> KEMASKINI DATA
-            </button>
-          </div>
-          
+          <!-- KPI Metrics Cards Grid -->
           <div class="dashboard-metrics-grid">
             <div class="metric-card">
               <div class="metric-info">
-                <h3>Jumlah Kutipan</h3>
-                <div class="metric-value" id="dash-total-kutipan">RM 0</div>
+                <h3>Jumlah Murid Keseluruhan</h3>
+                <div class="metric-value" id="dash-total-murid">0</div>
               </div>
-              <div class="metric-icon">
-                <i class="fa-solid fa-wallet"></i>
+              <div class="metric-icon"><i class="fa-solid fa-users-gear"></i></div>
+            </div>
+
+            <div class="metric-card" style="border-left: 4px solid var(--primary-main);">
+              <div class="metric-info">
+                <h3>Jumlah Kutipan Keseluruhan</h3>
+                <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">(Januari - Bulan Semasa)</div>
+                <div class="metric-value" style="color:var(--primary-main);" id="dash-total-kutipan">RM 0</div>
               </div>
+              <div class="metric-icon" style="background:#dcfce7; color:#15803d;"><i class="fa-solid fa-wallet"></i></div>
             </div>
 
             <div class="metric-card">
               <div class="metric-info">
-                <h3>Jumlah Murid FQC</h3>
-                <div class="metric-value" id="dash-total-murid">39</div>
+                <h3>Jumlah Sudah Bayar</h3>
+                <div class="metric-value" style="color:#15803d;" id="dash-total-sudah-bayar">0</div>
               </div>
-              <div class="metric-icon">
-                <i class="fa-solid fa-user-graduate"></i>
-              </div>
+              <div class="metric-icon" style="background:#dcfce7; color:#15803d;"><i class="fa-solid fa-circle-check"></i></div>
             </div>
 
             <div class="metric-card">
               <div class="metric-info">
-                <h3>Sudah Bayar</h3>
-                <div class="metric-value" style="color:var(--primary-main);" id="dash-total-sudah-bayar">0</div>
-              </div>
-              <div class="metric-icon" style="background:#dcfce7; color:#15803d;">
-                <i class="fa-solid fa-circle-check"></i>
-              </div>
-            </div>
-
-            <div class="metric-card">
-              <div class="metric-info">
-                <h3>Belum Bayar</h3>
+                <h3>Jumlah Belum Bayar</h3>
                 <div class="metric-value" style="color:#b91c1c;" id="dash-total-belum-bayar">0</div>
               </div>
-              <div class="metric-icon" style="background:#fee2e2; color:#b91c1c;">
-                <i class="fa-solid fa-circle-exclamation"></i>
+              <div class="metric-icon" style="background:#fee2e2; color:#b91c1c;"><i class="fa-solid fa-clock"></i></div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-info">
+                <h3>Jumlah Transaksi</h3>
+                <div class="metric-value" id="dash-total-transaksi">0</div>
               </div>
+              <div class="metric-icon"><i class="fa-solid fa-receipt"></i></div>
             </div>
           </div>
 
-          <!-- Card Senarai Murid Belum Bayar -->
+          <!-- Section: Senarai Murid Belum Bayar Yuran -->
           <div class="card">
             <div class="card-header">
               <div class="card-title">
-                <i class="fa-solid fa-user-clock" style="color:#b91c1c;"></i> Senarai Murid Belum Bayar Yuran
+                <i class="fa-solid fa-triangle-exclamation" style="color:#b45309;"></i> Senarai Murid Belum Bayar Yuran
               </div>
-              <div style="display:flex; align-items:center; gap:0.5rem;">
-                <label class="form-label" style="margin:0;">Bulan:</label>
-                <select id="dash-month-filter" class="form-select" style="width:140px; padding:0.3rem 0.6rem;" onchange="renderDashboard()">
+              <div style="display:flex; align-items:center; gap:0.75rem;">
+                <label style="font-size:0.82rem; font-weight:700; color:var(--text-muted);">Pilih Bulan:</label>
+                <select id="dash-month-filter" class="form-select" style="width:140px; padding:0.35rem 0.6rem; font-weight:700;" onchange="renderDashboard()">
                   <option value="JANUARI">JANUARI</option>
                   <option value="FEBRUARI">FEBRUARI</option>
                   <option value="MAC">MAC</option>
@@ -1148,69 +1273,167 @@ body {
                   <option value="NOVEMBER">NOVEMBER</option>
                   <option value="DISEMBER">DISEMBER</option>
                 </select>
-                
+
+                <button class="btn btn-excel" onclick="exportUnpaidToExcel()">
+                  <i class="fa-solid fa-file-excel"></i> EXPORT EXCEL
+                </button>
               </div>
             </div>
-            <div class="card-body">
+
+            <div class="card-body" style="padding:0;">
               <div class="data-table-container">
                 <table class="data-table">
                   <thead>
                     <tr>
-                      <th>#</th>
-                      <th>NAMA MURID</th>
-                      <th>NO. WHATSAPP</th>
-                      <th>STATUS</th>
-                      <th>TINDAKAN</th>
+                      <th style="width:40px;">Bil</th>
+                      <th>Nama Murid</th>
+                      <th>No. WhatsApp Parent</th>
+                      <th>Kategori / Yuran Belum Bayar</th>
+                      <th>Jumlah (RM)</th>
+                      <th>Status</th>
+                      <th style="width:170px;">Tindakan WhatsApp</th>
                     </tr>
                   </thead>
                   <tbody id="unpaid-table-body">
-                    <!-- Dynamic unpaid students -->
+                    <!-- Loaded dynamically -->
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
 
+          <!-- Section: Ringkasan Kutipan Setiap Bulan -->
+          <div class="card" style="margin-top:1.5rem;">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-calendar-days"></i> Ringkasan Kutipan Setiap Bulan (Januari – Disember 2026)
+              </div>
+            </div>
+            <div class="card-body">
+              <div id="monthly-summary-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:0.75rem;">
+                <!-- Loaded dynamically -->
+              </div>
+            </div>
+          </div>
         </section>
 
-        <!-- ===================================================================
-             VIEW 2: PEMBAYARAN BARU & RESIT PREVIEW
-             =================================================================== -->
+        <!-- ================= VIEW 2: PEMBAYARAN BARU ================= -->
         <section id="view-bayaran" class="tab-view">
-          
           <div class="payment-grid">
             
-            <!-- Form Pembayaran -->
-            <div class="payment-form-section">
-              
-              <!-- Card Maklumat Murid -->
+            <!-- SEBELAH KIRI (Desktop): Preview Resit Live -->
+            <div class="receipt-column">
               <div class="card">
                 <div class="card-header">
-                  <div class="card-title">
-                    <i class="fa-solid fa-user-graduate"></i> Maklumat Murid & Tarikh
-                  </div>
+                  <div class="card-title"><i class="fa-solid fa-file-invoice"></i> Preview Resit Rasmi FQC</div>
+                  <button class="btn btn-outline" style="padding:4px 8px; font-size:0.75rem;" onclick="actionResetBorang()">
+                    <i class="fa-solid fa-rotate-left"></i> Reset Form
+                  </button>
                 </div>
                 <div class="card-body">
-                  <div class="form-group">
-                    <label class="form-label">
-                      Pilih / Cari Nama Murid <span style="color:red;">*</span> 
-                      <button type="button" class="btn-refresh-students" onclick="fetchStudentsFromBackend(true)" title="Kemaskini Senarai Murid">
-                        <i class="fa-solid fa-rotate"></i> Kemaskini
-                      </button>
-                    </label>
-                    <select id="student-native-select" class="form-select" style="font-weight:700; color:var(--primary-dark); margin-bottom:8px;" onchange="onNativeStudentSelect(this.value)">
-                      <option value="">-- Tekan Di Sini Untuk Pilih Murid --</option>
-                    </select>
-                
-                    <div class="searchable-select">
-                      <input type="text" id="student-search-input" class="form-control" placeholder="🔍 ATAU Taip huruf nama / nombor telefon..." autocomplete="off">
-                      <div id="student-dropdown-options" class="dropdown-options"></div>
+                  <!-- Box-styled Official Receipt -->
+                  <div class="receipt-paper" id="receipt-paper">
+                    <div class="receipt-header">
+                      <div class="receipt-header-left">
+                        <div style="background:#1b4d2e; width:52px; height:52px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#d4af37; font-size:1.8rem; font-weight:800;">
+                          FQC
+                        </div>
+                        <div>
+                          <div class="receipt-centre-title">FATHUL QURANIC CENTRE (FQC)</div>
+                          <div style="font-size:0.75rem; font-weight:700; color:var(--primary-main);">(NS0326067-A)</div>
+                          <div class="receipt-centre-address">Pusat Pengajian Al-Quran & Bimbingan Akademik Terpadu FQC</div>
+                        </div>
+                      </div>
+                      <div class="receipt-title-badge">
+                        <h2>RESIT RASMI</h2>
+                        <div class="receipt-no-tag" id="rc-no">FQC-1100</div>
+                      </div>
                     </div>
+
+                    <div class="receipt-meta-grid">
+                      <div class="receipt-meta-item">
+                        <span class="receipt-meta-label">Nama Murid:</span>
+                        <span class="receipt-meta-value" id="rc-student-name">NAMA MURID</span>
+                      </div>
+                      <div class="receipt-meta-item">
+                        <span class="receipt-meta-label">Tarikh:</span>
+                        <span class="receipt-meta-value" id="rc-date">DD/MM/YYYY</span>
+                      </div>
+                      <div class="receipt-meta-item">
+                        <span class="receipt-meta-label">Bulan Bayaran:</span>
+                        <span class="receipt-meta-value" id="rc-month">OGOS</span>
+                      </div>
+                      <div class="receipt-meta-item">
+                        <span class="receipt-meta-label">Kaedah Bayaran:</span>
+                        <span class="receipt-meta-value" id="rc-payment-method">TUNAI</span>
+                      </div>
+                    </div>
+
+                    <!-- Items Table -->
+                    <table class="receipt-table">
+                      <thead>
+                        <tr>
+                          <th>Butiran Yuran</th>
+                          <th style="text-align:center;">Kategori / Kelas</th>
+                          <th style="text-align:center;">Bulan</th>
+                          <th style="text-align:right;">Amaun (RM)</th>
+                        </tr>
+                      </thead>
+                      <tbody id="rc-table-body">
+                        <!-- Loaded dynamically -->
+                      </tbody>
+                    </table>
+
+                    <div class="receipt-footer-section">
+                      <div class="receipt-signature-box">
+                        <div style="height:40px; border-bottom:1px solid #000; width:140px; margin-bottom:4px;"></div>
+                        <div class="receipt-signature-title">Pentadbir / Pengurusan FQC</div>
+                      </div>
+
+                      <div class="receipt-total-box">
+                        <div class="receipt-total-label">JUMLAH KESELURUHAN</div>
+                        <div class="receipt-total-value" id="rc-total-amount">RM 0</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Action Toolbar (4 Buttons) -->
+                  <div class="action-toolbar">
+                    <button class="btn btn-primary" id="btn-simpan" onclick="actionSimpanPembayaran()">
+                      <i class="fa-solid fa-floppy-disk"></i> Simpan Resit
+                    </button>
+                    <button class="btn btn-image" id="btn-image" onclick="actionJanaGambarResit()">
+                      <i class="fa-solid fa-image"></i> Jana Gambar Resit
+                    </button>
+                    <button class="btn btn-pdf" id="btn-pdf" onclick="actionPDFResit()">
+                      <i class="fa-solid fa-file-pdf"></i> PDF Resit
+                    </button>
+                    <button class="btn btn-whatsapp" id="btn-whatsapp" onclick="actionHantarWhatsapp()">
+                      <i class="fa-brands fa-whatsapp"></i> Hantar WhatsApp
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SEBELAH KANAN (Desktop): Borang Pembayaran -->
+            <div class="form-column">
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title"><i class="fa-solid fa-user-pen"></i> Borang Pembayaran Yuran</div>
+                </div>
+                <div class="card-body">
+                  
+                  <!-- Live Student Search Input -->
+                  <div class="form-group searchable-select">
+                    <label class="form-label"><i class="fa-solid fa-magnifying-glass"></i> Cari Nama Murid / Tel Parent</label>
+                    <input type="text" id="student-search-input" class="form-control" placeholder="🔍 Taip nama murid (Ahmad, Aisyah, Nur...) atau nombor tel..." autocomplete="off">
+                    <div id="student-dropdown-options" class="dropdown-options"></div>
                   </div>
 
                   <div class="grid-2">
                     <div class="form-group">
-                      <label class="form-label">No. WhatsApp Ibu Bapa</label>
+                      <label class="form-label">No. WhatsApp Ibu/Bapa</label>
                       <input type="text" id="parent-phone-display" class="form-control" placeholder="Contoh: 0145366009">
                     </div>
                     <div class="form-group">
@@ -1220,8 +1443,8 @@ body {
                   </div>
 
                   <div class="form-group">
-                    <label class="form-label">Bulan Bayaran Yuran</label>
-                    <select id="pay-month" class="form-select">
+                    <label class="form-label">Bulan Bayaran</label>
+                    <select id="pay-month" class="form-select" style="font-weight:700;">
                       <option value="JANUARI">JANUARI</option>
                       <option value="FEBRUARI">FEBRUARI</option>
                       <option value="MAC">MAC</option>
@@ -1235,165 +1458,202 @@ body {
                       <option value="NOVEMBER">NOVEMBER</option>
                       <option value="DISEMBER">DISEMBER</option>
                     </select>
-                
-                  </div>
-                </div>
-              </div>
-
-              <!-- Card Checkbox Fee Cards Container -->
-              <div class="card">
-                <div class="card-header">
-                  <div class="card-title">
-                    <i class="fa-solid fa-list-check"></i> Pilih Yuran & Harga RM (Kotak Tick)
-                  </div>
-                </div>
-                <div class="card-body">
-                  <div id="fee-checkbox-groups-container">
-                    <!-- Dynamic Checkbox Fee Cards rendered by app.js -->
                   </div>
 
+                  <!-- Fee Categories & Items with Tick-boxes -->
+                  <div class="form-group">
+                    <label class="form-label" style="margin-bottom:0.75rem; font-size:0.9rem; color:var(--primary-dark);">
+                      <i class="fa-solid fa-list-check"></i> Senarai Item Yuran (Tick & Ubah Harga Jika Perlu)
+                    </label>
+                    <div id="fee-checkbox-groups-container">
+                      <!-- Loaded dynamically -->
+                    </div>
+                  </div>
+
+                  <!-- Custom Total Amount & Payment Method -->
                   <div class="total-summary-card">
-                    <div class="total-summary-label">JUMLAH KESELURUHAN</div>
+                    <div class="total-summary-label">JUMLAH KESELURUHAN (RM)</div>
                     <div class="total-summary-input-group">
                       <span class="total-summary-prefix">RM</span>
                       <input type="number" id="fee-total-custom" class="total-summary-input" placeholder="0" oninput="onCustomTotalInput()">
                     </div>
                   </div>
-                </div>
-              </div>
 
-              <!-- Card Kaedah Bayaran -->
-              <div class="card">
-                <div class="card-header">
-                  <div class="card-title">
-                    <i class="fa-solid fa-credit-card"></i> Kaedah Pembayaran
-                  </div>
-                </div>
-                <div class="card-body">
-                  <div class="payment-method-grid" style="grid-template-columns: 1fr 1fr;">
-                    <label class="method-radio-label selected" id="lbl-tunai">
-                      <input type="radio" name="kaedahBayaran" value="TUNAI" checked>
-                      <i class="fa-solid fa-money-bill-wave"></i> TUNAI
-                    </label>
-                    <label class="method-radio-label" id="lbl-transfer">
-                      <input type="radio" name="kaedahBayaran" value="ONLINE TRANSFER">
-                      <i class="fa-solid fa-building-columns"></i> ONLINE TRANSFER
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Action Buttons Toolbar -->
-              <div class="action-toolbar no-print">
-                <button class="btn btn-primary" id="btn-simpan" onclick="actionSimpanPembayaran()">
-                  <i class="fa-solid fa-floppy-disk"></i> Simpan Resit
-                </button>
-                <button class="btn btn-whatsapp" id="btn-whatsapp" onclick="actionHantarWhatsapp()">
-                  <i class="fa-brands fa-whatsapp"></i> Simpan & Hantar WA
-                </button>
-                <button class="btn btn-outline" onclick="actionCetakResit()">
-                  <i class="fa-solid fa-print"></i> Cetak
-                </button>
-                <button class="btn btn-outline" style="color:red;" onclick="actionResetBorang()">
-                  <i class="fa-solid fa-rotate-left"></i> Reset
-                </button>
-              </div>
-
-            </div>
-
-            <!-- Preview Resit Digital (A4 Format) -->
-            <div class="receipt-preview-section">
-              <div class="receipt-paper">
-                <div class="receipt-header">
-                  <div class="receipt-header-left">
-                    <img src="assets/logo.png" class="receipt-logo img-target-logo" alt="FQC Logo" onError="this.src=DEFAULT_PLACEHOLDERS.logo">
-                    <div>
-                      <div class="receipt-centre-title">FATHUL QURANIC CENTRE (NS0326067-A)</div>
-                      <div class="receipt-centre-address">5-2, 2ND FLOOR, JLN PPS-1, PUSAT PERDAGANGAN SELASEH, 68100 BATU CAVES, SELANGOR<br>Tel: 014-5366009 / 03 6187 8543</div>
+                  <div class="form-group" style="margin-top:1.25rem;">
+                    <label class="form-label">Kaedah Bayaran</label>
+                    <div class="payment-method-grid">
+                      <label class="method-radio-label selected" id="lbl-tunai">
+                        <i class="fa-solid fa-money-bill-wave"></i> TUNAI
+                        <input type="radio" name="kaedahBayaran" value="TUNAI" checked>
+                      </label>
+                      <label class="method-radio-label" id="lbl-transfer">
+                        <i class="fa-solid fa-building-columns"></i> ONLINE TRANSFER
+                        <input type="radio" name="kaedahBayaran" value="ONLINE TRANSFER">
+                      </label>
+                      <label class="method-radio-label">
+                        <i class="fa-solid fa-qrcode"></i> QR
+                        <input type="radio" name="kaedahBayaran" value="QR">
+                      </label>
+                      <label class="method-radio-label">
+                        <i class="fa-solid fa-credit-card"></i> BANK TRANSFER
+                        <input type="radio" name="kaedahBayaran" value="BANK TRANSFER">
+                      </label>
                     </div>
                   </div>
-                  <div class="receipt-title-badge">
-                    <h2>RESIT RASMI</h2>
-                    <div class="receipt-no-tag" id="rc-no">FQC-1100</div>
-                  </div>
-                </div>
 
-                <div class="receipt-meta-grid">
-                  <div class="receipt-meta-item">
-                    <span class="receipt-meta-label">NAMA MURID:</span>
-                    <span class="receipt-meta-value" id="rc-student-name">NAMA MURID</span>
+                  <div class="form-group">
+                    <label class="form-label">Catatan Tambahan (Opsional)</label>
+                    <input type="text" id="pay-catatan" class="form-control" placeholder="Contoh: Bayaran ansuran / resit melalui ayah">
                   </div>
-                  <div class="receipt-meta-item">
-                    <span class="receipt-meta-label">TARIKH:</span>
-                    <span class="receipt-meta-value" id="rc-date">07/08/2026</span>
-                  </div>
-                  <div class="receipt-meta-item">
-                    <span class="receipt-meta-label">BULAN BAYARAN:</span>
-                    <span class="receipt-meta-value" id="rc-month">OGOS</span>
-                  </div>
-                  <div class="receipt-meta-item">
-                    <span class="receipt-meta-label">KAEDAH BAYARAN:</span>
-                    <span class="receipt-meta-value" id="rc-payment-method">TUNAI</span>
-                  </div>
-                </div>
 
-                <table class="receipt-table">
-                  <thead>
-                    <tr>
-                      <th>PERKARA / YURAN</th>
-                      <th style="text-align:center;">SUBJEK/KELAS</th>
-                      <th style="text-align:center;">BULAN</th>
-                      <th style="text-align:right;">JUMLAH (RM)</th>
-                    </tr>
-                  </thead>
-                  <tbody id="rc-table-body">
-                    <!-- Dynamic Receipt Items -->
-                  </tbody>
-                </table>
-
-                <div class="receipt-footer-section">
-                  <div class="receipt-signature-box">
-                    <img src="assets/signature.png" class="receipt-signature-img img-target-signature" alt="Tandatangan FQC" onError="this.src=DEFAULT_PLACEHOLDERS.signature">
-                    <div class="receipt-signature-title">Pentadbir / Pengurusan FQC</div>
-                  </div>
-                  <div class="receipt-total-box">
-                    <div class="receipt-total-label">JUMLAH BAYARAN</div>
-                    <div class="receipt-total-value" id="rc-total-amount">RM0</div>
-                  </div>
                 </div>
               </div>
             </div>
 
           </div>
-
         </section>
 
-        <!-- ===================================================================
-             VIEW 3: REKOD BAYARAN (HISTORY TABLE)
-             =================================================================== -->
+        <!-- ================= VIEW 3: REKOD BAYARAN ================= -->
         <section id="view-rekod" class="tab-view">
           <div class="card">
             <div class="card-header">
-              <div class="card-title">
-                <i class="fa-solid fa-receipt"></i> Sejarah Rekod Pembayaran Yuran
-              </div>
+              <div class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> Sejarah Rekod Pembayaran Yuran</div>
+              <button class="btn btn-outline" onclick="fetchPaymentHistoryFromBackend()">
+                <i class="fa-solid fa-rotate"></i> Muat Semula
+              </button>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="padding:0;">
               <div class="data-table-container">
                 <table class="data-table">
                   <thead>
                     <tr>
-                      <th>NO. RESIT</th>
-                      <th>TARIKH</th>
-                      <th>NAMA MURID</th>
-                      <th>BULAN</th>
-                      <th>JUMLAH (RM)</th>
-                      <th>KAEDAH</th>
-                      <th>TINDAKAN</th>
+                      <th>No. Resit</th>
+                      <th>Tarikh</th>
+                      <th>Nama Murid</th>
+                      <th>Bulan</th>
+                      <th>Jumlah</th>
+                      <th>Kaedah</th>
+                      <th style="width:120px;">Tindakan</th>
                     </tr>
                   </thead>
                   <tbody id="history-table-body">
-                    <!-- Dynamic history rows -->
+                    <!-- Loaded dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 4: MURID BELUM BAYAR ================= -->
+        <section id="view-belum-bayar" class="tab-view">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-user-xmark" style="color:#b91c1c;"></i> Senarai Murid Belum Bayar Yuran Mengikut Bulan
+              </div>
+              <div style="display:flex; align-items:center; gap:0.75rem;">
+                <select id="unpaid-month-filter" class="form-select" style="width:140px; font-weight:700;" onchange="renderUnpaidSection()">
+                  <option value="JANUARI">JANUARI</option>
+                  <option value="FEBRUARI">FEBRUARI</option>
+                  <option value="MAC">MAC</option>
+                  <option value="APRIL">APRIL</option>
+                  <option value="MEI">MEI</option>
+                  <option value="JUN">JUN</option>
+                  <option value="JULAI">JULAI</option>
+                  <option value="OGOS" selected>OGOS</option>
+                  <option value="SEPTEMBER">SEPTEMBER</option>
+                  <option value="OKTOBER">OKTOBER</option>
+                  <option value="NOVEMBER">NOVEMBER</option>
+                  <option value="DISEMBER">DISEMBER</option>
+                </select>
+                <button class="btn btn-excel" onclick="exportUnpaidToExcel()">
+                  <i class="fa-solid fa-file-excel"></i> EXPORT EXCEL
+                </button>
+              </div>
+            </div>
+            <div class="card-body" style="padding:0;">
+              <div class="data-table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th style="width:40px;">Bil</th>
+                      <th>Nama Murid</th>
+                      <th>No. WhatsApp Parent</th>
+                      <th>Kategori/Yuran Belum Bayar</th>
+                      <th>Jumlah (RM)</th>
+                      <th>Status</th>
+                      <th>WhatsApp Peringatan</th>
+                    </tr>
+                  </thead>
+                  <tbody id="unpaid-section-tbody">
+                    <!-- Reuses same unpaid table generator -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 5: DATA MURID ================= -->
+        <section id="view-murid" class="tab-view">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="fa-solid fa-users"></i> Senarai Data Profil Murid FQC</div>
+              <button class="btn btn-primary" onclick="openAddStudentModal()">
+                <i class="fa-solid fa-user-plus"></i> Tambah Murid Baharu
+              </button>
+            </div>
+            <div class="card-body" style="padding:0;">
+              <div class="data-table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th style="width:40px;">ID</th>
+                      <th>Nama Murid</th>
+                      <th>Nama Ibu/Bapa</th>
+                      <th>No. WhatsApp</th>
+                      <th>Kategori Didaftarkan</th>
+                      <th>Status</th>
+                      <th style="width:100px;">Tindakan</th>
+                    </tr>
+                  </thead>
+                  <tbody id="student-table-body">
+                    <!-- Loaded dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 6: TETAPAN YURAN ================= -->
+        <section id="view-tetapan" class="tab-view">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="fa-solid fa-sliders"></i> Tetapan Yuran & Kategori FQC</div>
+            </div>
+            <div class="card-body">
+              <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1rem;">
+                Tetapan yuran laluan mengikut kategori diselaraskan secara automatik dengan database Google Sheets / AppSheet.
+              </p>
+              <div class="data-table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Kategori</th>
+                      <th>Nama Yuran</th>
+                      <th>Harga Standard (RM)</th>
+                      <th>Harga Diskaun (RM)</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Kelas Mengaji</td><td>Yuran Bulanan</td><td>RM 130</td><td>RM 100</td><td><span class="badge-paid">Aktif</span></td></tr>
+                    <tr><td>Transit 2026</td><td>Yuran Bulanan</td><td>RM 260</td><td>RM 200</td><td><span class="badge-paid">Aktif</span></td></tr>
+                    <tr><td>Tuisyen Akademik</td><td>1 Subjek</td><td>RM 40</td><td>RM 35</td><td><span class="badge-paid">Aktif</span></td></tr>
+                    <tr><td>Kelas UPKK</td><td>Yuran Bulanan</td><td>RM 100</td><td>-</td><td><span class="badge-paid">Aktif</span></td></tr>
+                    <tr><td>Kelas PSRA</td><td>Yuran Bulanan</td><td>RM 100</td><td>-</td><td><span class="badge-paid">Aktif</span></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -1405,274 +1665,182 @@ body {
     </main>
   </div>
 
+  <!-- Modal Dialog: Tambah / Edit Profil Murid -->
+  <div id="student-modal-backdrop" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-student-title">Tambah Murid Baharu</div>
+        <button class="modal-close-btn" onclick="closeStudentModal()">&times;</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nama Murid</label>
+        <input type="hidden" id="modal-student-id">
+        <input type="text" id="modal-student-nama" class="form-control" placeholder="Nama Penuh Murid">
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Nama Ibu/Bapa</label>
+          <input type="text" id="modal-student-parent" class="form-control" placeholder="Nama Parent">
+        </div>
+        <div class="form-group">
+          <label class="form-label">No. WhatsApp Parent</label>
+          <input type="text" id="modal-student-phone" class="form-control" placeholder="Contoh: 0145366009">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Status Murid</label>
+        <select id="modal-student-status" class="form-select">
+          <option value="AKTIF">AKTIF</option>
+          <option value="TIDAK AKTIF">TIDAK AKTIF</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" style="color:var(--primary-dark); font-weight:800;">Kategori Didaftarkan Murid Ini:</label>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; background:var(--surface-subtle); padding:0.75rem; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+          <label style="font-size:0.85rem; font-weight:700;"><input type="checkbox" id="modal-chk-mengaji" checked> Kelas Mengaji</label>
+          <label style="font-size:0.85rem; font-weight:700;"><input type="checkbox" id="modal-chk-transit"> Transit 2026</label>
+          <label style="font-size:0.85rem; font-weight:700;"><input type="checkbox" id="modal-chk-jawi"> Kelas Khas Jawi</label>
+          <label style="font-size:0.85rem; font-weight:700;"><input type="checkbox" id="modal-chk-kafa"> KAFA</label>
+          <label style="font-size:0.85rem; font-weight:700;"><input type="checkbox" id="modal-chk-upkk"> UPKK</label>
+          <label style="font-size:0.85rem; font-weight:700;"><input type="checkbox" id="modal-chk-psra"> PSRA</label>
+          <label style="font-size:0.85rem; font-weight:700;"><input type="checkbox" id="modal-chk-akademik"> Tuisyen Akademik</label>
+          <label style="font-size:0.85rem; font-weight:700;"><input type="checkbox" id="modal-chk-online"> Mengaji Online</label>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.25rem;">
+        <button class="btn btn-outline" onclick="closeStudentModal()">Batal</button>
+        <button class="btn btn-primary" onclick="saveStudentFromModal()"><i class="fa-solid fa-check"></i> Simpan Profil</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification & Loading Overlay -->
+  <div id="toast" class="toast">
+    <i id="toast-icon" class="fa-solid fa-circle-check"></i>
+    <span id="toast-msg">Notifikasi</span>
+  </div>
+
+  <div id="loading" class="loading-overlay">
+    <div class="spinner"></div>
+    <div style="font-weight: 700; color: var(--primary-dark);" id="loading-text">Memproses data...</div>
+  </div>
+
+  <!-- Application JavaScript -->
   <script>
-
-// --- FUNGSI JANA PDF SENARAI MURID BELUM BAYAR ---
-function exportUnpaidToPdf() {
-  try {
-    const filterMonth = document.getElementById("dash-month-filter")?.value || "OGOS";
-    const paidNamesSet = new Set();
-    
-    if (Array.isArray(appState.payments)) {
-      appState.payments.forEach(p => {
-        if (p.bulan && p.bulan.toUpperCase() === filterMonth.toUpperCase() && p.namaMurid) {
-          paidNamesSet.add(p.namaMurid.trim().toLowerCase());
-        }
-      });
-    }
-
-    const unpaidStudents = (appState.students || []).filter(s => !paidNamesSet.has((s.nama || '').trim().toLowerCase()));
-
-    if (unpaidStudents.length === 0) {
-      showToast(`Tahniah! Tiada murid yang belum bayar bagi bulan ${filterMonth}.`, "info");
-      return;
-    }
-
-    let rowsHtml = "";
-    unpaidStudents.forEach((student, idx) => {
-      rowsHtml += `
-        <tr>
-          <td style="text-align:center; padding:8px; border-bottom:1px solid #cbd5e1;">${idx + 1}</td>
-          <td style="padding:8px; border-bottom:1px solid #cbd5e1; font-weight:bold;">${student.nama}</td>
-          <td style="padding:8px; border-bottom:1px solid #cbd5e1;">${student.phone || '-'}</td>
-          <td style="text-align:center; padding:8px; border-bottom:1px solid #cbd5e1; color:#b91c1c; font-weight:bold;">BELUM BAYAR (${filterMonth})</td>
-        </tr>
-      `;
-    });
-
-    const printWin = window.open("", "_blank");
-    const docContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Senarai Murid Belum Bayar Yuran - ${filterMonth}</title>
-        <style>
-          body { font-family: Arial, sans-serif; padding: 20px; color: #0f172a; }
-          .header { text-align: center; border-bottom: 2px solid #1b4d2e; padding-bottom: 12px; margin-bottom: 16px; }
-          .title { font-size: 18px; font-weight: bold; color: #1b4d2e; margin-bottom: 4px; }
-          .subtitle { font-size: 12px; color: #475569; }
-          .meta-box { background: #f8fafc; border: 1px solid #cbd5e1; padding: 10px; border-radius: 6px; margin-bottom: 16px; font-size: 13px; display: flex; justify-content: space-between; }
-          table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
-          th { background: #1b4d2e; color: #ffffff; padding: 8px; text-align: left; font-weight: bold; }
-          tr:nth-child(even) { background: #f8fafc; }
-          .footer { margin-top: 24px; text-align: right; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 8px; }
-          @media print { body { padding: 0; } }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <div class="title">FATHUL QURANIC CENTRE (NS0326067-A)</div>
-          <div class="subtitle">5-2, 2ND FLOOR, JLN PPS-1, PUSAT PERDAGANGAN SELASEH, 68100 BATU CAVES, SELANGOR | TEL: 014-5366009</div>
-        </div>
-        <div class="meta-box">
-          <div><strong>SENARAI MURID BELUM BAYAR YURAN</strong></div>
-          <div>Bulan: <strong>${filterMonth}</strong> | Jumlah Murid: <strong>${unpaidStudents.length} Orang</strong></div>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th style="width:40px; text-align:center;">#</th>
-              <th>NAMA MURID</th>
-              <th>NO. WHATSAPP IBU BAPA</th>
-              <th style="text-align:center;">STATUS PEMBAYARAN</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rowsHtml}
-          </tbody>
-        </table>
-        <div class="footer">
-          Dicetak secara automatik daripada Sistem Yuran Digital FQC pada ${new Date().toLocaleDateString('ms-MY')}
-        </div>
-        <` + `script>
-          window.onload = function() {
-            setTimeout(function() {
-              window.print();
-            }, 300);
-          };
-        <` + `/script>
-      </body>
-      </html>
-    `;
-
-    printWin.document.write(docContent);
-    printWin.document.close();
-    showToast(`Dokumen PDF bagi bulan ${filterMonth} sedia untuk diprint / disimpan!`, "success");
-  } catch (err) {
-    showToast("Gagal menjana PDF: " + err.message, "error");
-  }
-}
-if (typeof window !== "undefined") window.exportUnpaidToPdf = exportUnpaidToPdf;
-
-
-// --- FUNGSI EXPORT TO EXCEL (CSV) SENARAI MURID BELUM BAYAR ---
-function exportUnpaidToExcel() {
-  try {
-    const filterMonth = document.getElementById("dash-month-filter")?.value || "OGOS";
-    const paidNamesSet = new Set();
-    
-    if (Array.isArray(appState.payments)) {
-      appState.payments.forEach(p => {
-        if (p.bulan && p.bulan.toUpperCase() === filterMonth.toUpperCase() && p.namaMurid) {
-          paidNamesSet.add(p.namaMurid.trim().toLowerCase());
-        }
-      });
-    }
-
-    const unpaidStudents = (appState.students || []).filter(s => !paidNamesSet.has((s.nama || '').trim().toLowerCase()));
-
-    if (unpaidStudents.length === 0) {
-      showToast(`Tahniah! Tiada murid yang belum bayar bagi bulan ${filterMonth}.`, "info");
-      return;
-    }
-
-    let csvContent = "\uFEFF";
-    csvContent += "Bil,Nama Murid,No. WhatsApp,Bulan,Status Pembayaran\n";
-
-    unpaidStudents.forEach((student, idx) => {
-      const cleanName = `"${(student.nama || '').replace(/"/g, '""')}"`;
-      const cleanPhone = `"${(student.phone || '-').replace(/"/g, '""')}"`;
-      csvContent += `${idx + 1},${cleanName},${cleanPhone},${filterMonth},BELUM BAYAR\n`;
-    });
-
-    const fileName = `Senarai_Murid_Belum_Bayar_${filterMonth}_FQC.csv`;
-    const encodedUri = "data:text/csv;charset=utf-8," + encodeURIComponent(csvContent);
-
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", fileName);
-    link.setAttribute("target", "_blank");
-    link.style.display = "none";
-    document.body.appendChild(link);
-    link.click();
-    setTimeout(() => { if (document.body.contains(link)) document.body.removeChild(link); }, 1000);
-
-    showToast(`Fail Excel (${fileName}) berjaya dimuat turun!`, "success");
-  } catch (err) {
-    showToast("Gagal memuat turun Excel: " + err.message, "error");
-  }
-}
-if (typeof window !== "undefined") window.exportUnpaidToExcel = exportUnpaidToExcel;
 /**
  * ==============================================================================
  * SISTEM PEMBAYARAN YURAN & RESIT DIGITAL - FATHUL QURANIC CENTRE (FQC)
- * Clean Modular Application Logic (app.js)
+ * Full Application Logic (app.js)
  * ==============================================================================
  */
 
-// Master List 28 Murid FQC Default Terbaharu
+// Master List 28 Murid FQC Default
 const MASTER_STUDENTS_DEFAULT = [
-  { id: 1, nama: "Syed Mohd Alwi Bin Syed Mohamed", phone: "0145366009" },
-  { id: 2, nama: "Faid Fareed Bin Mohd Shah Fitri", phone: "01481810192" },
-  { id: 3, nama: "Mohd Fadzli Bin Ab Wahab", phone: "01133323707" },
-  { id: 4, nama: "Nur Aliyah Binti Muhammad A'fifi", phone: "0133447681" },
-  { id: 5, nama: "Nur Inas Tihani Binti Muhammed Nasri", phone: "0179378264" },
-  { id: 6, nama: "Fidatul Fitriah Binti Fazli", phone: "0176826787" },
-  { id: 7, nama: "Nur Damia Arissa Bt Faizol Azimi", phone: "0132955402" },
-  { id: 8, nama: "Alya Sofia Binti Aris", phone: "0173235786" },
-  { id: 9, nama: "Tengku Aqill Hafy Bin Tengku Shahrizal", phone: "0133440896" },
-  { id: 10, nama: "Muhammad Aathif Adhwa Bin Mohd Fazli", phone: "0123209953" },
-  { id: 11, nama: "Nur Aimy Safiy Binti Shaiful Azmi", phone: "0108901030" },
-  { id: 12, nama: "Muhammad Harith Bin Muhamad Hosni", phone: "0173409430" },
-  { id: 13, nama: "Nur Ayesha Zahira Binti Abdullah Zawawie", phone: "0132410737" },
-  { id: 14, nama: "Wan Nadzrin Afeef Bin Wan Ibrahim Jefri", phone: "01110081660" },
-  { id: 15, nama: "Hilal Sufi Bin Hasrull Nizam", phone: "0193593693" },
-  { id: 16, nama: "Maira Yusreena Binti Muhamad Yazid", phone: "0129878510" },
-  { id: 17, nama: "Izz Zara Sofia Binti Mohd Safarudin", phone: "0162710027" },
-  { id: 18, nama: "Ammar Luqman Bin Shamsudin", phone: "0172382980" },
-  { id: 19, nama: "Ainan Salsabila Binti Hafiz Anuar", phone: "0139311818" },
-  { id: 20, nama: "Arissa Medina Bt Ahmad Fauzi", phone: "0129425926" },
-  { id: 21, nama: "Ammar Ramadhan Bin Ahmad Fauzi", phone: "0129425926" },
-  { id: 22, nama: "Muhammad Rizal Arshad Bin Mohd Rosmizam", phone: "0129343676" },
-  { id: 23, nama: "Nur Raisha Adawiyah Binti Mohd Rosmizam", phone: "0129343676" },
-  { id: 24, nama: "Aisyah Humaira Bt Lukman", phone: "0196550670" },
-  { id: 25, nama: "Izarra Khaiyrra Bt Mohd Aris", phone: "0199872971" },
-  { id: 26, nama: "Ahmad Aariz Dayyan B. Mohd Kamalludin", phone: "0132315660" },
-  { id: 27, nama: "Nur Aisya' Qaseh Bt Aziman", phone: "0179890260" },
-  { id: 28, nama: "NAJIHAH", phone: "0134565245" }
+  { id: 1, nama: "Syed Mohd Alwi Bin Syed Mohamed", parent: "Syed Mohamed", phone: "0145366009", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 2, nama: "Faid Fareed Bin Mohd Shah Fitri", parent: "Mohd Shah Fitri", phone: "01481810192", status: "AKTIF", mengaji: "YA", transit: "YA", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 260, catatan: "" },
+  { id: 3, nama: "Mohd Fadzli Bin Ab Wahab", parent: "Ab Wahab", phone: "01133323707", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 4, nama: "Nur Aliyah Binti Muhammad A'fifi", parent: "Muhammad A'fifi", phone: "0133447681", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 5, nama: "Nur Inas Tihani Binti Muhammed Nasri", parent: "Muhammed Nasri", phone: "0179378264", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 6, nama: "Fidatul Fitriah Binti Fazli", parent: "Fazli", phone: "0176826787", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 7, nama: "Nur Damia Arissa Bt Faizol Azimi", parent: "Faizol Azimi", phone: "0132955402", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 8, nama: "Alya Sofia Binti Aris", parent: "Aris", phone: "0173235786", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 9, nama: "Tengku Aqill Hafy Bin Tengku Shahrizal", parent: "Tengku Shahrizal", phone: "0133440896", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 10, nama: "Muhammad Aathif Adhwa Bin Mohd Fazli", parent: "Mohd Fazli", phone: "0123209953", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 11, nama: "Nur Aimy Safiy Binti Shaiful Azmi", parent: "Shaiful Azmi", phone: "0108901030", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 12, nama: "Muhammad Harith Bin Muhamad Hosni", parent: "Muhamad Hosni", phone: "0173409430", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 13, nama: "Nur Ayesha Zahira Binti Abdullah Zawawie", parent: "Abdullah Zawawie", phone: "0132410737", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 14, nama: "Wan Nadzrin Afeef Bin Wan Ibrahim Jefri", parent: "Wan Ibrahim Jefri", phone: "01110081660", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 15, nama: "Hilal Sufi Bin Hasrull Nizam", parent: "Hasrull Nizam", phone: "0193593693", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 16, nama: "Maira Yusreena Binti Muhamad Yazid", parent: "Muhamad Yazid", phone: "0129878510", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 17, nama: "Izz Zara Sofia Binti Mohd Safarudin", parent: "Mohd Safarudin", phone: "0162710027", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 18, nama: "Ammar Luqman Bin Shamsudin", parent: "Shamsudin", phone: "0172382980", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 19, nama: "Ainan Salsabila Binti Hafiz Anuar", parent: "Hafiz Anuar", phone: "0139311818", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 20, nama: "Arissa Medina Bt Ahmad Fauzi", parent: "Ahmad Fauzi", phone: "0129425926", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 21, nama: "Ammar Ramadhan Bin Ahmad Fauzi", parent: "Ahmad Fauzi", phone: "0129425926", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 22, nama: "Muhammad Rizal Arshad Bin Mohd Rosmizam", parent: "Mohd Rosmizam", phone: "0129343676", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 23, nama: "Nur Raisha Adawiyah Binti Mohd Rosmizam", parent: "Mohd Rosmizam", phone: "0129343676", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 24, nama: "Aisyah Humaira Bt Lukman", parent: "Lukman", phone: "0196550670", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 25, nama: "Izarra Khaiyrra Bt Mohd Aris", parent: "Mohd Aris", phone: "0199872971", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 26, nama: "Ahmad Aariz Dayyan B. Mohd Kamalludin", parent: "Mohd Kamalludin", phone: "0132315660", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 27, nama: "Nur Aisya' Qaseh Bt Aziman", parent: "Aziman", phone: "0179890260", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 28, nama: "NAJIHAH", parent: "Ibu / Bapa Najihah", phone: "0134565245", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" }
 ];
 
-// Helper Safe Storage
-function safeGetStorage(key, defaultVal = "") {
-  try {
-    if (typeof localStorage !== "undefined") return localStorage.getItem(key) || defaultVal;
-  } catch (e) {}
-  return defaultVal;
-}
-
-function safeSetStorage(key, val) {
-  try {
-    if (typeof localStorage !== "undefined") localStorage.setItem(key, val);
-  } catch (e) {}
-}
-
-// Master 26 Fee Items Array
+// Fee Items Specification (Tick-boxes & Discount Dropdowns)
 const FEE_CHECKBOX_ITEMS = [
-  { id: "mengaji_pendaftaran", group: "1. KELAS MENGAJI", label: "Pendaftaran Mengaji", stdPrice: 100, field: "pendaftaran", icon: "fa-book-quran" },
-  { id: "mengaji_bulanan", group: "1. KELAS MENGAJI", label: "Yuran Bulanan Mengaji", stdPrice: 100, priceOptions: [100, 130], field: "pengajianAlquran", icon: "fa-book-quran" },
-  { id: "mengaji_buku", group: "1. KELAS MENGAJI", label: "Buku Mengaji", stdPrice: 20, field: "bukuRekodModul", icon: "fa-book-open" },
-  { id: "online_pendaftaran", group: "2. KELAS MENGAJI ONLINE", label: "Pendaftaran Online", stdPrice: 50, field: "pendaftaran", icon: "fa-laptop" },
-  { id: "online_bulanan", group: "2. KELAS MENGAJI ONLINE", label: "Yuran Bulanan Online", stdPrice: 150, field: "pengajianAlquran", icon: "fa-laptop" },
-  { id: "akademik_pendaftaran", group: "3. TUISYEN AKADEMIK", label: "Pendaftaran Akademik", stdPrice: 50, field: "pendaftaran", icon: "fa-graduation-cap" },
-  { id: "akademik_1", group: "3. TUISYEN AKADEMIK", label: "Tuisyen Akademik 1 Subjek", stdPrice: 35, priceOptions: [35, 40], field: "kelasAkademik", icon: "fa-book" },
-  { id: "akademik_4", group: "3. TUISYEN AKADEMIK", label: "Tuisyen Akademik 4 Subjek", stdPrice: 110, field: "kelasAkademik", icon: "fa-layer-group" },
-  { id: "kafa_pendaftaran", group: "4. TUISYEN KAFA (THN 2-6)", label: "Pendaftaran KAFA", stdPrice: 100, field: "pendaftaran", icon: "fa-mosque" },
-  { id: "kafa_bulanan", group: "4. TUISYEN KAFA (THN 2-6)", label: "Yuran Bulanan KAFA", stdPrice: 100, field: "kelasKafa", icon: "fa-mosque" },
-  { id: "kafa_buku", group: "4. TUISYEN KAFA (THN 2-6)", label: "Buku KAFA", stdPrice: 60, field: "bukuRekodModul", icon: "fa-book-open" },
-  { id: "jawi_pendaftaran", group: "5. KELAS KHAS JAWI", label: "Pendaftaran Jawi", stdPrice: 100, field: "pendaftaran", icon: "fa-pen-nib" },
-  { id: "jawi_bulanan", group: "5. KELAS KHAS JAWI", label: "Yuran Bulanan Jawi", stdPrice: 100, field: "kelasKhasJawi", icon: "fa-pen-nib" },
-  { id: "jawi_buku", group: "5. KELAS KHAS JAWI", label: "Buku Jawi", stdPrice: 60, field: "bukuRekodModul", icon: "fa-book-open" },
-  { id: "upkk_pendaftaran", group: "6. KELAS UPKK", label: "Pendaftaran UPKK", stdPrice: 100, field: "pendaftaran", icon: "fa-award" },
-  { id: "upkk_bulanan", group: "6. KELAS UPKK", label: "Yuran Bulanan UPKK", stdPrice: 100, field: "kelasUpkk", icon: "fa-award" },
-  { id: "upkk_buku", group: "6. KELAS UPKK", label: "Buku UPKK", stdPrice: 64, field: "bukuRekodModul", icon: "fa-book-open" },
-  { id: "psra_pendaftaran", group: "7. KELAS PSRA", label: "Pendaftaran PSRA", stdPrice: 100, field: "pendaftaran", icon: "fa-certificate" },
-  { id: "psra_bulanan", group: "7. KELAS PSRA", label: "Yuran Bulanan PSRA", stdPrice: 100, field: "kelasPsra", icon: "fa-certificate" },
-  { id: "psra_buku", group: "7. KELAS PSRA", label: "Buku PSRA", stdPrice: 60, field: "bukuRekodModul", icon: "fa-book-open" },
-  { id: "transit_pendaftaran", group: "8. TRANSIT FQC", label: "Pendaftaran Transit", stdPrice: 150, field: "pendaftaran", icon: "fa-bus" },
-  { id: "transit_biasa", group: "8. TRANSIT FQC", label: "Transit Biasa", stdPrice: 260, field: "transit", icon: "fa-bus" },
-  { id: "transit_petang", group: "8. TRANSIT FQC", label: "Transit Sampai Petang", stdPrice: 310, field: "transit", icon: "fa-clock" },
-  { id: "transit_diskaun", group: "8. TRANSIT FQC", label: "Transit Diskaun", stdPrice: 200, field: "transit", icon: "fa-tags" },
-  { id: "transit_mengaji", group: "8. TRANSIT FQC", label: "Tambahan Mengaji", stdPrice: 50, field: "transit", icon: "fa-plus-circle" },
-  { id: "transit_ot", group: "8. TRANSIT FQC", label: "Tambahan OT Sebulan", stdPrice: 40, field: "transit", icon: "fa-user-clock" },
-  { id: "sumbangan", group: "9. SUMBANGAN & LAIN-LAIN", label: "Sumbangan / Modul / Lain-lain", stdPrice: 50, field: "sumbangan", icon: "fa-hand-holding-heart" }
+  { id: "mengaji_pendaftaran", group: "Kelas Mengaji Al-Quran", label: "Pendaftaran Mengaji", stdPrice: 100, options: null, categoryKey: "mengaji", icon: "fa-book-quran" },
+  { id: "mengaji_bulanan", group: "Kelas Mengaji Al-Quran", label: "Yuran Bulanan Mengaji", stdPrice: 130, options: [100, 130], categoryKey: "mengaji", icon: "fa-book-quran" },
+  { id: "mengaji_buku", group: "Kelas Mengaji Al-Quran", label: "Buku Mengaji", stdPrice: 20, options: null, categoryKey: "mengaji", icon: "fa-book-open" },
+
+  { id: "online_pendaftaran", group: "Mengaji Online", label: "Pendaftaran Online", stdPrice: 50, options: null, categoryKey: "online", icon: "fa-laptop" },
+  { id: "online_bulanan", group: "Mengaji Online", label: "Yuran Bulanan Online", stdPrice: 150, options: null, categoryKey: "online", icon: "fa-laptop" },
+
+  { id: "akademik_pendaftaran", group: "Tuisyen Akademik", label: "Pendaftaran Akademik", stdPrice: 50, options: null, categoryKey: "akademik", icon: "fa-graduation-cap" },
+  { id: "akademik_1", group: "Tuisyen Akademik", label: "1 Subjek Akademik", stdPrice: 40, options: [35, 40], categoryKey: "akademik", icon: "fa-book" },
+  { id: "akademik_4", group: "Tuisyen Akademik", label: "4 Subjek Akademik", stdPrice: 110, options: null, categoryKey: "akademik", icon: "fa-layer-group" },
+
+  { id: "kafa_pendaftaran", group: "KAFA", label: "Pendaftaran KAFA", stdPrice: 100, options: null, categoryKey: "kafa", icon: "fa-mosque" },
+  { id: "kafa_bulanan", group: "KAFA", label: "Yuran Bulanan KAFA", stdPrice: 100, options: null, categoryKey: "kafa", icon: "fa-mosque" },
+  { id: "kafa_buku", group: "KAFA", label: "Buku KAFA", stdPrice: 60, options: null, categoryKey: "kafa", icon: "fa-book-open" },
+
+  { id: "jawi_pendaftaran", group: "Kelas Khas Jawi 2/3/4", label: "Pendaftaran Jawi", stdPrice: 100, options: null, categoryKey: "jawi", icon: "fa-pen-nib" },
+  { id: "jawi_bulanan", group: "Kelas Khas Jawi 2/3/4", label: "Yuran Bulanan Jawi", stdPrice: 100, options: null, categoryKey: "jawi", icon: "fa-pen-nib" },
+  { id: "jawi_buku", group: "Kelas Khas Jawi 2/3/4", label: "Buku Jawi", stdPrice: 60, options: null, categoryKey: "jawi", icon: "fa-book-open" },
+
+  { id: "upkk_pendaftaran", group: "UPKK", label: "Pendaftaran UPKK", stdPrice: 100, options: null, categoryKey: "upkk", icon: "fa-award" },
+  { id: "upkk_bulanan", group: "UPKK", label: "Yuran Bulanan UPKK", stdPrice: 100, options: null, categoryKey: "upkk", icon: "fa-award" },
+  { id: "upkk_buku", group: "UPKK", label: "Buku UPKK", stdPrice: 64, options: null, categoryKey: "upkk", icon: "fa-book-open" },
+
+  { id: "psra_pendaftaran", group: "PSRA", label: "Pendaftaran PSRA", stdPrice: 100, options: null, categoryKey: "psra", icon: "fa-certificate" },
+  { id: "psra_bulanan", group: "PSRA", label: "Yuran Bulanan PSRA", stdPrice: 100, options: null, categoryKey: "psra", icon: "fa-certificate" },
+  { id: "psra_buku", group: "PSRA", label: "Buku PSRA", stdPrice: 60, options: null, categoryKey: "psra", icon: "fa-book-open" },
+
+  { id: "transit_pendaftaran", group: "Transit 2026", label: "Pendaftaran Transit", stdPrice: 150, options: null, categoryKey: "transit", icon: "fa-bus" },
+  { id: "transit_bulanan", group: "Transit 2026", label: "Yuran Bulanan Transit", stdPrice: 260, options: [200, 260], categoryKey: "transit", icon: "fa-bus" },
+  { id: "transit_petang", group: "Transit 2026", label: "Duduk Sampai Petang", stdPrice: 310, options: null, categoryKey: "transit", icon: "fa-clock" },
+  { id: "transit_mengaji", group: "Transit 2026", label: "Tambahan Mengaji Transit", stdPrice: 50, options: null, categoryKey: "transit", icon: "fa-plus-circle" },
+  { id: "transit_ot", group: "Transit 2026", label: "Tambahan OT 1 Bulan", stdPrice: 40, options: null, categoryKey: "transit", icon: "fa-user-clock" }
 ];
 
-// App State
+// Global State
 let appState = {
   students: [...MASTER_STUDENTS_DEFAULT],
   payments: [],
   selectedStudent: null,
   currentReceiptNo: "FQC-1100",
-  appsScriptUrl: safeGetStorage("fqc_apps_script_url", "https://script.google.com/macros/s/AKfycbyku9YGRoiwVEGWOdGLrbXX7STxLgY-8W6atCGkH601/exec"),
-  config: {
-    logoUrl: safeGetStorage("fqc_logo_url", "assets/logo.png"),
-    signatureUrl: safeGetStorage("fqc_signature_url", "assets/signature.png"),
-    backgroundUrl: safeGetStorage("fqc_background_url", "assets/pbaq-bg.png")
-  }
+  lastUpdated: new Date().toLocaleString("ms-MY"),
+  appsScriptUrl: safeGetStorage("fqc_apps_script_url", "https://script.google.com/macros/s/AKfycbyku9YGRoiwVEGWOdGLrbXX7STxLgY-8W6atCGkH601/exec")
 };
 
-const DEFAULT_PLACEHOLDERS = {
-  logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231b4d2e'/><text x='50' y='55' font-size='30' font-family='sans-serif' font-weight='bold' fill='%23d4af37' text-anchor='middle'>FQC</text></svg>",
-  signature: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='60' viewBox='0 0 150 60'><path d='M10 40 Q 40 10, 70 40 T 130 20' stroke='%231b4d2e' stroke-width='3' fill='none'/><text x='75' y='55' font-size='10' font-family='sans-serif' fill='%2364748b' text-anchor='middle'>Pentadbir FQC</text></svg>",
-  background: ""
-};
+function safeGetStorage(key, defaultVal = "") {
+  try { if (typeof localStorage !== "undefined") return localStorage.getItem(key) || defaultVal; } catch (e) {}
+  return defaultVal;
+}
 
-// Application Initialization
+function safeSetStorage(key, val) {
+  try { if (typeof localStorage !== "undefined") localStorage.setItem(key, val); } catch (e) {}
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initDateAndMonth();
-  initStudentSearch();
+  initStudentLiveSearch();
   initFeeCalculations();
   loadLocalStoragePayments();
-  loadAssetUrls();
+  loadLocalStorageStudents();
   calculateNextReceiptNo();
   fetchStudentsFromBackend();
   fetchPaymentHistoryFromBackend();
   renderDashboard();
   renderHistoryTable();
+  renderStudentTable();
   renderReceiptPreview();
 });
 
-// Toast & Loading Helpers
 function showToast(message, type = "success") {
   const toast = document.getElementById("toast");
   const msgEl = document.getElementById("toast-msg");
@@ -1680,9 +1848,7 @@ function showToast(message, type = "success") {
   
   msgEl.innerText = message;
   toast.className = `toast ${type} show`;
-  setTimeout(() => {
-    toast.className = `toast ${type}`;
-  }, 3500);
+  setTimeout(() => { toast.className = `toast ${type}`; }, 3500);
 }
 
 function showLoading(show, text = "Memproses data...") {
@@ -1695,7 +1861,6 @@ function showLoading(show, text = "Memproses data...") {
   else loading.classList.remove("show");
 }
 
-// Navigation Switcher
 function switchView(viewId) {
   try {
     document.querySelectorAll(".tab-view").forEach(el => el.classList.remove("active"));
@@ -1712,6 +1877,8 @@ function switchView(viewId) {
 
     if (viewId === "dashboard") renderDashboard();
     if (viewId === "rekod") renderHistoryTable();
+    if (viewId === "murid") renderStudentTable();
+    if (viewId === "belum-bayar") renderUnpaidSection();
     if (viewId === "bayaran") {
       renderCheckboxFeeGroups();
       updateTotalAmount();
@@ -1737,80 +1904,95 @@ function initDateAndMonth() {
   }
 }
 
-function renderStudentSelectOptions() {
-  const selectEl = document.getElementById("student-native-select");
-  if (!selectEl) return;
-  let html = `<option value="">-- Tekan Di Sini Untuk Pilih Murid (${appState.students.length} Murid) --</option>`;
-  appState.students.forEach((student, idx) => {
-    html += `<option value="${idx}">${idx + 1}. ${student.nama} (${student.phone || 'Tiada No.'})</option>`;
-  });
-  selectEl.innerHTML = html;
-}
-
-function onNativeStudentSelect(idxVal) {
-  const phoneDisplay = document.getElementById("parent-phone-display");
-  const searchInput = document.getElementById("student-search-input");
-  if (idxVal === "") {
-    appState.selectedStudent = null;
-    if (phoneDisplay) phoneDisplay.value = "";
-    if (searchInput) searchInput.value = "";
-  } else {
-    const student = appState.students[parseInt(idxVal, 10)];
-    if (student) {
-      appState.selectedStudent = student;
-      if (phoneDisplay) phoneDisplay.value = student.phone || "";
-      if (searchInput) searchInput.value = student.nama;
-    }
-  }
-  renderReceiptPreview();
-}
-
-function initStudentSearch() {
-  renderStudentSelectOptions();
+// Live Student Search (No Long Dropdown!)
+function initStudentLiveSearch() {
   const searchInput = document.getElementById("student-search-input");
   const dropdown = document.getElementById("student-dropdown-options");
   const phoneDisplay = document.getElementById("parent-phone-display");
 
   if (!searchInput || !dropdown) return;
 
-  function renderOptions(filterText = "") {
+  function filterOptions(text = "") {
     dropdown.innerHTML = "";
+    const cleanText = text.trim().toLowerCase();
+
     const filtered = appState.students.filter(s => 
-      s.nama.toLowerCase().includes(filterText.toLowerCase()) ||
-      (s.phone && s.phone.includes(filterText))
+      s.status !== "TIDAK AKTIF" && (
+        s.nama.toLowerCase().includes(cleanText) ||
+        (s.phone && s.phone.includes(cleanText)) ||
+        (s.parent && s.parent.toLowerCase().includes(cleanText))
+      )
     );
 
     if (filtered.length === 0) {
-      dropdown.innerHTML = `<div class="option-item" style="color:var(--text-muted);">Tiada murid ditemui</div>`;
+      dropdown.innerHTML = `<div class="option-item" style="color:var(--text-muted);">Tiada murid dijumpai bagi "${text}"</div>`;
       return;
     }
 
     filtered.forEach(student => {
       const item = document.createElement("div");
       item.className = "option-item";
-      item.innerHTML = `<span style="font-weight:600;">${student.nama}</span>`;
+      
+      const categoryBadges = getCategoryBadgesHtml(student);
+      item.innerHTML = `
+        <div style="font-weight:700; color:var(--primary-dark);">${student.nama}</div>
+        <div style="font-size:0.78rem; color:var(--text-muted);">Parent: ${student.parent || '-'} | Tel: ${student.phone || '-'}</div>
+        <div style="margin-top:2px;">${categoryBadges}</div>
+      `;
+
       item.onclick = () => {
-        appState.selectedStudent = student;
-        searchInput.value = student.nama;
-        if (phoneDisplay) phoneDisplay.value = student.phone || '';
-        const selectEl = document.getElementById("student-native-select");
-        if (selectEl) {
-          const foundIdx = appState.students.findIndex(s => s.nama === student.nama);
-          if (foundIdx !== -1) selectEl.value = foundIdx.toString();
-        }
+        selectStudent(student);
         dropdown.classList.remove("show");
-        renderReceiptPreview();
       };
       dropdown.appendChild(item);
     });
   }
 
-  searchInput.addEventListener("focus", () => { renderOptions(searchInput.value); dropdown.classList.add("show"); });
-  searchInput.addEventListener("input", (e) => { renderOptions(e.target.value); dropdown.classList.add("show"); });
+  searchInput.addEventListener("focus", () => { filterOptions(searchInput.value); dropdown.classList.add("show"); });
+  searchInput.addEventListener("input", (e) => { filterOptions(e.target.value); dropdown.classList.add("show"); });
   document.addEventListener("click", (e) => { if (!e.target.closest(".searchable-select")) dropdown.classList.remove("show"); });
 }
 
-// Fee Checkbox Render & Events
+function getCategoryBadgesHtml(student) {
+  let html = "";
+  if (student.mengaji === "YA") html += `<span class="cat-tag cat-mengaji">Mengaji</span>`;
+  if (student.transit === "YA") html += `<span class="cat-tag cat-transit">Transit</span>`;
+  if (student.jawi === "YA") html += `<span class="cat-tag cat-jawi">Jawi</span>`;
+  if (student.upkk === "YA") html += `<span class="cat-tag cat-upkk">UPKK</span>`;
+  if (student.psra === "YA") html += `<span class="cat-tag cat-psra">PSRA</span>`;
+  if (student.kafa === "YA") html += `<span class="cat-tag cat-kafa">KAFA</span>`;
+  if (student.akademik === "YA") html += `<span class="cat-tag cat-akademik">Akademik</span>`;
+  if (student.online === "YA") html += `<span class="cat-tag cat-online">Online</span>`;
+  return html || `<span class="cat-tag" style="background:#e2e8f0; color:#64748b;">Umum</span>`;
+}
+
+function selectStudent(student) {
+  appState.selectedStudent = student;
+  const searchInput = document.getElementById("student-search-input");
+  const phoneDisplay = document.getElementById("parent-phone-display");
+
+  if (searchInput) searchInput.value = student.nama;
+  if (phoneDisplay) phoneDisplay.value = student.phone || "";
+
+  // Auto tick fee categories that match student profile
+  FEE_CHECKBOX_ITEMS.forEach(item => {
+    const chk = document.getElementById(`chk-${item.id}`);
+    const card = document.getElementById(`card-${item.id}`);
+    if (chk) {
+      const isEnrolled = student[item.categoryKey] === "YA";
+      // Auto check monthly fee item if student enrolled
+      if (isEnrolled && (item.id.includes("bulanan") || item.id === "akademik_1")) {
+        chk.checked = true;
+        if (card) card.classList.add("checked");
+      }
+    }
+  });
+
+  updateTotalAmount();
+  renderReceiptPreview();
+}
+
+// Fee Checkbox & Price Selection Rendering
 function renderCheckboxFeeGroups() {
   const container = document.getElementById("fee-checkbox-groups-container");
   if (!container) return;
@@ -1825,14 +2007,27 @@ function renderCheckboxFeeGroups() {
   Object.keys(groupsMap).forEach(groupName => {
     const items = groupsMap[groupName];
     const groupIcon = items[0]?.icon || "fa-list";
-    html += `<div class="fee-group-block"><div class="fee-group-header"><i class="fa-solid ${groupIcon}"></i> ${groupName}</div><div class="fee-checkbox-grid">`;
+    html += `
+      <div class="fee-group-block">
+        <div class="fee-group-header"><i class="fa-solid ${groupIcon}"></i> ${groupName}</div>
+        <div class="fee-checkbox-grid">
+    `;
+
     items.forEach(item => {
-      let priceInputHtml = "";
-      if (Array.isArray(item.priceOptions) && item.priceOptions.length > 0) {
-        let optionsHtml = item.priceOptions.map(p => `<option value="${p}">${p}</option>`).join('');
-        priceInputHtml = `<select id="price-${item.id}" class="fee-card-price-input" style="font-weight:800; cursor:pointer; background:transparent;" onchange="onFeePriceInput('${item.id}')" onclick="event.stopPropagation()">${optionsHtml}</select>`;
+      let priceControlHtml = "";
+      if (item.options && Array.isArray(item.options)) {
+        priceControlHtml = `<select id="price-opt-${item.id}" class="fee-card-price-select" onchange="onFeePriceSelectChange('${item.id}', this.value)" onclick="event.stopPropagation()">`;
+        item.options.forEach(opt => {
+          const selectedAttr = opt === item.stdPrice ? "selected" : "";
+          const optLabel = (item.id === "transit_bulanan" && opt === 200) ? `RM${opt} (Diskaun)` : `RM${opt}`;
+          priceControlHtml += `<option value="${opt}" ${selectedAttr}>${optLabel}</option>`;
+        });
+        priceControlHtml += `</select>`;
       } else {
-        priceInputHtml = `<input type="number" id="price-${item.id}" class="fee-card-price-input" min="0" value="${item.stdPrice}" oninput="onFeePriceInput('${item.id}')" onclick="event.stopPropagation()">`;
+        priceControlHtml = `
+          <span class="fee-card-price-prefix">RM</span>
+          <input type="number" id="price-${item.id}" class="fee-card-price-input" min="0" value="${item.stdPrice}" oninput="onFeePriceInput('${item.id}')" onclick="event.stopPropagation()">
+        `;
       }
 
       html += `
@@ -1842,12 +2037,12 @@ function renderCheckboxFeeGroups() {
             <span class="fee-card-label">${item.label}</span>
           </div>
           <div class="fee-card-price-group" onclick="event.stopPropagation()">
-            <span class="fee-card-price-prefix">RM</span>
-            ${priceInputHtml}
+            ${priceControlHtml}
           </div>
         </div>
       `;
     });
+
     html += `</div></div>`;
   });
 
@@ -1855,7 +2050,7 @@ function renderCheckboxFeeGroups() {
 }
 
 function toggleFeeCard(itemId, event) {
-  if (event && event.target && (event.target.tagName === 'INPUT' || event.target.classList.contains('fee-card-checkbox'))) {
+  if (event && event.target && (event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' || event.target.classList.contains('fee-card-checkbox'))) {
     return;
   }
   const chk = document.getElementById(`chk-${itemId}`);
@@ -1884,6 +2079,26 @@ function onFeePriceInput(itemId) {
   updateTotalAmount();
 }
 
+function onFeePriceSelectChange(itemId, selectedVal) {
+  const chk = document.getElementById(`chk-${itemId}`);
+  const card = document.getElementById(`card-${itemId}`);
+  if (chk && !chk.checked) {
+    chk.checked = true;
+    if (card) card.classList.add("checked");
+  }
+  updateTotalAmount();
+}
+
+function getItemPrice(item) {
+  if (item.options && Array.isArray(item.options)) {
+    const selEl = document.getElementById(`price-opt-${item.id}`);
+    if (selEl) return parseFloat(selEl.value) || item.stdPrice;
+  }
+  const priceEl = document.getElementById(`price-${item.id}`);
+  if (priceEl) return parseFloat(priceEl.value) || item.stdPrice;
+  return item.stdPrice;
+}
+
 function initFeeCalculations() {
   renderCheckboxFeeGroups();
   document.getElementById("pay-date")?.addEventListener("change", renderReceiptPreview);
@@ -1907,9 +2122,8 @@ function calculateTotal() {
   let totalSum = 0;
   FEE_CHECKBOX_ITEMS.forEach(item => {
     const chk = document.getElementById(`chk-${item.id}`);
-    const priceEl = document.getElementById(`price-${item.id}`);
-    if (chk && chk.checked && priceEl) {
-      totalSum += (parseFloat(priceEl.value) || 0);
+    if (chk && chk.checked) {
+      totalSum += getItemPrice(item);
     }
   });
   return totalSum;
@@ -1940,7 +2154,7 @@ function calculateNextReceiptNo() {
     }
   });
   appState.currentReceiptNo = `FQC-${maxNo + 1}`;
-  const el = document.getElementById("receipt-no-display");
+  const el = document.getElementById("rc-no");
   if (el) el.innerText = appState.currentReceiptNo;
 }
 
@@ -1978,16 +2192,23 @@ function renderReceiptPreview() {
 
   FEE_CHECKBOX_ITEMS.forEach(item => {
     const chk = document.getElementById(`chk-${item.id}`);
-    const priceEl = document.getElementById(`price-${item.id}`);
-    if (chk && chk.checked && priceEl) {
-      const priceVal = parseFloat(priceEl.value) || 0;
-      hasItems = true; totalAmount += priceVal;
-      html += `<tr class="active-item"><td>${item.label}</td><td style="text-align:center;">-</td><td style="text-align:center;">${bulan}</td><td class="amount-cell">${priceVal.toFixed(0)}</td></tr>`;
+    if (chk && chk.checked) {
+      const itemPrice = getItemPrice(item);
+      hasItems = true;
+      totalAmount += itemPrice;
+      html += `
+        <tr class="active-item">
+          <td>${item.label}</td>
+          <td style="text-align:center;">${item.group}</td>
+          <td style="text-align:center;">${bulan}</td>
+          <td class="amount-cell">${itemPrice.toFixed(0)}</td>
+        </tr>
+      `;
     }
   });
 
-  if (!hasItems) html = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); font-style:italic; padding:12px;">Sila tick kotak bayaran yuran di sebelah kiri</td></tr>`;
-  
+  if (!hasItems) html = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); font-style:italic; padding:16px;">Sila tick kotak bayaran yuran di sebelah kanan</td></tr>`;
+
   const customTotalVal = document.getElementById("fee-total-custom")?.value;
   if (isTotalCustomEdited && customTotalVal !== "") {
     totalAmount = parseFloat(customTotalVal) || 0;
@@ -1999,18 +2220,12 @@ function renderReceiptPreview() {
 
 function validateForm() {
   const studentName = appState.selectedStudent ? appState.selectedStudent.nama : (document.getElementById("student-search-input")?.value || "").trim();
-  if (!studentName) { showToast("Sila pilih atau masukkan nama murid.", "warning"); return false; }
+  if (!studentName) { showToast("Sila pilih atau taip nama murid.", "warning"); return false; }
   if (!document.getElementById("pay-date")?.value) { showToast("Sila pilih tarikh.", "warning"); return false; }
   if (!document.getElementById("pay-month")?.value) { showToast("Sila pilih bulan.", "warning"); return false; }
-  if (calculateTotal() <= 0) { showToast("Sila masukkan sekurang-kurangnya satu bayaran yuran > RM0.", "warning"); return false; }
+  if (calculateTotal() <= 0) { showToast("Sila tick sekurang-kurangnya satu bayaran yuran.", "warning"); return false; }
   if (!document.querySelector('input[name="kaedahBayaran"]:checked')?.value) { showToast("Sila pilih kaedah bayaran.", "warning"); return false; }
   return true;
-}
-
-function actionJanaResit() {
-  if (!validateForm()) return;
-  renderReceiptPreview();
-  showToast("Resit rasmi FQC berjaya dijana!", "success");
 }
 
 async function actionSimpanPembayaran() {
@@ -2020,47 +2235,33 @@ async function actionSimpanPembayaran() {
   try {
     if (btnSimpan) btnSimpan.disabled = true;
     if (btnWhatsapp) btnWhatsapp.disabled = true;
-    showLoading(true, "Menyimpan pembayaran ke Google Sheets...");
+    showLoading(true, "Menyimpan resit pembayaran ke database Google Sheets / AppSheet...");
 
     const phone = appState.selectedStudent ? appState.selectedStudent.phone : (document.getElementById("parent-phone-display")?.value || "");
     const studentName = appState.selectedStudent ? appState.selectedStudent.nama : document.getElementById("student-search-input")?.value;
-    
-    let hargaStandardTotal = 0;
-    let jumlahDiskaunTotal = 0;
-    const checkedItems = [];
-    const categoryTotals = { pendaftaran: 0, pengajianAlquran: 0, kelasUpkk: 0, kelasPsra: 0, kelasKhasJawi: 0, bukuRekodModul: 0, sumbangan: 0, kelasKafa: 0, kelasAkademik: 0, transit: 0 };
+    const idMurid = appState.selectedStudent ? appState.selectedStudent.id : "";
 
+    const checkedItems = [];
     FEE_CHECKBOX_ITEMS.forEach(item => {
       const chk = document.getElementById(`chk-${item.id}`);
-      const priceEl = document.getElementById(`price-${item.id}`);
-      if (chk && chk.checked && priceEl) {
-        const paidPrice = parseFloat(priceEl.value) || 0;
-        hargaStandardTotal += item.stdPrice;
-        if (item.stdPrice > paidPrice) jumlahDiskaunTotal += (item.stdPrice - paidPrice);
-        if (categoryTotals[item.field] !== undefined) categoryTotals[item.field] += paidPrice;
-        checkedItems.push({ id: item.id, label: item.label, stdPrice: item.stdPrice, paidPrice: paidPrice });
+      if (chk && chk.checked) {
+        checkedItems.push({
+          id: item.id,
+          group: item.group,
+          label: item.label,
+          stdPrice: item.stdPrice,
+          paidPrice: getItemPrice(item)
+        });
       }
     });
 
     const paymentObj = {
       noResit: appState.currentReceiptNo,
+      idMurid: idMurid,
       tarikh: formatDateDisplay(document.getElementById("pay-date")?.value),
-      bulan: document.getElementById("pay-month")?.value,
+      bulan: (document.getElementById("pay-month")?.value || "OGOS").toUpperCase(),
       namaMurid: studentName,
       noWhatsapp: phone,
-      pendaftaran: categoryTotals.pendaftaran,
-      pengajianAlquran: categoryTotals.pengajianAlquran,
-      kelasUpkk: categoryTotals.kelasUpkk,
-      kelasPsra: categoryTotals.kelasPsra,
-      kelasKhasJawi: categoryTotals.kelasKhasJawi,
-      bukuRekodModul: categoryTotals.bukuRekodModul,
-      sumbangan: categoryTotals.sumbangan,
-      kelasKafa: categoryTotals.kelasKafa,
-      kelasAkademik: categoryTotals.kelasAkademik,
-      transit: categoryTotals.transit,
-      hargaStandard: hargaStandardTotal,
-      jumlahDiskaun: jumlahDiskaunTotal,
-      sebabDiskaun: jumlahDiskaunTotal > 0 ? "Harga Khas Murid" : "-",
       butiranItem: JSON.stringify(checkedItems),
       jumlah: calculateTotal(),
       kaedahBayaran: document.querySelector('input[name="kaedahBayaran"]:checked')?.value,
@@ -2072,16 +2273,15 @@ async function actionSimpanPembayaran() {
       return new Promise((resolve) => {
         google.script.run
           .withSuccessHandler(function(resJson) {
-            if (resJson && resJson.success && resJson.noResit) {
-              paymentObj.noResit = resJson.noResit;
-            }
+            if (resJson && resJson.success && resJson.noResit) paymentObj.noResit = resJson.noResit;
             appState.payments.unshift(paymentObj);
             saveLocalStoragePayments();
             showLoading(false);
-            showToast(`Pembayaran berjaya disimpan. No. Resit: ${paymentObj.noResit}`, "success");
+            showToast(`Resit ${paymentObj.noResit} berjaya disimpan!`, "success");
             calculateNextReceiptNo();
             renderDashboard();
             renderHistoryTable();
+            renderUnpaidSection();
             resolve(paymentObj);
           })
           .withFailureHandler(function(err) {
@@ -2107,10 +2307,11 @@ async function actionSimpanPembayaran() {
     appState.payments.unshift(paymentObj);
     saveLocalStoragePayments();
     showLoading(false);
-    showToast(`Pembayaran berjaya disimpan. No. Resit: ${paymentObj.noResit}`, "success");
+    showToast(`Resit ${paymentObj.noResit} berjaya disimpan!`, "success");
     calculateNextReceiptNo();
     renderDashboard();
     renderHistoryTable();
+    renderUnpaidSection();
     return paymentObj;
   } catch (e) {
     showLoading(false);
@@ -2129,111 +2330,44 @@ async function actionHantarWhatsapp() {
 
   const phoneFormatted = formatWhatsAppPhone(saved.noWhatsapp);
   if (!phoneFormatted) {
-    showToast("Nombor WhatsApp tidak sah.", "warning");
+    showToast("Nombor WhatsApp tidak sah untuk murid ini.", "warning");
     return;
   }
 
   const itemsListText = JSON.parse(saved.butiranItem || "[]").map(i => `• ${i.label}: RM${i.paidPrice}`).join("\n");
-  const msg = `*RESIT PEMBAYARAN YURAN FATHUL QURANIC CENTRE (NS0326067-A)*\n\nNo. Resit: ${saved.noResit}\nNama Murid: ${saved.namaMurid}\nTarikh: ${saved.tarikh}\nBulan: ${saved.bulan}\nKaedah: ${saved.kaedahBayaran}\n\n*BUTIRAN YURAN:*\n${itemsListText}\n\n*JUMLAH KESELURUHAN: RM${saved.jumlah}*\n\nTerima kasih atas pembayaran yuran anak anda. Semoga dipertambahkan rezeki dan diberkati. Barokallahufik.`;
+  const msg = `Assalamualaikum. Terima kasih. Berikut adalah resit pembayaran yuran bagi ${saved.namaMurid} untuk bulan ${saved.bulan} 2026.\n\nNo. Resit: ${saved.noResit}\nTarikh: ${saved.tarikh}\nKaedah: ${saved.kaedahBayaran}\n\n*BUTIRAN YURAN:*\n${itemsListText}\n\n*JUMLAH PEMBAYARAN: RM${saved.jumlah}*\n\nTerima kasih.`;
   window.open(`https://wa.me/${phoneFormatted}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-// --- FUNGSI CETAK RESIT (BULLETPROOF 1 MUKA SURAT A4 RESIT SAHAJA) ---
-function actionCetakResit() {
-  try {
-    if (typeof switchView === "function") {
-      switchView('bayaran');
-    }
+function actionJanaGambarResit() {
+  const receiptEl = document.getElementById("receipt-paper");
+  if (!receiptEl) return;
 
-    document.body.classList.add("printing-receipt-only");
-
-    setTimeout(() => {
-      window.print();
-      setTimeout(() => {
-        document.body.classList.remove("printing-receipt-only");
-      }, 1000);
-    }, 200);
-  } catch (err) {
+  if (typeof html2canvas !== "undefined") {
+    showLoading(true, "Menjana gambar resit PNG...");
+    html2canvas(receiptEl, { scale: 2 }).then(canvas => {
+      showLoading(false);
+      const imageUri = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = `Resit_FQC_${appState.currentReceiptNo}.png`;
+      link.href = imageUri;
+      link.click();
+      showToast("Gambar resit berjaya dijana dan dimuat turun!", "success");
+    }).catch(err => {
+      showLoading(false);
+      showToast("Gagal menjana gambar resit: " + err, "error");
+    });
+  } else {
+    showToast("Fungsi jana gambar sedia ada. Sila cetak resit.", "info");
     window.print();
   }
 }
-if (typeof window !== "undefined") window.actionCetakResit = actionCetakResit;const printWin = window.open("", "_blank", "width=800,height=900");
-    if (!printWin) {
-      window.print();
-      return;
-    }
 
-    const receiptHtml = receiptEl.outerHTML;
-
-    const docContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Resit Pembayaran - Fathul Quranic Centre</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <style>
-          @page { size: A4 portrait; margin: 12mm; }
-          body {
-            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
-            background: #ffffff;
-            color: #0f172a;
-            margin: 0;
-            padding: 0;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-          }
-          .receipt-paper {
-            width: 100%;
-            max-width: 100%;
-            border: none !important;
-            box-shadow: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-          }
-          .receipt-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #2e7d32; padding-bottom: 0.85rem; margin-bottom: 0.85rem; }
-          .receipt-header-left { display: flex; align-items: center; gap: 0.85rem; }
-          .receipt-logo { width: 56px; height: 56px; object-fit: contain; }
-          .receipt-centre-title { font-size: 1.1rem; font-weight: 800; color: #1b4d2e; line-height: 1.2; }
-          .receipt-centre-address { font-size: 0.7rem; color: #64748b; margin-top: 3px; max-width: 320px; }
-          .receipt-title-badge { text-align: right; }
-          .receipt-title-badge h2 { font-size: 1.2rem; font-weight: 800; color: #1b4d2e; margin: 0; }
-          .receipt-no-tag { font-size: 0.8rem; font-weight: 700; color: #2e7d32; background: #e8f5e9; padding: 0.15rem 0.5rem; border-radius: 4px; display: inline-block; margin-top: 4px; }
-          .receipt-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem; background: #f8fafc; padding: 0.75rem; border-radius: 6px; font-size: 0.82rem; }
-          .receipt-meta-item { display: flex; gap: 0.4rem; }
-          .receipt-meta-label { font-weight: 700; color: #64748b; }
-          .receipt-meta-value { font-weight: 700; color: #0f172a; }
-          .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; font-size: 0.82rem; }
-          .receipt-table th { background: #1b4d2e; color: #ffffff; padding: 0.55rem 0.75rem; font-weight: 700; text-align: left; }
-          .receipt-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid #e2e8f0; }
-          .receipt-footer-section { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 1rem; padding-top: 0.85rem; border-top: 1px solid #e2e8f0; }
-          .receipt-signature-box { text-align: center; }
-          .receipt-signature-img { height: 44px; object-fit: contain; margin-bottom: 2px; }
-          .receipt-signature-title { font-size: 0.7rem; font-weight: 700; color: #64748b; border-top: 1px dashed #64748b; padding-top: 3px; }
-          .receipt-total-box { text-align: right; }
-          .receipt-total-label { font-size: 0.8rem; font-weight: 700; color: #64748b; }
-          .receipt-total-value { font-size: 1.45rem; font-weight: 800; color: #1b4d2e; }
-        </style>
-      </head>
-      <body>
-        ${receiptHtml}
-        <` + `script>
-          window.onload = function() {
-            setTimeout(function() {
-              window.print();
-            }, 300);
-          };
-        <` + `/script>
-      </body>
-      </html>
-    `;
-
-    printWin.document.write(docContent);
-    printWin.document.close();
-  } catch (e) {
-    window.print();
-  }
+function actionPDFResit() {
+  window.print();
 }
-if (typeof window !== "undefined") window.actionCetakResit = actionCetakResit;function actionResetBorang() {
+
+function actionResetBorang() {
   appState.selectedStudent = null;
   const searchInput = document.getElementById("student-search-input");
   if (searchInput) searchInput.value = "";
@@ -2261,61 +2395,160 @@ if (typeof window !== "undefined") window.actionCetakResit = actionCetakResit;fu
   showToast("Borang telah dibersihkan.", "info");
 }
 
-function saveLocalStoragePayments() {
-  safeSetStorage("fqc_payments_db", JSON.stringify(appState.payments));
-}
-
+function saveLocalStoragePayments() { safeSetStorage("fqc_payments_db", JSON.stringify(appState.payments)); }
 function loadLocalStoragePayments() {
-  const localData = safeGetStorage("fqc_payments_db");
-  if (localData) {
-    try {
-      const parsed = JSON.parse(localData);
-      if (Array.isArray(parsed)) appState.payments = parsed;
-    } catch (e) {}
-  }
+  const data = safeGetStorage("fqc_payments_db");
+  if (data) { try { appState.payments = JSON.parse(data); } catch (e) {} }
+}
+function saveLocalStorageStudents() { safeSetStorage("fqc_students_db", JSON.stringify(appState.students)); }
+function loadLocalStorageStudents() {
+  const data = safeGetStorage("fqc_students_db");
+  if (data) { try { const parsed = JSON.parse(data); if (Array.isArray(parsed) && parsed.length > 0) appState.students = parsed; } catch (e) {} }
 }
 
-function renderDashboard() {
-  const filterMonth = document.getElementById("dash-month-filter")?.value || document.getElementById("pay-month")?.value || "OGOS";
-  
-  const paidNamesSet = new Set();
-  appState.payments.forEach(p => {
-    if (p.bulan && p.bulan.toUpperCase() === filterMonth.toUpperCase() && p.namaMurid) {
-      paidNamesSet.add(p.namaMurid.trim().toLowerCase());
+// Kemaskini Data Action (Button in Dashboard)
+async function actionRefreshAllData() {
+  showLoading(true, "Mengambil data terbaru daripada database Google Sheets / AppSheet...");
+  appState.lastUpdated = new Date().toLocaleString("ms-MY");
+  const stampEl = document.getElementById("dash-last-updated");
+  if (stampEl) stampEl.innerText = `Dikemaskini terakhir: ${appState.lastUpdated}`;
+
+  await fetchStudentsFromBackend(false);
+  await fetchPaymentHistoryFromBackend(false);
+
+  showLoading(false);
+  renderDashboard();
+  renderHistoryTable();
+  renderUnpaidSection();
+  showToast("Data murid, rekod bayaran, dan status tunggakan berjaya dikemaskini!", "success");
+}
+
+// Unpaid Calculation Logic based on Enrolled Student Categories
+function getUnpaidStudentsForMonth(monthName) {
+  const filterMonth = monthName.toUpperCase();
+  const activeStudents = appState.students.filter(s => s.status !== "TIDAK AKTIF");
+  const unpaidList = [];
+
+  activeStudents.forEach(student => {
+    const studentPayments = appState.payments.filter(p => p.bulan && p.bulan.toUpperCase() === filterMonth && p.namaMurid.trim().toLowerCase() === student.nama.trim().toLowerCase());
+    
+    // Check categories enrolled for this student
+    const enrolledCategories = [];
+    if (student.mengaji === "YA") enrolledCategories.push({ name: "Mengaji", stdPrice: student.hargaMengaji || 100 });
+    if (student.transit === "YA") enrolledCategories.push({ name: "Transit", stdPrice: student.hargaTransit || 260 });
+    if (student.jawi === "YA") enrolledCategories.push({ name: "Jawi", stdPrice: 100 });
+    if (student.upkk === "YA") enrolledCategories.push({ name: "UPKK", stdPrice: 100 });
+    if (student.psra === "YA") enrolledCategories.push({ name: "PSRA", stdPrice: 100 });
+    if (student.kafa === "YA") enrolledCategories.push({ name: "KAFA", stdPrice: 100 });
+    if (student.akademik === "YA") enrolledCategories.push({ name: "Akademik", stdPrice: student.hargaAkademik || 40 });
+    if (student.online === "YA") enrolledCategories.push({ name: "Mengaji Online", stdPrice: 150 });
+
+    if (enrolledCategories.length === 0) {
+      enrolledCategories.push({ name: "Mengaji", stdPrice: 100 });
+    }
+
+    // Check which categories have been paid in studentPayments
+    const paidCategoriesSet = new Set();
+    studentPayments.forEach(p => {
+      let items = [];
+      try { items = typeof p.butiranItem === 'string' ? JSON.parse(p.butiranItem) : p.butiranItem; } catch(e) {}
+      if (Array.isArray(items) && items.length > 0) {
+        items.forEach(it => {
+          const groupName = (it.group || it.label || "").toLowerCase();
+          if (groupName.includes("mengaji online")) paidCategoriesSet.add("Mengaji Online");
+          else if (groupName.includes("mengaji")) paidCategoriesSet.add("Mengaji");
+          if (groupName.includes("transit")) paidCategoriesSet.add("Transit");
+          if (groupName.includes("jawi")) paidCategoriesSet.add("Jawi");
+          if (groupName.includes("upkk")) paidCategoriesSet.add("UPKK");
+          if (groupName.includes("psra")) paidCategoriesSet.add("PSRA");
+          if (groupName.includes("kafa")) paidCategoriesSet.add("KAFA");
+          if (groupName.includes("akademik")) paidCategoriesSet.add("Akademik");
+        });
+      } else if (p.jumlah > 0) {
+        // Fallback: assume paid main enrolled category if total paid >= price
+        enrolledCategories.forEach(cat => paidCategoriesSet.add(cat.name));
+      }
+    });
+
+    const unpaidCategories = enrolledCategories.filter(cat => !paidCategoriesSet.has(cat.name));
+
+    if (unpaidCategories.length > 0) {
+      const categoryText = unpaidCategories.map(c => c.name).join(", ");
+      const totalAmountUnpaid = unpaidCategories.reduce((sum, c) => sum + c.stdPrice, 0);
+      unpaidList.push({
+        student: student,
+        unpaidCategories: unpaidCategories,
+        categoryText: categoryText,
+        totalAmount: totalAmountUnpaid
+      });
     }
   });
 
-  const unpaidStudents = appState.students.filter(s => !paidNamesSet.has(s.nama.trim().toLowerCase()));
-  const paidCount = appState.students.length - unpaidStudents.length;
-  const totalKutipan = appState.payments.reduce((acc, p) => acc + (parseFloat(p.jumlah) || 0), 0);
+  return unpaidList;
+}
 
-  if (document.getElementById("dash-total-kutipan")) document.getElementById("dash-total-kutipan").innerText = `RM ${totalKutipan.toFixed(0)}`;
-  if (document.getElementById("dash-total-murid")) document.getElementById("dash-total-murid").innerText = appState.students.length;
+function renderDashboard() {
+  const filterMonth = document.getElementById("dash-month-filter")?.value || "OGOS";
+  
+  const unpaidItems = getUnpaidStudentsForMonth(filterMonth);
+  const activeStudents = appState.students.filter(s => s.status !== "TIDAK AKTIF");
+  const paidCount = activeStudents.length - unpaidItems.length;
+
+  // Calculate Cumulative overall collections Jan to current month
+  const monthsMalay = ["JANUARI", "FEBRUARI", "MAC", "APRIL", "MEI", "JUN", "JULAI", "OGOS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DISEMBER"];
+  const currentMonthIdx = new Date().getMonth();
+  
+  let totalOverallJanToNow = 0;
+  appState.payments.forEach(p => {
+    const itemMonth = p.bulan ? p.bulan.toUpperCase() : "";
+    const monthIdx = monthsMalay.indexOf(itemMonth);
+    if (monthIdx !== -1 && monthIdx <= currentMonthIdx) {
+      totalOverallJanToNow += (parseFloat(p.jumlah) || 0);
+    }
+  });
+
+  if (document.getElementById("dash-total-kutipan")) document.getElementById("dash-total-kutipan").innerText = `RM ${totalOverallJanToNow.toFixed(0)}`;
+  if (document.getElementById("dash-total-murid")) document.getElementById("dash-total-murid").innerText = activeStudents.length;
   if (document.getElementById("dash-total-sudah-bayar")) document.getElementById("dash-total-sudah-bayar").innerText = paidCount;
-  if (document.getElementById("dash-total-belum-bayar")) document.getElementById("dash-total-belum-bayar").innerText = unpaidStudents.length;
+  if (document.getElementById("dash-total-belum-bayar")) document.getElementById("dash-total-belum-bayar").innerText = unpaidItems.length;
+  if (document.getElementById("dash-total-transaksi")) document.getElementById("dash-total-transaksi").innerText = appState.payments.length;
 
+  renderUnpaidTable(unpaidItems, filterMonth);
+  renderMonthlySummaryGrid();
+}
+
+function renderUnpaidSection() {
+  const filterMonth = document.getElementById("unpaid-month-filter")?.value || document.getElementById("dash-month-filter")?.value || "OGOS";
+  const unpaidItems = getUnpaidStudentsForMonth(filterMonth);
+  renderUnpaidTable(unpaidItems, filterMonth);
+}
+
+function renderUnpaidTable(unpaidItems, filterMonth) {
   const unpaidTbody = document.getElementById("unpaid-table-body");
   if (!unpaidTbody) return;
 
-  if (unpaidStudents.length === 0) {
-    unpaidTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:1.25rem; color:#15803d; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Tahniah! Semua ${appState.students.length} murid telah membuat pembayaran bagi bulan ${filterMonth}!</td></tr>`;
+  if (unpaidItems.length === 0) {
+    unpaidTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:1.25rem; color:#15803d; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Tahniah! Semua murid telah membuat pembayaran penuh bagi bulan ${filterMonth}!</td></tr>`;
     return;
   }
 
   let html = "";
-  unpaidStudents.forEach((student, idx) => {
+  unpaidItems.forEach((item, idx) => {
+    const s = item.student;
     html += `
       <tr>
         <td>${idx + 1}</td>
-        <td><strong>${student.nama}</strong></td>
-        <td>${student.phone || '-'}</td>
-        <td><span class="badge-unpaid"><i class="fa-solid fa-clock"></i> Belum Bayar (${filterMonth})</span></td>
+        <td><strong>${s.nama}</strong></td>
+        <td>${s.phone || '-'}</td>
+        <td><span class="badge-unpaid"><i class="fa-solid fa-triangle-exclamation"></i> ${item.categoryText}</span></td>
+        <td><strong>RM ${item.totalAmount}</strong></td>
+        <td><span class="badge-unpaid">Belum Bayar</span></td>
         <td style="display:flex; gap:0.4rem;">
-          <button class="btn btn-whatsapp" style="padding:4px 8px; font-size:0.75rem;" onclick="sendWaReminder('${student.nama.replace(/'/g, "\\'")}', '${student.phone || ''}', '${filterMonth}')">
-            <i class="fa-brands fa-whatsapp"></i> Peringatan WA
+          <button class="btn btn-whatsapp" style="padding:4px 8px; font-size:0.75rem;" onclick="sendWaReminder('${s.nama.replace(/'/g, "\\'")}', '${s.phone || ''}', '${filterMonth}', '${item.categoryText}')">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp
           </button>
-          <button class="btn btn-primary" style="padding:4px 8px; font-size:0.75rem;" onclick="payForStudent('${student.nama.replace(/'/g, "\\'")}')">
-            <i class="fa-solid fa-cash-register"></i> Bayar Now
+          <button class="btn btn-primary" style="padding:4px 8px; font-size:0.75rem;" onclick="payForStudent('${s.nama.replace(/'/g, "\\'")}')">
+            <i class="fa-solid fa-cash-register"></i> Bayar
           </button>
         </td>
       </tr>
@@ -2324,26 +2557,89 @@ function renderDashboard() {
   unpaidTbody.innerHTML = html;
 }
 
-function sendWaReminder(studentName, phone, month) {
+function sendWaReminder(studentName, phone, month, categoryText) {
   const phoneFormatted = formatWhatsAppPhone(phone);
-  if (!phoneFormatted) {
-    showToast("Nombor WhatsApp tidak sah untuk murid ini.", "warning");
-    return;
-  }
-  const msg = `*PERINGATAN MESRA BAYARAN YURAN FATHUL QURANIC CENTRE (FQC)*\n\nAssalamu'alaikum / Salam Sejahtera Ibu/Bapa ${studentName},\n\nIni adalah peringatan mesra berkenaan yuran pengajian bulan *${month}* bagi murid *${studentName}* yang belum dijelaskan.\n\nMohon ibu/bapa membuat makluman atau pembayaran yuran. Terima kasih atas kerjasama dan keprihatinan ibu/bapa.\n\nBarakallahufik,\n*Fathul Quranic Centre (NS0326067-A)*`;
+  if (!phoneFormatted) { showToast("Nombor WhatsApp tidak sah.", "warning"); return; }
+  const msg = `Assalamualaikum. Makluman, bayaran yuran bagi ${studentName} untuk bulan ${month} (${categoryText}) masih belum direkodkan. Mohon semak pembayaran. Terima kasih.`;
   window.open(`https://wa.me/${phoneFormatted}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
 function payForStudent(studentName) {
   const student = appState.students.find(s => s.nama.toLowerCase() === studentName.toLowerCase());
   if (student) {
-    appState.selectedStudent = student;
-    const searchInput = document.getElementById("student-search-input");
-    if (searchInput) searchInput.value = student.nama;
-    const phoneDisplay = document.getElementById("parent-phone-display");
-    if (phoneDisplay) phoneDisplay.value = student.phone || '';
+    selectStudent(student);
   }
   switchView('bayaran');
+}
+
+// Export Unpaid Students to Excel (.xlsx)
+function exportUnpaidToExcel() {
+  const monthSelect = document.getElementById("dash-month-filter")?.value || document.getElementById("unpaid-month-filter")?.value || "OGOS";
+  const unpaidItems = getUnpaidStudentsForMonth(monthSelect);
+  
+  if (unpaidItems.length === 0) {
+    showToast(`Tiada senarai tunggakan bagi bulan ${monthSelect} untuk dieksport.`, "info");
+    return;
+  }
+
+  const exportData = unpaidItems.map((item, idx) => ({
+    "Bil": idx + 1,
+    "Nama Murid": item.student.nama,
+    "No. WhatsApp": item.student.phone || "-",
+    "Kategori": item.categoryText,
+    "Jenis Yuran": "Yuran Bulanan",
+    "Jumlah (RM)": item.totalAmount,
+    "Bulan": monthSelect,
+    "Status": "Belum Bayar"
+  }));
+
+  if (typeof XLSX !== "undefined") {
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Belum Bayar");
+    const fileName = `Senarai_Belum_Bayar_FQC_${monthSelect}_2026.xlsx`;
+    XLSX.writeFile(wb, fileName);
+    showToast(`Fail Excel ${fileName} berjaya dijana dan dimuat turun!`, "success");
+  } else {
+    // Fallback to CSV
+    let csvContent = "data:text/csv;charset=utf-8,Bil,Nama Murid,No WhatsApp,Kategori,Jenis Yuran,Jumlah,Bulan,Status\n";
+    exportData.forEach(row => {
+      csvContent += `${row["Bil"]},"${row["Nama Murid"]}","${row["No. WhatsApp"]}","${row["Kategori"]}",Yuran Bulanan,${row["Jumlah (RM)"]},${row["Bulan"]},Belum Bayar\n`;
+    });
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `Senarai_Belum_Bayar_FQC_${monthSelect}_2026.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast("Senarai tunggakan berjaya dieksport ke CSV!", "success");
+  }
+}
+
+function renderMonthlySummaryGrid() {
+  const gridContainer = document.getElementById("monthly-summary-container");
+  if (!gridContainer) return;
+
+  const monthsMalay = ["JANUARI", "FEBRUARI", "MAC", "APRIL", "MEI", "JUN", "JULAI", "OGOS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DISEMBER"];
+  const monthlySumMap = {};
+  monthsMalay.forEach(m => monthlySumMap[m] = 0);
+
+  appState.payments.forEach(p => {
+    const m = p.bulan ? p.bulan.toUpperCase() : "";
+    if (monthlySumMap[m] !== undefined) monthlySumMap[m] += (parseFloat(p.jumlah) || 0);
+  });
+
+  let html = "";
+  monthsMalay.forEach(m => {
+    html += `
+      <div style="background:var(--surface-card); border:1px solid var(--border-color); padding:0.75rem; border-radius:var(--radius-sm); text-align:center;">
+        <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">${m}</div>
+        <div style="font-size:1.1rem; font-weight:800; color:var(--primary-dark); margin-top:2px;">RM ${monthlySumMap[m].toFixed(0)}</div>
+      </div>
+    `;
+  });
+  gridContainer.innerHTML = html;
 }
 
 function renderHistoryTable() {
@@ -2361,12 +2657,12 @@ function renderHistoryTable() {
       <tr>
         <td><strong>${p.noResit || '-'}</strong></td>
         <td>${p.tarikh || '-'}</td>
-        <td>${p.namaMurid || '-'}</td>
+        <td><strong>${p.namaMurid || '-'}</strong></td>
         <td>${p.bulan || '-'}</td>
         <td><strong>RM ${parseFloat(p.jumlah || 0).toFixed(0)}</strong></td>
         <td><span class="header-badge" style="display:inline-flex;">${p.kaedahBayaran || 'TUNAI'}</span></td>
         <td>
-          <button class="btn btn-outline" style="padding:4px 8px; font-size:0.75rem;" onclick="cetakResitRekod(${idx})"><i class="fa-solid fa-print"></i> Resit</button>
+          <button class="btn btn-outline" style="padding:4px 8px; font-size:0.75rem;" onclick="cetakResitRekod(${idx})"><i class="fa-solid fa-eye"></i> Lihat Resit</button>
         </td>
       </tr>
     `;
@@ -2386,16 +2682,16 @@ function cetakResitRekod(idx) {
 
   const tableBody = document.getElementById("rc-table-body");
   let items = [];
-  try { items = JSON.parse(p.butiranItem || "[]"); } catch (e) {}
+  try { items = typeof p.butiranItem === 'string' ? JSON.parse(p.butiranItem) : p.butiranItem; } catch (e) {}
   
   if (tableBody) {
     let html = "";
-    if (items.length > 0) {
+    if (Array.isArray(items) && items.length > 0) {
       items.forEach(it => {
-        html += `<tr class="active-item"><td>${it.label}</td><td style="text-align:center;">-</td><td style="text-align:center;">${p.bulan}</td><td class="amount-cell">${it.paidPrice}</td></tr>`;
+        html += `<tr class="active-item"><td>${it.label}</td><td style="text-align:center;">${it.group || '-'}</td><td style="text-align:center;">${p.bulan}</td><td class="amount-cell">${it.paidPrice}</td></tr>`;
       });
     } else {
-      html = `<tr><td colspan="4" style="text-align:center;">Jumlah Yuran Dibayar: RM ${p.jumlah}</td></tr>`;
+      html = `<tr class="active-item"><td>Yuran Pengajian ${p.bulan}</td><td style="text-align:center;">Umum</td><td style="text-align:center;">${p.bulan}</td><td class="amount-cell">${p.jumlah}</td></tr>`;
     }
     tableBody.innerHTML = html;
   }
@@ -2405,120 +2701,197 @@ function cetakResitRekod(idx) {
   showToast(`Melihat Resit ${p.noResit}`, "info");
 }
 
+// Student Table & CRUD View
+function renderStudentTable() {
+  const tbody = document.getElementById("student-table-body");
+  if (!tbody) return;
 
+  let html = "";
+  appState.students.forEach((s, idx) => {
+    const categoryBadges = getCategoryBadgesHtml(s);
+    html += `
+      <tr>
+        <td>${s.id || (idx + 1)}</td>
+        <td><strong>${s.nama}</strong></td>
+        <td>${s.parent || '-'}</td>
+        <td>${s.phone || '-'}</td>
+        <td>${categoryBadges}</td>
+        <td><span class="${s.status === 'AKTIF' ? 'badge-paid' : 'badge-unpaid'}">${s.status}</span></td>
+        <td>
+          <button class="btn btn-outline" style="padding:4px 8px; font-size:0.75rem;" onclick="openEditStudentModal(${idx})"><i class="fa-solid fa-pen"></i> Edit</button>
+        </td>
+      </tr>
+    `;
+  });
+  tbody.innerHTML = html;
+}
 
+function openAddStudentModal() {
+  document.getElementById("modal-student-title").innerText = "Tambah Murid Baharu";
+  document.getElementById("modal-student-id").value = "";
+  document.getElementById("modal-student-nama").value = "";
+  document.getElementById("modal-student-parent").value = "";
+  document.getElementById("modal-student-phone").value = "";
+  document.getElementById("modal-student-status").value = "AKTIF";
 
+  document.getElementById("modal-chk-mengaji").checked = true;
+  document.getElementById("modal-chk-transit").checked = false;
+  document.getElementById("modal-chk-jawi").checked = false;
+  document.getElementById("modal-chk-kafa").checked = false;
+  document.getElementById("modal-chk-upkk").checked = false;
+  document.getElementById("modal-chk-psra").checked = false;
+  document.getElementById("modal-chk-akademik").checked = false;
+  document.getElementById("modal-chk-online").checked = false;
 
-// --- FUNGSI PROMISE-BASED BACKEND FETCHING (GUARANTEED 1-CLICK REFRESH) ---
-function fetchStudentsFromBackend(showToastMsg = false) {
+  document.getElementById("student-modal-backdrop")?.classList.add("show");
+}
+
+function openEditStudentModal(idx) {
+  const s = appState.students[idx];
+  if (!s) return;
+
+  document.getElementById("modal-student-title").innerText = "Kemaskini Profil Murid";
+  document.getElementById("modal-student-id").value = s.id || (idx + 1);
+  document.getElementById("modal-student-nama").value = s.nama;
+  document.getElementById("modal-student-parent").value = s.parent || "";
+  document.getElementById("modal-student-phone").value = s.phone || "";
+  document.getElementById("modal-student-status").value = s.status || "AKTIF";
+
+  document.getElementById("modal-chk-mengaji").checked = s.mengaji === "YA";
+  document.getElementById("modal-chk-transit").checked = s.transit === "YA";
+  document.getElementById("modal-chk-jawi").checked = s.jawi === "YA";
+  document.getElementById("modal-chk-kafa").checked = s.kafa === "YA";
+  document.getElementById("modal-chk-upkk").checked = s.upkk === "YA";
+  document.getElementById("modal-chk-psra").checked = s.psra === "YA";
+  document.getElementById("modal-chk-akademik").checked = s.akademik === "YA";
+  document.getElementById("modal-chk-online").checked = s.online === "YA";
+
+  document.getElementById("student-modal-backdrop")?.classList.add("show");
+}
+
+function closeStudentModal() {
+  document.getElementById("student-modal-backdrop")?.classList.remove("show");
+}
+
+async function saveStudentFromModal() {
+  const nama = document.getElementById("modal-student-nama").value.trim();
+  if (!nama) { showToast("Sila masukkan nama murid.", "warning"); return; }
+
+  const id = document.getElementById("modal-student-id").value;
+  const parent = document.getElementById("modal-student-parent").value.trim();
+  const phone = document.getElementById("modal-student-phone").value.trim();
+  const status = document.getElementById("modal-student-status").value;
+
+  const studentObj = {
+    id: id || (appState.students.length + 1),
+    nama: nama,
+    parent: parent,
+    phone: phone,
+    status: status,
+    mengaji: document.getElementById("modal-chk-mengaji").checked ? "YA" : "TIDAK",
+    transit: document.getElementById("modal-chk-transit").checked ? "YA" : "TIDAK",
+    jawi: document.getElementById("modal-chk-jawi").checked ? "YA" : "TIDAK",
+    kafa: document.getElementById("modal-chk-kafa").checked ? "YA" : "TIDAK",
+    upkk: document.getElementById("modal-chk-upkk").checked ? "YA" : "TIDAK",
+    psra: document.getElementById("modal-chk-psra").checked ? "YA" : "TIDAK",
+    akademik: document.getElementById("modal-chk-akademik").checked ? "YA" : "TIDAK",
+    online: document.getElementById("modal-chk-online").checked ? "YA" : "TIDAK",
+    hargaMengaji: 100, hargaAkademik: 40, hargaTransit: 260, catatan: ""
+  };
+
+  const existingIdx = appState.students.findIndex(s => s.id == studentObj.id || s.nama.toLowerCase() === nama.toLowerCase());
+  if (existingIdx !== -1) appState.students[existingIdx] = studentObj;
+  else appState.students.push(studentObj);
+
+  saveLocalStorageStudents();
+  closeStudentModal();
+  renderStudentTable();
+  renderDashboard();
+
+  if (typeof google !== "undefined" && google.script && google.script.run) {
+    google.script.run.saveStudent(studentObj);
+  } else if (appState.appsScriptUrl) {
+    try {
+      fetch(appState.appsScriptUrl, {
+        method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "saveStudent", payload: studentObj })
+      });
+    } catch(e) {}
+  }
+
+  showToast("Profil murid berjaya disimpan!", "success");
+}
+
+async function fetchStudentsFromBackend(showToastMsg = false) {
   if (showToastMsg) showLoading(true, "Memuat turun data murid terkini dari Google Sheets...");
 
-  return new Promise((resolve) => {
-    if (typeof google !== "undefined" && google.script && google.script.run) {
-      google.script.run
-        .withSuccessHandler(function(studentsData) {
-          if (showToastMsg) showLoading(false);
-          if (Array.isArray(studentsData) && studentsData.length > 0) {
-            appState.students = studentsData;
-            if (typeof initStudentSearch === "function") initStudentSearch();
-            if (typeof renderStudentSelectOptions === "function") renderStudentSelectOptions();
-            if (typeof renderDashboard === "function") renderDashboard();
-            if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik dari Google Sheets!`, "success");
-          }
-          resolve(appState.students);
-        })
-        .withFailureHandler(function(err) {
-          if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid: " + err, "error"); }
-          resolve(appState.students);
-        })
-        .getStudents();
-      return;
-    }
-
-    if (!appState.appsScriptUrl) {
-      if (showToastMsg) showLoading(false);
-      resolve(appState.students);
-      return;
-    }
-
-    fetch(`${appState.appsScriptUrl}?action=getStudents`)
-      .then(res => res.json())
-      .then(data => {
+  if (typeof google !== "undefined" && google.script && google.script.run) {
+    google.script.run
+      .withSuccessHandler(function(studentsData) {
         if (showToastMsg) showLoading(false);
-        if (data && data.success && Array.isArray(data.data) && data.data.length > 0) {
-          appState.students = data.data;
-          if (typeof initStudentSearch === "function") initStudentSearch();
-          if (typeof renderStudentSelectOptions === "function") renderStudentSelectOptions();
-          if (typeof renderDashboard === "function") renderDashboard();
-          if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik dari Google Sheets!`, "success");
+        if (Array.isArray(studentsData) && studentsData.length > 0) {
+          appState.students = studentsData;
+          saveLocalStorageStudents();
+          renderDashboard();
+          renderStudentTable();
+          if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik!`, "success");
         }
-        resolve(appState.students);
       })
-      .catch(err => {
-        if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid.", "error"); }
-        resolve(appState.students);
-      });
-  });
-}
-
-function fetchPaymentHistoryFromBackend() {
-  return new Promise((resolve) => {
-    if (typeof google !== "undefined" && google.script && google.script.run) {
-      google.script.run
-        .withSuccessHandler(function(historyData) {
-          if (Array.isArray(historyData) && historyData.length > 0) {
-            appState.payments = historyData;
-            if (typeof saveLocalStoragePayments === "function") saveLocalStoragePayments();
-            if (typeof calculateNextReceiptNo === "function") calculateNextReceiptNo();
-            if (typeof renderDashboard === "function") renderDashboard();
-            if (typeof renderHistoryTable === "function") renderHistoryTable();
-          }
-          resolve(appState.payments);
-        })
-        .withFailureHandler(function() { resolve(appState.payments); })
-        .getPaymentHistory();
-      return;
-    }
-
-    if (!appState.appsScriptUrl) {
-      resolve(appState.payments);
-      return;
-    }
-
-    fetch(`${appState.appsScriptUrl}?action=getPaymentHistory`)
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.success && Array.isArray(data.data) && data.data.length > 0) {
-          appState.payments = data.data;
-          if (typeof saveLocalStoragePayments === "function") saveLocalStoragePayments();
-          if (typeof calculateNextReceiptNo === "function") calculateNextReceiptNo();
-          if (typeof renderDashboard === "function") renderDashboard();
-          if (typeof renderHistoryTable === "function") renderHistoryTable();
-        }
-        resolve(appState.payments);
+      .withFailureHandler(function(err) {
+        if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid: " + err, "error"); }
       })
-      .catch(() => { resolve(appState.payments); });
-  });
-}
+      .getStudents();
+    return;
+  }
 
-async function actionRefreshDashboardData() {
-  showLoading(true, "Mengemaskini pangkalan data Google Sheets...");
+  if (!appState.appsScriptUrl) return;
   try {
-    await Promise.all([
-      fetchStudentsFromBackend(false),
-      fetchPaymentHistoryFromBackend()
-    ]);
-    renderDashboard();
-    renderHistoryTable();
-    if (typeof renderStudentSelectOptions === "function") renderStudentSelectOptions();
-    showToast(`Berjaya! Data Dashboard & ${appState.students.length} murid dikemaskini dari Google Sheets!`, "success");
+    const res = await fetch(`${appState.appsScriptUrl}?action=getStudents`);
+    const data = await res.json();
+    if (showToastMsg) showLoading(false);
+    if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+      appState.students = data.data;
+      saveLocalStorageStudents();
+      renderDashboard();
+      renderStudentTable();
+      if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik!`, "success");
+    }
   } catch (err) {
-    showToast("Mengemaskini data.", "info");
-  } finally {
-    showLoading(false);
+    if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid.", "error"); }
   }
 }
-if (typeof window !== "undefined") window.actionRefreshDashboardData = actionRefreshDashboardData;
+
+async function fetchPaymentHistoryFromBackend() {
+  if (typeof google !== "undefined" && google.script && google.script.run) {
+    google.script.run
+      .withSuccessHandler(function(historyData) {
+        if (Array.isArray(historyData) && historyData.length > 0) {
+          appState.payments = historyData;
+          saveLocalStoragePayments();
+          calculateNextReceiptNo();
+          renderDashboard();
+          renderHistoryTable();
+        }
+      })
+      .getPaymentHistory();
+    return;
+  }
+
+  if (!appState.appsScriptUrl) return;
+  try {
+    const res = await fetch(`${appState.appsScriptUrl}?action=getPaymentHistory`);
+    const data = await res.json();
+    if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+      appState.payments = data.data;
+      saveLocalStoragePayments();
+      calculateNextReceiptNo();
+      renderDashboard();
+      renderHistoryTable();
+    }
+  } catch (err) {}
+}
+
 </script>
+
 </body>
 </html>

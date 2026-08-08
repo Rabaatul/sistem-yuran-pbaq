@@ -1,123 +1,112 @@
-﻿/**
+/**
  * ==============================================================================
  * SISTEM PEMBAYARAN YURAN & RESIT DIGITAL - FATHUL QURANIC CENTRE (FQC)
- * Clean Modular Application Logic (app.js)
+ * Full Application Logic (app.js)
  * ==============================================================================
  */
 
-// Master List 28 Murid FQC Default Terbaharu
+// Master List 28 Murid FQC Default
 const MASTER_STUDENTS_DEFAULT = [
-  { id: 1, nama: "Syed Mohd Alwi Bin Syed Mohamed", phone: "0145366009" },
-  { id: 2, nama: "Faid Fareed Bin Mohd Shah Fitri", phone: "01481810192" },
-  { id: 3, nama: "Mohd Fadzli Bin Ab Wahab", phone: "01133323707" },
-  { id: 4, nama: "Nur Aliyah Binti Muhammad A'fifi", phone: "0133447681" },
-  { id: 5, nama: "Nur Inas Tihani Binti Muhammed Nasri", phone: "0179378264" },
-  { id: 6, nama: "Fidatul Fitriah Binti Fazli", phone: "0176826787" },
-  { id: 7, nama: "Nur Damia Arissa Bt Faizol Azimi", phone: "0132955402" },
-  { id: 8, nama: "Alya Sofia Binti Aris", phone: "0173235786" },
-  { id: 9, nama: "Tengku Aqill Hafy Bin Tengku Shahrizal", phone: "0133440896" },
-  { id: 10, nama: "Muhammad Aathif Adhwa Bin Mohd Fazli", phone: "0123209953" },
-  { id: 11, nama: "Nur Aimy Safiy Binti Shaiful Azmi", phone: "0108901030" },
-  { id: 12, nama: "Muhammad Harith Bin Muhamad Hosni", phone: "0173409430" },
-  { id: 13, nama: "Nur Ayesha Zahira Binti Abdullah Zawawie", phone: "0132410737" },
-  { id: 14, nama: "Wan Nadzrin Afeef Bin Wan Ibrahim Jefri", phone: "01110081660" },
-  { id: 15, nama: "Hilal Sufi Bin Hasrull Nizam", phone: "0193593693" },
-  { id: 16, nama: "Maira Yusreena Binti Muhamad Yazid", phone: "0129878510" },
-  { id: 17, nama: "Izz Zara Sofia Binti Mohd Safarudin", phone: "0162710027" },
-  { id: 18, nama: "Ammar Luqman Bin Shamsudin", phone: "0172382980" },
-  { id: 19, nama: "Ainan Salsabila Binti Hafiz Anuar", phone: "0139311818" },
-  { id: 20, nama: "Arissa Medina Bt Ahmad Fauzi", phone: "0129425926" },
-  { id: 21, nama: "Ammar Ramadhan Bin Ahmad Fauzi", phone: "0129425926" },
-  { id: 22, nama: "Muhammad Rizal Arshad Bin Mohd Rosmizam", phone: "0129343676" },
-  { id: 23, nama: "Nur Raisha Adawiyah Binti Mohd Rosmizam", phone: "0129343676" },
-  { id: 24, nama: "Aisyah Humaira Bt Lukman", phone: "0196550670" },
-  { id: 25, nama: "Izarra Khaiyrra Bt Mohd Aris", phone: "0199872971" },
-  { id: 26, nama: "Ahmad Aariz Dayyan B. Mohd Kamalludin", phone: "0132315660" },
-  { id: 27, nama: "Nur Aisya' Qaseh Bt Aziman", phone: "0179890260" },
-  { id: 28, nama: "NAJIHAH", phone: "0134565245" }
+  { id: 1, nama: "Syed Mohd Alwi Bin Syed Mohamed", parent: "Syed Mohamed", phone: "0145366009", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 2, nama: "Faid Fareed Bin Mohd Shah Fitri", parent: "Mohd Shah Fitri", phone: "01481810192", status: "AKTIF", mengaji: "YA", transit: "YA", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 260, catatan: "" },
+  { id: 3, nama: "Mohd Fadzli Bin Ab Wahab", parent: "Ab Wahab", phone: "01133323707", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 4, nama: "Nur Aliyah Binti Muhammad A'fifi", parent: "Muhammad A'fifi", phone: "0133447681", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 5, nama: "Nur Inas Tihani Binti Muhammed Nasri", parent: "Muhammed Nasri", phone: "0179378264", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 6, nama: "Fidatul Fitriah Binti Fazli", parent: "Fazli", phone: "0176826787", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 7, nama: "Nur Damia Arissa Bt Faizol Azimi", parent: "Faizol Azimi", phone: "0132955402", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 8, nama: "Alya Sofia Binti Aris", parent: "Aris", phone: "0173235786", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 9, nama: "Tengku Aqill Hafy Bin Tengku Shahrizal", parent: "Tengku Shahrizal", phone: "0133440896", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 10, nama: "Muhammad Aathif Adhwa Bin Mohd Fazli", parent: "Mohd Fazli", phone: "0123209953", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 11, nama: "Nur Aimy Safiy Binti Shaiful Azmi", parent: "Shaiful Azmi", phone: "0108901030", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 12, nama: "Muhammad Harith Bin Muhamad Hosni", parent: "Muhamad Hosni", phone: "0173409430", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 13, nama: "Nur Ayesha Zahira Binti Abdullah Zawawie", parent: "Abdullah Zawawie", phone: "0132410737", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 14, nama: "Wan Nadzrin Afeef Bin Wan Ibrahim Jefri", parent: "Wan Ibrahim Jefri", phone: "01110081660", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 15, nama: "Hilal Sufi Bin Hasrull Nizam", parent: "Hasrull Nizam", phone: "0193593693", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 16, nama: "Maira Yusreena Binti Muhamad Yazid", parent: "Muhamad Yazid", phone: "0129878510", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 17, nama: "Izz Zara Sofia Binti Mohd Safarudin", parent: "Mohd Safarudin", phone: "0162710027", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 18, nama: "Ammar Luqman Bin Shamsudin", parent: "Shamsudin", phone: "0172382980", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 19, nama: "Ainan Salsabila Binti Hafiz Anuar", parent: "Hafiz Anuar", phone: "0139311818", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 20, nama: "Arissa Medina Bt Ahmad Fauzi", parent: "Ahmad Fauzi", phone: "0129425926", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 21, nama: "Ammar Ramadhan Bin Ahmad Fauzi", parent: "Ahmad Fauzi", phone: "0129425926", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 22, nama: "Muhammad Rizal Arshad Bin Mohd Rosmizam", parent: "Mohd Rosmizam", phone: "0129343676", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 23, nama: "Nur Raisha Adawiyah Binti Mohd Rosmizam", parent: "Mohd Rosmizam", phone: "0129343676", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 24, nama: "Aisyah Humaira Bt Lukman", parent: "Lukman", phone: "0196550670", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 25, nama: "Izarra Khaiyrra Bt Mohd Aris", parent: "Mohd Aris", phone: "0199872971", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 26, nama: "Ahmad Aariz Dayyan B. Mohd Kamalludin", parent: "Mohd Kamalludin", phone: "0132315660", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 27, nama: "Nur Aisya' Qaseh Bt Aziman", parent: "Aziman", phone: "0179890260", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 28, nama: "NAJIHAH", parent: "Ibu / Bapa Najihah", phone: "0134565245", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" }
 ];
 
-// Helper Safe Storage
-function safeGetStorage(key, defaultVal = "") {
-  try {
-    if (typeof localStorage !== "undefined") return localStorage.getItem(key) || defaultVal;
-  } catch (e) {}
-  return defaultVal;
-}
-
-function safeSetStorage(key, val) {
-  try {
-    if (typeof localStorage !== "undefined") localStorage.setItem(key, val);
-  } catch (e) {}
-}
-
-// Master 26 Fee Items Array
+// Fee Items Specification (Tick-boxes & Discount Dropdowns)
 const FEE_CHECKBOX_ITEMS = [
-  { id: "mengaji_pendaftaran", group: "1. KELAS MENGAJI", label: "Pendaftaran Mengaji", stdPrice: 100, field: "pendaftaran", icon: "fa-book-quran" },
-  { id: "mengaji_bulanan", group: "1. KELAS MENGAJI", label: "Yuran Bulanan Mengaji", stdPrice: 100, field: "pengajianAlquran", icon: "fa-book-quran" },
-  { id: "mengaji_buku", group: "1. KELAS MENGAJI", label: "Buku Mengaji", stdPrice: 20, field: "bukuRekodModul", icon: "fa-book-open" },
-  { id: "online_pendaftaran", group: "2. KELAS MENGAJI ONLINE", label: "Pendaftaran Online", stdPrice: 50, field: "pendaftaran", icon: "fa-laptop" },
-  { id: "online_bulanan", group: "2. KELAS MENGAJI ONLINE", label: "Yuran Bulanan Online", stdPrice: 150, field: "pengajianAlquran", icon: "fa-laptop" },
-  { id: "akademik_pendaftaran", group: "3. TUISYEN AKADEMIK", label: "Pendaftaran Akademik", stdPrice: 50, field: "pendaftaran", icon: "fa-graduation-cap" },
-  { id: "akademik_1", group: "3. TUISYEN AKADEMIK", label: "Tuisyen Akademik 1 Subjek", stdPrice: 35, field: "kelasAkademik", icon: "fa-book" },
-  { id: "akademik_4", group: "3. TUISYEN AKADEMIK", label: "Tuisyen Akademik 4 Subjek", stdPrice: 110, field: "kelasAkademik", icon: "fa-layer-group" },
-  { id: "kafa_pendaftaran", group: "4. TUISYEN KAFA (THN 2-6)", label: "Pendaftaran KAFA", stdPrice: 100, field: "pendaftaran", icon: "fa-mosque" },
-  { id: "kafa_bulanan", group: "4. TUISYEN KAFA (THN 2-6)", label: "Yuran Bulanan KAFA", stdPrice: 100, field: "kelasKafa", icon: "fa-mosque" },
-  { id: "kafa_buku", group: "4. TUISYEN KAFA (THN 2-6)", label: "Buku KAFA", stdPrice: 60, field: "bukuRekodModul", icon: "fa-book-open" },
-  { id: "jawi_pendaftaran", group: "5. KELAS KHAS JAWI", label: "Pendaftaran Jawi", stdPrice: 100, field: "pendaftaran", icon: "fa-pen-nib" },
-  { id: "jawi_bulanan", group: "5. KELAS KHAS JAWI", label: "Yuran Bulanan Jawi", stdPrice: 100, field: "kelasKhasJawi", icon: "fa-pen-nib" },
-  { id: "jawi_buku", group: "5. KELAS KHAS JAWI", label: "Buku Jawi", stdPrice: 60, field: "bukuRekodModul", icon: "fa-book-open" },
-  { id: "upkk_pendaftaran", group: "6. KELAS UPKK", label: "Pendaftaran UPKK", stdPrice: 100, field: "pendaftaran", icon: "fa-award" },
-  { id: "upkk_bulanan", group: "6. KELAS UPKK", label: "Yuran Bulanan UPKK", stdPrice: 100, field: "kelasUpkk", icon: "fa-award" },
-  { id: "upkk_buku", group: "6. KELAS UPKK", label: "Buku UPKK", stdPrice: 64, field: "bukuRekodModul", icon: "fa-book-open" },
-  { id: "psra_pendaftaran", group: "7. KELAS PSRA", label: "Pendaftaran PSRA", stdPrice: 100, field: "pendaftaran", icon: "fa-certificate" },
-  { id: "psra_bulanan", group: "7. KELAS PSRA", label: "Yuran Bulanan PSRA", stdPrice: 100, field: "kelasPsra", icon: "fa-certificate" },
-  { id: "psra_buku", group: "7. KELAS PSRA", label: "Buku PSRA", stdPrice: 60, field: "bukuRekodModul", icon: "fa-book-open" },
-  { id: "transit_pendaftaran", group: "8. TRANSIT FQC", label: "Pendaftaran Transit", stdPrice: 150, field: "pendaftaran", icon: "fa-bus" },
-  { id: "transit_biasa", group: "8. TRANSIT FQC", label: "Transit Biasa", stdPrice: 260, field: "transit", icon: "fa-bus" },
-  { id: "transit_petang", group: "8. TRANSIT FQC", label: "Transit Sampai Petang", stdPrice: 310, field: "transit", icon: "fa-clock" },
-  { id: "transit_diskaun", group: "8. TRANSIT FQC", label: "Transit Diskaun", stdPrice: 200, field: "transit", icon: "fa-tags" },
-  { id: "transit_mengaji", group: "8. TRANSIT FQC", label: "Tambahan Mengaji", stdPrice: 50, field: "transit", icon: "fa-plus-circle" },
-  { id: "transit_ot", group: "8. TRANSIT FQC", label: "Tambahan OT Sebulan", stdPrice: 40, field: "transit", icon: "fa-user-clock" },
-  { id: "sumbangan", group: "9. SUMBANGAN & LAIN-LAIN", label: "Sumbangan / Modul / Lain-lain", stdPrice: 50, field: "sumbangan", icon: "fa-hand-holding-heart" }
+  { id: "mengaji_pendaftaran", group: "Kelas Mengaji Al-Quran", label: "Pendaftaran Mengaji", stdPrice: 100, options: null, categoryKey: "mengaji", icon: "fa-book-quran" },
+  { id: "mengaji_bulanan", group: "Kelas Mengaji Al-Quran", label: "Yuran Bulanan Mengaji", stdPrice: 130, options: [100, 130], categoryKey: "mengaji", icon: "fa-book-quran" },
+  { id: "mengaji_buku", group: "Kelas Mengaji Al-Quran", label: "Buku Mengaji", stdPrice: 20, options: null, categoryKey: "mengaji", icon: "fa-book-open" },
+
+  { id: "online_pendaftaran", group: "Mengaji Online", label: "Pendaftaran Online", stdPrice: 50, options: null, categoryKey: "online", icon: "fa-laptop" },
+  { id: "online_bulanan", group: "Mengaji Online", label: "Yuran Bulanan Online", stdPrice: 150, options: null, categoryKey: "online", icon: "fa-laptop" },
+
+  { id: "akademik_pendaftaran", group: "Tuisyen Akademik", label: "Pendaftaran Akademik", stdPrice: 50, options: null, categoryKey: "akademik", icon: "fa-graduation-cap" },
+  { id: "akademik_1", group: "Tuisyen Akademik", label: "1 Subjek Akademik", stdPrice: 40, options: [35, 40], categoryKey: "akademik", icon: "fa-book" },
+  { id: "akademik_4", group: "Tuisyen Akademik", label: "4 Subjek Akademik", stdPrice: 110, options: null, categoryKey: "akademik", icon: "fa-layer-group" },
+
+  { id: "kafa_pendaftaran", group: "KAFA", label: "Pendaftaran KAFA", stdPrice: 100, options: null, categoryKey: "kafa", icon: "fa-mosque" },
+  { id: "kafa_bulanan", group: "KAFA", label: "Yuran Bulanan KAFA", stdPrice: 100, options: null, categoryKey: "kafa", icon: "fa-mosque" },
+  { id: "kafa_buku", group: "KAFA", label: "Buku KAFA", stdPrice: 60, options: null, categoryKey: "kafa", icon: "fa-book-open" },
+
+  { id: "jawi_pendaftaran", group: "Kelas Khas Jawi 2/3/4", label: "Pendaftaran Jawi", stdPrice: 100, options: null, categoryKey: "jawi", icon: "fa-pen-nib" },
+  { id: "jawi_bulanan", group: "Kelas Khas Jawi 2/3/4", label: "Yuran Bulanan Jawi", stdPrice: 100, options: null, categoryKey: "jawi", icon: "fa-pen-nib" },
+  { id: "jawi_buku", group: "Kelas Khas Jawi 2/3/4", label: "Buku Jawi", stdPrice: 60, options: null, categoryKey: "jawi", icon: "fa-book-open" },
+
+  { id: "upkk_pendaftaran", group: "UPKK", label: "Pendaftaran UPKK", stdPrice: 100, options: null, categoryKey: "upkk", icon: "fa-award" },
+  { id: "upkk_bulanan", group: "UPKK", label: "Yuran Bulanan UPKK", stdPrice: 100, options: null, categoryKey: "upkk", icon: "fa-award" },
+  { id: "upkk_buku", group: "UPKK", label: "Buku UPKK", stdPrice: 64, options: null, categoryKey: "upkk", icon: "fa-book-open" },
+
+  { id: "psra_pendaftaran", group: "PSRA", label: "Pendaftaran PSRA", stdPrice: 100, options: null, categoryKey: "psra", icon: "fa-certificate" },
+  { id: "psra_bulanan", group: "PSRA", label: "Yuran Bulanan PSRA", stdPrice: 100, options: null, categoryKey: "psra", icon: "fa-certificate" },
+  { id: "psra_buku", group: "PSRA", label: "Buku PSRA", stdPrice: 60, options: null, categoryKey: "psra", icon: "fa-book-open" },
+
+  { id: "transit_pendaftaran", group: "Transit 2026", label: "Pendaftaran Transit", stdPrice: 150, options: null, categoryKey: "transit", icon: "fa-bus" },
+  { id: "transit_bulanan", group: "Transit 2026", label: "Yuran Bulanan Transit", stdPrice: 260, options: [200, 260], categoryKey: "transit", icon: "fa-bus" },
+  { id: "transit_petang", group: "Transit 2026", label: "Duduk Sampai Petang", stdPrice: 310, options: null, categoryKey: "transit", icon: "fa-clock" },
+  { id: "transit_mengaji", group: "Transit 2026", label: "Tambahan Mengaji Transit", stdPrice: 50, options: null, categoryKey: "transit", icon: "fa-plus-circle" },
+  { id: "transit_ot", group: "Transit 2026", label: "Tambahan OT 1 Bulan", stdPrice: 40, options: null, categoryKey: "transit", icon: "fa-user-clock" }
 ];
 
-// App State
+// Global State
 let appState = {
   students: [...MASTER_STUDENTS_DEFAULT],
   payments: [],
   selectedStudent: null,
   currentReceiptNo: "FQC-1100",
-  appsScriptUrl: safeGetStorage("fqc_apps_script_url", "https://script.google.com/macros/s/AKfycbyku9YGRoiwVEGWOdGLrbXX7STxLgY-8W6atCGkH601/exec"),
-  config: {
-    logoUrl: safeGetStorage("fqc_logo_url", "assets/logo.png"),
-    signatureUrl: safeGetStorage("fqc_signature_url", "assets/signature.png"),
-    backgroundUrl: safeGetStorage("fqc_background_url", "assets/pbaq-bg.png")
-  }
+  lastUpdated: new Date().toLocaleString("ms-MY"),
+  appsScriptUrl: safeGetStorage("fqc_apps_script_url", "https://script.google.com/macros/s/AKfycbyku9YGRoiwVEGWOdGLrbXX7STxLgY-8W6atCGkH601/exec")
 };
 
-const DEFAULT_PLACEHOLDERS = {
-  logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231b4d2e'/><text x='50' y='55' font-size='30' font-family='sans-serif' font-weight='bold' fill='%23d4af37' text-anchor='middle'>FQC</text></svg>",
-  signature: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='60' viewBox='0 0 150 60'><path d='M10 40 Q 40 10, 70 40 T 130 20' stroke='%231b4d2e' stroke-width='3' fill='none'/><text x='75' y='55' font-size='10' font-family='sans-serif' fill='%2364748b' text-anchor='middle'>Pentadbir FQC</text></svg>",
-  background: ""
-};
+function safeGetStorage(key, defaultVal = "") {
+  try { if (typeof localStorage !== "undefined") return localStorage.getItem(key) || defaultVal; } catch (e) {}
+  return defaultVal;
+}
 
-// Application Initialization
+function safeSetStorage(key, val) {
+  try { if (typeof localStorage !== "undefined") localStorage.setItem(key, val); } catch (e) {}
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initDateAndMonth();
-  initStudentSearch();
+  initStudentLiveSearch();
   initFeeCalculations();
   loadLocalStoragePayments();
-  loadAssetUrls();
+  loadLocalStorageStudents();
   calculateNextReceiptNo();
   fetchStudentsFromBackend();
   fetchPaymentHistoryFromBackend();
   renderDashboard();
   renderHistoryTable();
+  renderStudentTable();
   renderReceiptPreview();
 });
 
-// Toast & Loading Helpers
 function showToast(message, type = "success") {
   const toast = document.getElementById("toast");
   const msgEl = document.getElementById("toast-msg");
@@ -125,9 +114,7 @@ function showToast(message, type = "success") {
   
   msgEl.innerText = message;
   toast.className = `toast ${type} show`;
-  setTimeout(() => {
-    toast.className = `toast ${type}`;
-  }, 3500);
+  setTimeout(() => { toast.className = `toast ${type}`; }, 3500);
 }
 
 function showLoading(show, text = "Memproses data...") {
@@ -140,7 +127,6 @@ function showLoading(show, text = "Memproses data...") {
   else loading.classList.remove("show");
 }
 
-// Navigation Switcher
 function switchView(viewId) {
   try {
     document.querySelectorAll(".tab-view").forEach(el => el.classList.remove("active"));
@@ -157,6 +143,8 @@ function switchView(viewId) {
 
     if (viewId === "dashboard") renderDashboard();
     if (viewId === "rekod") renderHistoryTable();
+    if (viewId === "murid") renderStudentTable();
+    if (viewId === "belum-bayar") renderUnpaidSection();
     if (viewId === "bayaran") {
       renderCheckboxFeeGroups();
       updateTotalAmount();
@@ -182,80 +170,95 @@ function initDateAndMonth() {
   }
 }
 
-function renderStudentSelectOptions() {
-  const selectEl = document.getElementById("student-native-select");
-  if (!selectEl) return;
-  let html = `<option value="">-- Tekan Di Sini Untuk Pilih Murid (${appState.students.length} Murid) --</option>`;
-  appState.students.forEach((student, idx) => {
-    html += `<option value="${idx}">${idx + 1}. ${student.nama} (${student.phone || 'Tiada No.'})</option>`;
-  });
-  selectEl.innerHTML = html;
-}
-
-function onNativeStudentSelect(idxVal) {
-  const phoneDisplay = document.getElementById("parent-phone-display");
-  const searchInput = document.getElementById("student-search-input");
-  if (idxVal === "") {
-    appState.selectedStudent = null;
-    if (phoneDisplay) phoneDisplay.value = "";
-    if (searchInput) searchInput.value = "";
-  } else {
-    const student = appState.students[parseInt(idxVal, 10)];
-    if (student) {
-      appState.selectedStudent = student;
-      if (phoneDisplay) phoneDisplay.value = student.phone || "";
-      if (searchInput) searchInput.value = student.nama;
-    }
-  }
-  renderReceiptPreview();
-}
-
-function initStudentSearch() {
-  renderStudentSelectOptions();
+// Live Student Search (No Long Dropdown!)
+function initStudentLiveSearch() {
   const searchInput = document.getElementById("student-search-input");
   const dropdown = document.getElementById("student-dropdown-options");
   const phoneDisplay = document.getElementById("parent-phone-display");
 
   if (!searchInput || !dropdown) return;
 
-  function renderOptions(filterText = "") {
+  function filterOptions(text = "") {
     dropdown.innerHTML = "";
+    const cleanText = text.trim().toLowerCase();
+
     const filtered = appState.students.filter(s => 
-      s.nama.toLowerCase().includes(filterText.toLowerCase()) ||
-      (s.phone && s.phone.includes(filterText))
+      s.status !== "TIDAK AKTIF" && (
+        s.nama.toLowerCase().includes(cleanText) ||
+        (s.phone && s.phone.includes(cleanText)) ||
+        (s.parent && s.parent.toLowerCase().includes(cleanText))
+      )
     );
 
     if (filtered.length === 0) {
-      dropdown.innerHTML = `<div class="option-item" style="color:var(--text-muted);">Tiada murid ditemui</div>`;
+      dropdown.innerHTML = `<div class="option-item" style="color:var(--text-muted);">Tiada murid dijumpai bagi "${text}"</div>`;
       return;
     }
 
     filtered.forEach(student => {
       const item = document.createElement("div");
       item.className = "option-item";
-      item.innerHTML = `<span style="font-weight:600;">${student.nama}</span>`;
+      
+      const categoryBadges = getCategoryBadgesHtml(student);
+      item.innerHTML = `
+        <div style="font-weight:700; color:var(--primary-dark);">${student.nama}</div>
+        <div style="font-size:0.78rem; color:var(--text-muted);">Parent: ${student.parent || '-'} | Tel: ${student.phone || '-'}</div>
+        <div style="margin-top:2px;">${categoryBadges}</div>
+      `;
+
       item.onclick = () => {
-        appState.selectedStudent = student;
-        searchInput.value = student.nama;
-        if (phoneDisplay) phoneDisplay.value = student.phone || '';
-        const selectEl = document.getElementById("student-native-select");
-        if (selectEl) {
-          const foundIdx = appState.students.findIndex(s => s.nama === student.nama);
-          if (foundIdx !== -1) selectEl.value = foundIdx.toString();
-        }
+        selectStudent(student);
         dropdown.classList.remove("show");
-        renderReceiptPreview();
       };
       dropdown.appendChild(item);
     });
   }
 
-  searchInput.addEventListener("focus", () => { renderOptions(searchInput.value); dropdown.classList.add("show"); });
-  searchInput.addEventListener("input", (e) => { renderOptions(e.target.value); dropdown.classList.add("show"); });
+  searchInput.addEventListener("focus", () => { filterOptions(searchInput.value); dropdown.classList.add("show"); });
+  searchInput.addEventListener("input", (e) => { filterOptions(e.target.value); dropdown.classList.add("show"); });
   document.addEventListener("click", (e) => { if (!e.target.closest(".searchable-select")) dropdown.classList.remove("show"); });
 }
 
-// Fee Checkbox Render & Events
+function getCategoryBadgesHtml(student) {
+  let html = "";
+  if (student.mengaji === "YA") html += `<span class="cat-tag cat-mengaji">Mengaji</span>`;
+  if (student.transit === "YA") html += `<span class="cat-tag cat-transit">Transit</span>`;
+  if (student.jawi === "YA") html += `<span class="cat-tag cat-jawi">Jawi</span>`;
+  if (student.upkk === "YA") html += `<span class="cat-tag cat-upkk">UPKK</span>`;
+  if (student.psra === "YA") html += `<span class="cat-tag cat-psra">PSRA</span>`;
+  if (student.kafa === "YA") html += `<span class="cat-tag cat-kafa">KAFA</span>`;
+  if (student.akademik === "YA") html += `<span class="cat-tag cat-akademik">Akademik</span>`;
+  if (student.online === "YA") html += `<span class="cat-tag cat-online">Online</span>`;
+  return html || `<span class="cat-tag" style="background:#e2e8f0; color:#64748b;">Umum</span>`;
+}
+
+function selectStudent(student) {
+  appState.selectedStudent = student;
+  const searchInput = document.getElementById("student-search-input");
+  const phoneDisplay = document.getElementById("parent-phone-display");
+
+  if (searchInput) searchInput.value = student.nama;
+  if (phoneDisplay) phoneDisplay.value = student.phone || "";
+
+  // Auto tick fee categories that match student profile
+  FEE_CHECKBOX_ITEMS.forEach(item => {
+    const chk = document.getElementById(`chk-${item.id}`);
+    const card = document.getElementById(`card-${item.id}`);
+    if (chk) {
+      const isEnrolled = student[item.categoryKey] === "YA";
+      // Auto check monthly fee item if student enrolled
+      if (isEnrolled && (item.id.includes("bulanan") || item.id === "akademik_1")) {
+        chk.checked = true;
+        if (card) card.classList.add("checked");
+      }
+    }
+  });
+
+  updateTotalAmount();
+  renderReceiptPreview();
+}
+
+// Fee Checkbox & Price Selection Rendering
 function renderCheckboxFeeGroups() {
   const container = document.getElementById("fee-checkbox-groups-container");
   if (!container) return;
@@ -270,8 +273,29 @@ function renderCheckboxFeeGroups() {
   Object.keys(groupsMap).forEach(groupName => {
     const items = groupsMap[groupName];
     const groupIcon = items[0]?.icon || "fa-list";
-    html += `<div class="fee-group-block"><div class="fee-group-header"><i class="fa-solid ${groupIcon}"></i> ${groupName}</div><div class="fee-checkbox-grid">`;
+    html += `
+      <div class="fee-group-block">
+        <div class="fee-group-header"><i class="fa-solid ${groupIcon}"></i> ${groupName}</div>
+        <div class="fee-checkbox-grid">
+    `;
+
     items.forEach(item => {
+      let priceControlHtml = "";
+      if (item.options && Array.isArray(item.options)) {
+        priceControlHtml = `<select id="price-opt-${item.id}" class="fee-card-price-select" onchange="onFeePriceSelectChange('${item.id}', this.value)" onclick="event.stopPropagation()">`;
+        item.options.forEach(opt => {
+          const selectedAttr = opt === item.stdPrice ? "selected" : "";
+          const optLabel = (item.id === "transit_bulanan" && opt === 200) ? `RM${opt} (Diskaun)` : `RM${opt}`;
+          priceControlHtml += `<option value="${opt}" ${selectedAttr}>${optLabel}</option>`;
+        });
+        priceControlHtml += `</select>`;
+      } else {
+        priceControlHtml = `
+          <span class="fee-card-price-prefix">RM</span>
+          <input type="number" id="price-${item.id}" class="fee-card-price-input" min="0" value="${item.stdPrice}" oninput="onFeePriceInput('${item.id}')" onclick="event.stopPropagation()">
+        `;
+      }
+
       html += `
         <div class="fee-checkbox-card" id="card-${item.id}" onclick="toggleFeeCard('${item.id}', event)">
           <div class="fee-card-left">
@@ -279,12 +303,12 @@ function renderCheckboxFeeGroups() {
             <span class="fee-card-label">${item.label}</span>
           </div>
           <div class="fee-card-price-group" onclick="event.stopPropagation()">
-            <span class="fee-card-price-prefix">RM</span>
-            <input type="number" id="price-${item.id}" class="fee-card-price-input" min="0" value="${item.stdPrice}" oninput="onFeePriceInput('${item.id}')" onclick="event.stopPropagation()">
+            ${priceControlHtml}
           </div>
         </div>
       `;
     });
+
     html += `</div></div>`;
   });
 
@@ -292,7 +316,7 @@ function renderCheckboxFeeGroups() {
 }
 
 function toggleFeeCard(itemId, event) {
-  if (event && event.target && (event.target.tagName === 'INPUT' || event.target.classList.contains('fee-card-checkbox'))) {
+  if (event && event.target && (event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' || event.target.classList.contains('fee-card-checkbox'))) {
     return;
   }
   const chk = document.getElementById(`chk-${itemId}`);
@@ -321,6 +345,26 @@ function onFeePriceInput(itemId) {
   updateTotalAmount();
 }
 
+function onFeePriceSelectChange(itemId, selectedVal) {
+  const chk = document.getElementById(`chk-${itemId}`);
+  const card = document.getElementById(`card-${itemId}`);
+  if (chk && !chk.checked) {
+    chk.checked = true;
+    if (card) card.classList.add("checked");
+  }
+  updateTotalAmount();
+}
+
+function getItemPrice(item) {
+  if (item.options && Array.isArray(item.options)) {
+    const selEl = document.getElementById(`price-opt-${item.id}`);
+    if (selEl) return parseFloat(selEl.value) || item.stdPrice;
+  }
+  const priceEl = document.getElementById(`price-${item.id}`);
+  if (priceEl) return parseFloat(priceEl.value) || item.stdPrice;
+  return item.stdPrice;
+}
+
 function initFeeCalculations() {
   renderCheckboxFeeGroups();
   document.getElementById("pay-date")?.addEventListener("change", renderReceiptPreview);
@@ -344,9 +388,8 @@ function calculateTotal() {
   let totalSum = 0;
   FEE_CHECKBOX_ITEMS.forEach(item => {
     const chk = document.getElementById(`chk-${item.id}`);
-    const priceEl = document.getElementById(`price-${item.id}`);
-    if (chk && chk.checked && priceEl) {
-      totalSum += (parseFloat(priceEl.value) || 0);
+    if (chk && chk.checked) {
+      totalSum += getItemPrice(item);
     }
   });
   return totalSum;
@@ -377,7 +420,7 @@ function calculateNextReceiptNo() {
     }
   });
   appState.currentReceiptNo = `FQC-${maxNo + 1}`;
-  const el = document.getElementById("receipt-no-display");
+  const el = document.getElementById("rc-no");
   if (el) el.innerText = appState.currentReceiptNo;
 }
 
@@ -415,16 +458,23 @@ function renderReceiptPreview() {
 
   FEE_CHECKBOX_ITEMS.forEach(item => {
     const chk = document.getElementById(`chk-${item.id}`);
-    const priceEl = document.getElementById(`price-${item.id}`);
-    if (chk && chk.checked && priceEl) {
-      const priceVal = parseFloat(priceEl.value) || 0;
-      hasItems = true; totalAmount += priceVal;
-      html += `<tr class="active-item"><td>${item.label}</td><td style="text-align:center;">-</td><td style="text-align:center;">${bulan}</td><td class="amount-cell">${priceVal.toFixed(0)}</td></tr>`;
+    if (chk && chk.checked) {
+      const itemPrice = getItemPrice(item);
+      hasItems = true;
+      totalAmount += itemPrice;
+      html += `
+        <tr class="active-item">
+          <td>${item.label}</td>
+          <td style="text-align:center;">${item.group}</td>
+          <td style="text-align:center;">${bulan}</td>
+          <td class="amount-cell">${itemPrice.toFixed(0)}</td>
+        </tr>
+      `;
     }
   });
 
-  if (!hasItems) html = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); font-style:italic; padding:12px;">Sila tick kotak bayaran yuran di sebelah kiri</td></tr>`;
-  
+  if (!hasItems) html = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); font-style:italic; padding:16px;">Sila tick kotak bayaran yuran di sebelah kanan</td></tr>`;
+
   const customTotalVal = document.getElementById("fee-total-custom")?.value;
   if (isTotalCustomEdited && customTotalVal !== "") {
     totalAmount = parseFloat(customTotalVal) || 0;
@@ -436,18 +486,12 @@ function renderReceiptPreview() {
 
 function validateForm() {
   const studentName = appState.selectedStudent ? appState.selectedStudent.nama : (document.getElementById("student-search-input")?.value || "").trim();
-  if (!studentName) { showToast("Sila pilih atau masukkan nama murid.", "warning"); return false; }
+  if (!studentName) { showToast("Sila pilih atau taip nama murid.", "warning"); return false; }
   if (!document.getElementById("pay-date")?.value) { showToast("Sila pilih tarikh.", "warning"); return false; }
   if (!document.getElementById("pay-month")?.value) { showToast("Sila pilih bulan.", "warning"); return false; }
-  if (calculateTotal() <= 0) { showToast("Sila masukkan sekurang-kurangnya satu bayaran yuran > RM0.", "warning"); return false; }
+  if (calculateTotal() <= 0) { showToast("Sila tick sekurang-kurangnya satu bayaran yuran.", "warning"); return false; }
   if (!document.querySelector('input[name="kaedahBayaran"]:checked')?.value) { showToast("Sila pilih kaedah bayaran.", "warning"); return false; }
   return true;
-}
-
-function actionJanaResit() {
-  if (!validateForm()) return;
-  renderReceiptPreview();
-  showToast("Resit rasmi FQC berjaya dijana!", "success");
 }
 
 async function actionSimpanPembayaran() {
@@ -457,47 +501,33 @@ async function actionSimpanPembayaran() {
   try {
     if (btnSimpan) btnSimpan.disabled = true;
     if (btnWhatsapp) btnWhatsapp.disabled = true;
-    showLoading(true, "Menyimpan pembayaran ke Google Sheets...");
+    showLoading(true, "Menyimpan resit pembayaran ke database Google Sheets / AppSheet...");
 
     const phone = appState.selectedStudent ? appState.selectedStudent.phone : (document.getElementById("parent-phone-display")?.value || "");
     const studentName = appState.selectedStudent ? appState.selectedStudent.nama : document.getElementById("student-search-input")?.value;
-    
-    let hargaStandardTotal = 0;
-    let jumlahDiskaunTotal = 0;
-    const checkedItems = [];
-    const categoryTotals = { pendaftaran: 0, pengajianAlquran: 0, kelasUpkk: 0, kelasPsra: 0, kelasKhasJawi: 0, bukuRekodModul: 0, sumbangan: 0, kelasKafa: 0, kelasAkademik: 0, transit: 0 };
+    const idMurid = appState.selectedStudent ? appState.selectedStudent.id : "";
 
+    const checkedItems = [];
     FEE_CHECKBOX_ITEMS.forEach(item => {
       const chk = document.getElementById(`chk-${item.id}`);
-      const priceEl = document.getElementById(`price-${item.id}`);
-      if (chk && chk.checked && priceEl) {
-        const paidPrice = parseFloat(priceEl.value) || 0;
-        hargaStandardTotal += item.stdPrice;
-        if (item.stdPrice > paidPrice) jumlahDiskaunTotal += (item.stdPrice - paidPrice);
-        if (categoryTotals[item.field] !== undefined) categoryTotals[item.field] += paidPrice;
-        checkedItems.push({ id: item.id, label: item.label, stdPrice: item.stdPrice, paidPrice: paidPrice });
+      if (chk && chk.checked) {
+        checkedItems.push({
+          id: item.id,
+          group: item.group,
+          label: item.label,
+          stdPrice: item.stdPrice,
+          paidPrice: getItemPrice(item)
+        });
       }
     });
 
     const paymentObj = {
       noResit: appState.currentReceiptNo,
+      idMurid: idMurid,
       tarikh: formatDateDisplay(document.getElementById("pay-date")?.value),
-      bulan: document.getElementById("pay-month")?.value,
+      bulan: (document.getElementById("pay-month")?.value || "OGOS").toUpperCase(),
       namaMurid: studentName,
       noWhatsapp: phone,
-      pendaftaran: categoryTotals.pendaftaran,
-      pengajianAlquran: categoryTotals.pengajianAlquran,
-      kelasUpkk: categoryTotals.kelasUpkk,
-      kelasPsra: categoryTotals.kelasPsra,
-      kelasKhasJawi: categoryTotals.kelasKhasJawi,
-      bukuRekodModul: categoryTotals.bukuRekodModul,
-      sumbangan: categoryTotals.sumbangan,
-      kelasKafa: categoryTotals.kelasKafa,
-      kelasAkademik: categoryTotals.kelasAkademik,
-      transit: categoryTotals.transit,
-      hargaStandard: hargaStandardTotal,
-      jumlahDiskaun: jumlahDiskaunTotal,
-      sebabDiskaun: jumlahDiskaunTotal > 0 ? "Harga Khas Murid" : "-",
       butiranItem: JSON.stringify(checkedItems),
       jumlah: calculateTotal(),
       kaedahBayaran: document.querySelector('input[name="kaedahBayaran"]:checked')?.value,
@@ -509,16 +539,15 @@ async function actionSimpanPembayaran() {
       return new Promise((resolve) => {
         google.script.run
           .withSuccessHandler(function(resJson) {
-            if (resJson && resJson.success && resJson.noResit) {
-              paymentObj.noResit = resJson.noResit;
-            }
+            if (resJson && resJson.success && resJson.noResit) paymentObj.noResit = resJson.noResit;
             appState.payments.unshift(paymentObj);
             saveLocalStoragePayments();
             showLoading(false);
-            showToast(`Pembayaran berjaya disimpan. No. Resit: ${paymentObj.noResit}`, "success");
+            showToast(`Resit ${paymentObj.noResit} berjaya disimpan!`, "success");
             calculateNextReceiptNo();
             renderDashboard();
             renderHistoryTable();
+            renderUnpaidSection();
             resolve(paymentObj);
           })
           .withFailureHandler(function(err) {
@@ -544,10 +573,11 @@ async function actionSimpanPembayaran() {
     appState.payments.unshift(paymentObj);
     saveLocalStoragePayments();
     showLoading(false);
-    showToast(`Pembayaran berjaya disimpan. No. Resit: ${paymentObj.noResit}`, "success");
+    showToast(`Resit ${paymentObj.noResit} berjaya disimpan!`, "success");
     calculateNextReceiptNo();
     renderDashboard();
     renderHistoryTable();
+    renderUnpaidSection();
     return paymentObj;
   } catch (e) {
     showLoading(false);
@@ -566,16 +596,40 @@ async function actionHantarWhatsapp() {
 
   const phoneFormatted = formatWhatsAppPhone(saved.noWhatsapp);
   if (!phoneFormatted) {
-    showToast("Nombor WhatsApp tidak sah.", "warning");
+    showToast("Nombor WhatsApp tidak sah untuk murid ini.", "warning");
     return;
   }
 
   const itemsListText = JSON.parse(saved.butiranItem || "[]").map(i => `• ${i.label}: RM${i.paidPrice}`).join("\n");
-  const msg = `*RESIT PEMBAYARAN YURAN FATHUL QURANIC CENTRE (NS0326067-A)*\n\nNo. Resit: ${saved.noResit}\nNama Murid: ${saved.namaMurid}\nTarikh: ${saved.tarikh}\nBulan: ${saved.bulan}\nKaedah: ${saved.kaedahBayaran}\n\n*BUTIRAN YURAN:*\n${itemsListText}\n\n*JUMLAH KESELURUHAN: RM${saved.jumlah}*\n\nTerima kasih atas pembayaran yuran anak anda. Semoga dipertambahkan rezeki dan diberkati. Barokallahufik.`;
+  const msg = `Assalamualaikum. Terima kasih. Berikut adalah resit pembayaran yuran bagi ${saved.namaMurid} untuk bulan ${saved.bulan} 2026.\n\nNo. Resit: ${saved.noResit}\nTarikh: ${saved.tarikh}\nKaedah: ${saved.kaedahBayaran}\n\n*BUTIRAN YURAN:*\n${itemsListText}\n\n*JUMLAH PEMBAYARAN: RM${saved.jumlah}*\n\nTerima kasih.`;
   window.open(`https://wa.me/${phoneFormatted}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-function actionCetakResit() {
+function actionJanaGambarResit() {
+  const receiptEl = document.getElementById("receipt-paper");
+  if (!receiptEl) return;
+
+  if (typeof html2canvas !== "undefined") {
+    showLoading(true, "Menjana gambar resit PNG...");
+    html2canvas(receiptEl, { scale: 2 }).then(canvas => {
+      showLoading(false);
+      const imageUri = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = `Resit_FQC_${appState.currentReceiptNo}.png`;
+      link.href = imageUri;
+      link.click();
+      showToast("Gambar resit berjaya dijana dan dimuat turun!", "success");
+    }).catch(err => {
+      showLoading(false);
+      showToast("Gagal menjana gambar resit: " + err, "error");
+    });
+  } else {
+    showToast("Fungsi jana gambar sedia ada. Sila cetak resit.", "info");
+    window.print();
+  }
+}
+
+function actionPDFResit() {
   window.print();
 }
 
@@ -607,61 +661,160 @@ function actionResetBorang() {
   showToast("Borang telah dibersihkan.", "info");
 }
 
-function saveLocalStoragePayments() {
-  safeSetStorage("fqc_payments_db", JSON.stringify(appState.payments));
-}
-
+function saveLocalStoragePayments() { safeSetStorage("fqc_payments_db", JSON.stringify(appState.payments)); }
 function loadLocalStoragePayments() {
-  const localData = safeGetStorage("fqc_payments_db");
-  if (localData) {
-    try {
-      const parsed = JSON.parse(localData);
-      if (Array.isArray(parsed)) appState.payments = parsed;
-    } catch (e) {}
-  }
+  const data = safeGetStorage("fqc_payments_db");
+  if (data) { try { appState.payments = JSON.parse(data); } catch (e) {} }
+}
+function saveLocalStorageStudents() { safeSetStorage("fqc_students_db", JSON.stringify(appState.students)); }
+function loadLocalStorageStudents() {
+  const data = safeGetStorage("fqc_students_db");
+  if (data) { try { const parsed = JSON.parse(data); if (Array.isArray(parsed) && parsed.length > 0) appState.students = parsed; } catch (e) {} }
 }
 
-function renderDashboard() {
-  const filterMonth = document.getElementById("dash-month-filter")?.value || document.getElementById("pay-month")?.value || "OGOS";
-  
-  const paidNamesSet = new Set();
-  appState.payments.forEach(p => {
-    if (p.bulan && p.bulan.toUpperCase() === filterMonth.toUpperCase() && p.namaMurid) {
-      paidNamesSet.add(p.namaMurid.trim().toLowerCase());
+// Kemaskini Data Action (Button in Dashboard)
+async function actionRefreshAllData() {
+  showLoading(true, "Mengambil data terbaru daripada database Google Sheets / AppSheet...");
+  appState.lastUpdated = new Date().toLocaleString("ms-MY");
+  const stampEl = document.getElementById("dash-last-updated");
+  if (stampEl) stampEl.innerText = `Dikemaskini terakhir: ${appState.lastUpdated}`;
+
+  await fetchStudentsFromBackend(false);
+  await fetchPaymentHistoryFromBackend(false);
+
+  showLoading(false);
+  renderDashboard();
+  renderHistoryTable();
+  renderUnpaidSection();
+  showToast("Data murid, rekod bayaran, dan status tunggakan berjaya dikemaskini!", "success");
+}
+
+// Unpaid Calculation Logic based on Enrolled Student Categories
+function getUnpaidStudentsForMonth(monthName) {
+  const filterMonth = monthName.toUpperCase();
+  const activeStudents = appState.students.filter(s => s.status !== "TIDAK AKTIF");
+  const unpaidList = [];
+
+  activeStudents.forEach(student => {
+    const studentPayments = appState.payments.filter(p => p.bulan && p.bulan.toUpperCase() === filterMonth && p.namaMurid.trim().toLowerCase() === student.nama.trim().toLowerCase());
+    
+    // Check categories enrolled for this student
+    const enrolledCategories = [];
+    if (student.mengaji === "YA") enrolledCategories.push({ name: "Mengaji", stdPrice: student.hargaMengaji || 100 });
+    if (student.transit === "YA") enrolledCategories.push({ name: "Transit", stdPrice: student.hargaTransit || 260 });
+    if (student.jawi === "YA") enrolledCategories.push({ name: "Jawi", stdPrice: 100 });
+    if (student.upkk === "YA") enrolledCategories.push({ name: "UPKK", stdPrice: 100 });
+    if (student.psra === "YA") enrolledCategories.push({ name: "PSRA", stdPrice: 100 });
+    if (student.kafa === "YA") enrolledCategories.push({ name: "KAFA", stdPrice: 100 });
+    if (student.akademik === "YA") enrolledCategories.push({ name: "Akademik", stdPrice: student.hargaAkademik || 40 });
+    if (student.online === "YA") enrolledCategories.push({ name: "Mengaji Online", stdPrice: 150 });
+
+    if (enrolledCategories.length === 0) {
+      enrolledCategories.push({ name: "Mengaji", stdPrice: 100 });
+    }
+
+    // Check which categories have been paid in studentPayments
+    const paidCategoriesSet = new Set();
+    studentPayments.forEach(p => {
+      let items = [];
+      try { items = typeof p.butiranItem === 'string' ? JSON.parse(p.butiranItem) : p.butiranItem; } catch(e) {}
+      if (Array.isArray(items) && items.length > 0) {
+        items.forEach(it => {
+          const groupName = (it.group || it.label || "").toLowerCase();
+          if (groupName.includes("mengaji online")) paidCategoriesSet.add("Mengaji Online");
+          else if (groupName.includes("mengaji")) paidCategoriesSet.add("Mengaji");
+          if (groupName.includes("transit")) paidCategoriesSet.add("Transit");
+          if (groupName.includes("jawi")) paidCategoriesSet.add("Jawi");
+          if (groupName.includes("upkk")) paidCategoriesSet.add("UPKK");
+          if (groupName.includes("psra")) paidCategoriesSet.add("PSRA");
+          if (groupName.includes("kafa")) paidCategoriesSet.add("KAFA");
+          if (groupName.includes("akademik")) paidCategoriesSet.add("Akademik");
+        });
+      } else if (p.jumlah > 0) {
+        // Fallback: assume paid main enrolled category if total paid >= price
+        enrolledCategories.forEach(cat => paidCategoriesSet.add(cat.name));
+      }
+    });
+
+    const unpaidCategories = enrolledCategories.filter(cat => !paidCategoriesSet.has(cat.name));
+
+    if (unpaidCategories.length > 0) {
+      const categoryText = unpaidCategories.map(c => c.name).join(", ");
+      const totalAmountUnpaid = unpaidCategories.reduce((sum, c) => sum + c.stdPrice, 0);
+      unpaidList.push({
+        student: student,
+        unpaidCategories: unpaidCategories,
+        categoryText: categoryText,
+        totalAmount: totalAmountUnpaid
+      });
     }
   });
 
-  const unpaidStudents = appState.students.filter(s => !paidNamesSet.has(s.nama.trim().toLowerCase()));
-  const paidCount = appState.students.length - unpaidStudents.length;
-  const totalKutipan = appState.payments.reduce((acc, p) => acc + (parseFloat(p.jumlah) || 0), 0);
+  return unpaidList;
+}
 
-  if (document.getElementById("dash-total-kutipan")) document.getElementById("dash-total-kutipan").innerText = `RM ${totalKutipan.toFixed(0)}`;
-  if (document.getElementById("dash-total-murid")) document.getElementById("dash-total-murid").innerText = appState.students.length;
+function renderDashboard() {
+  const filterMonth = document.getElementById("dash-month-filter")?.value || "OGOS";
+  
+  const unpaidItems = getUnpaidStudentsForMonth(filterMonth);
+  const activeStudents = appState.students.filter(s => s.status !== "TIDAK AKTIF");
+  const paidCount = activeStudents.length - unpaidItems.length;
+
+  // Calculate Cumulative overall collections Jan to current month
+  const monthsMalay = ["JANUARI", "FEBRUARI", "MAC", "APRIL", "MEI", "JUN", "JULAI", "OGOS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DISEMBER"];
+  const currentMonthIdx = new Date().getMonth();
+  
+  let totalOverallJanToNow = 0;
+  appState.payments.forEach(p => {
+    const itemMonth = p.bulan ? p.bulan.toUpperCase() : "";
+    const monthIdx = monthsMalay.indexOf(itemMonth);
+    if (monthIdx !== -1 && monthIdx <= currentMonthIdx) {
+      totalOverallJanToNow += (parseFloat(p.jumlah) || 0);
+    }
+  });
+
+  if (document.getElementById("dash-total-kutipan")) document.getElementById("dash-total-kutipan").innerText = `RM ${totalOverallJanToNow.toFixed(0)}`;
+  if (document.getElementById("dash-total-murid")) document.getElementById("dash-total-murid").innerText = activeStudents.length;
   if (document.getElementById("dash-total-sudah-bayar")) document.getElementById("dash-total-sudah-bayar").innerText = paidCount;
-  if (document.getElementById("dash-total-belum-bayar")) document.getElementById("dash-total-belum-bayar").innerText = unpaidStudents.length;
+  if (document.getElementById("dash-total-belum-bayar")) document.getElementById("dash-total-belum-bayar").innerText = unpaidItems.length;
+  if (document.getElementById("dash-total-transaksi")) document.getElementById("dash-total-transaksi").innerText = appState.payments.length;
 
+  renderUnpaidTable(unpaidItems, filterMonth);
+  renderMonthlySummaryGrid();
+}
+
+function renderUnpaidSection() {
+  const filterMonth = document.getElementById("unpaid-month-filter")?.value || document.getElementById("dash-month-filter")?.value || "OGOS";
+  const unpaidItems = getUnpaidStudentsForMonth(filterMonth);
+  renderUnpaidTable(unpaidItems, filterMonth);
+}
+
+function renderUnpaidTable(unpaidItems, filterMonth) {
   const unpaidTbody = document.getElementById("unpaid-table-body");
   if (!unpaidTbody) return;
 
-  if (unpaidStudents.length === 0) {
-    unpaidTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:1.25rem; color:#15803d; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Tahniah! Semua ${appState.students.length} murid telah membuat pembayaran bagi bulan ${filterMonth}!</td></tr>`;
+  if (unpaidItems.length === 0) {
+    unpaidTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:1.25rem; color:#15803d; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Tahniah! Semua murid telah membuat pembayaran penuh bagi bulan ${filterMonth}!</td></tr>`;
     return;
   }
 
   let html = "";
-  unpaidStudents.forEach((student, idx) => {
+  unpaidItems.forEach((item, idx) => {
+    const s = item.student;
     html += `
       <tr>
         <td>${idx + 1}</td>
-        <td><strong>${student.nama}</strong></td>
-        <td>${student.phone || '-'}</td>
-        <td><span class="badge-unpaid"><i class="fa-solid fa-clock"></i> Belum Bayar (${filterMonth})</span></td>
+        <td><strong>${s.nama}</strong></td>
+        <td>${s.phone || '-'}</td>
+        <td><span class="badge-unpaid"><i class="fa-solid fa-triangle-exclamation"></i> ${item.categoryText}</span></td>
+        <td><strong>RM ${item.totalAmount}</strong></td>
+        <td><span class="badge-unpaid">Belum Bayar</span></td>
         <td style="display:flex; gap:0.4rem;">
-          <button class="btn btn-whatsapp" style="padding:4px 8px; font-size:0.75rem;" onclick="sendWaReminder('${student.nama.replace(/'/g, "\\'")}', '${student.phone || ''}', '${filterMonth}')">
-            <i class="fa-brands fa-whatsapp"></i> Peringatan WA
+          <button class="btn btn-whatsapp" style="padding:4px 8px; font-size:0.75rem;" onclick="sendWaReminder('${s.nama.replace(/'/g, "\\'")}', '${s.phone || ''}', '${filterMonth}', '${item.categoryText}')">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp
           </button>
-          <button class="btn btn-primary" style="padding:4px 8px; font-size:0.75rem;" onclick="payForStudent('${student.nama.replace(/'/g, "\\'")}')">
-            <i class="fa-solid fa-cash-register"></i> Bayar Now
+          <button class="btn btn-primary" style="padding:4px 8px; font-size:0.75rem;" onclick="payForStudent('${s.nama.replace(/'/g, "\\'")}')">
+            <i class="fa-solid fa-cash-register"></i> Bayar
           </button>
         </td>
       </tr>
@@ -670,26 +823,89 @@ function renderDashboard() {
   unpaidTbody.innerHTML = html;
 }
 
-function sendWaReminder(studentName, phone, month) {
+function sendWaReminder(studentName, phone, month, categoryText) {
   const phoneFormatted = formatWhatsAppPhone(phone);
-  if (!phoneFormatted) {
-    showToast("Nombor WhatsApp tidak sah untuk murid ini.", "warning");
-    return;
-  }
-  const msg = `*PERINGATAN MESRA BAYARAN YURAN FATHUL QURANIC CENTRE (FQC)*\n\nAssalamu'alaikum / Salam Sejahtera Ibu/Bapa ${studentName},\n\nIni adalah peringatan mesra berkenaan yuran pengajian bulan *${month}* bagi murid *${studentName}* yang belum dijelaskan.\n\nMohon ibu/bapa membuat makluman atau pembayaran yuran. Terima kasih atas kerjasama dan keprihatinan ibu/bapa.\n\nBarakallahufik,\n*Fathul Quranic Centre (NS0326067-A)*`;
+  if (!phoneFormatted) { showToast("Nombor WhatsApp tidak sah.", "warning"); return; }
+  const msg = `Assalamualaikum. Makluman, bayaran yuran bagi ${studentName} untuk bulan ${month} (${categoryText}) masih belum direkodkan. Mohon semak pembayaran. Terima kasih.`;
   window.open(`https://wa.me/${phoneFormatted}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
 function payForStudent(studentName) {
   const student = appState.students.find(s => s.nama.toLowerCase() === studentName.toLowerCase());
   if (student) {
-    appState.selectedStudent = student;
-    const searchInput = document.getElementById("student-search-input");
-    if (searchInput) searchInput.value = student.nama;
-    const phoneDisplay = document.getElementById("parent-phone-display");
-    if (phoneDisplay) phoneDisplay.value = student.phone || '';
+    selectStudent(student);
   }
   switchView('bayaran');
+}
+
+// Export Unpaid Students to Excel (.xlsx)
+function exportUnpaidToExcel() {
+  const monthSelect = document.getElementById("dash-month-filter")?.value || document.getElementById("unpaid-month-filter")?.value || "OGOS";
+  const unpaidItems = getUnpaidStudentsForMonth(monthSelect);
+  
+  if (unpaidItems.length === 0) {
+    showToast(`Tiada senarai tunggakan bagi bulan ${monthSelect} untuk dieksport.`, "info");
+    return;
+  }
+
+  const exportData = unpaidItems.map((item, idx) => ({
+    "Bil": idx + 1,
+    "Nama Murid": item.student.nama,
+    "No. WhatsApp": item.student.phone || "-",
+    "Kategori": item.categoryText,
+    "Jenis Yuran": "Yuran Bulanan",
+    "Jumlah (RM)": item.totalAmount,
+    "Bulan": monthSelect,
+    "Status": "Belum Bayar"
+  }));
+
+  if (typeof XLSX !== "undefined") {
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Belum Bayar");
+    const fileName = `Senarai_Belum_Bayar_FQC_${monthSelect}_2026.xlsx`;
+    XLSX.writeFile(wb, fileName);
+    showToast(`Fail Excel ${fileName} berjaya dijana dan dimuat turun!`, "success");
+  } else {
+    // Fallback to CSV
+    let csvContent = "data:text/csv;charset=utf-8,Bil,Nama Murid,No WhatsApp,Kategori,Jenis Yuran,Jumlah,Bulan,Status\n";
+    exportData.forEach(row => {
+      csvContent += `${row["Bil"]},"${row["Nama Murid"]}","${row["No. WhatsApp"]}","${row["Kategori"]}",Yuran Bulanan,${row["Jumlah (RM)"]},${row["Bulan"]},Belum Bayar\n`;
+    });
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `Senarai_Belum_Bayar_FQC_${monthSelect}_2026.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast("Senarai tunggakan berjaya dieksport ke CSV!", "success");
+  }
+}
+
+function renderMonthlySummaryGrid() {
+  const gridContainer = document.getElementById("monthly-summary-container");
+  if (!gridContainer) return;
+
+  const monthsMalay = ["JANUARI", "FEBRUARI", "MAC", "APRIL", "MEI", "JUN", "JULAI", "OGOS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DISEMBER"];
+  const monthlySumMap = {};
+  monthsMalay.forEach(m => monthlySumMap[m] = 0);
+
+  appState.payments.forEach(p => {
+    const m = p.bulan ? p.bulan.toUpperCase() : "";
+    if (monthlySumMap[m] !== undefined) monthlySumMap[m] += (parseFloat(p.jumlah) || 0);
+  });
+
+  let html = "";
+  monthsMalay.forEach(m => {
+    html += `
+      <div style="background:var(--surface-card); border:1px solid var(--border-color); padding:0.75rem; border-radius:var(--radius-sm); text-align:center;">
+        <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">${m}</div>
+        <div style="font-size:1.1rem; font-weight:800; color:var(--primary-dark); margin-top:2px;">RM ${monthlySumMap[m].toFixed(0)}</div>
+      </div>
+    `;
+  });
+  gridContainer.innerHTML = html;
 }
 
 function renderHistoryTable() {
@@ -707,12 +923,12 @@ function renderHistoryTable() {
       <tr>
         <td><strong>${p.noResit || '-'}</strong></td>
         <td>${p.tarikh || '-'}</td>
-        <td>${p.namaMurid || '-'}</td>
+        <td><strong>${p.namaMurid || '-'}</strong></td>
         <td>${p.bulan || '-'}</td>
         <td><strong>RM ${parseFloat(p.jumlah || 0).toFixed(0)}</strong></td>
         <td><span class="header-badge" style="display:inline-flex;">${p.kaedahBayaran || 'TUNAI'}</span></td>
         <td>
-          <button class="btn btn-outline" style="padding:4px 8px; font-size:0.75rem;" onclick="cetakResitRekod(${idx})"><i class="fa-solid fa-print"></i> Resit</button>
+          <button class="btn btn-outline" style="padding:4px 8px; font-size:0.75rem;" onclick="cetakResitRekod(${idx})"><i class="fa-solid fa-eye"></i> Lihat Resit</button>
         </td>
       </tr>
     `;
@@ -732,16 +948,16 @@ function cetakResitRekod(idx) {
 
   const tableBody = document.getElementById("rc-table-body");
   let items = [];
-  try { items = JSON.parse(p.butiranItem || "[]"); } catch (e) {}
+  try { items = typeof p.butiranItem === 'string' ? JSON.parse(p.butiranItem) : p.butiranItem; } catch (e) {}
   
   if (tableBody) {
     let html = "";
-    if (items.length > 0) {
+    if (Array.isArray(items) && items.length > 0) {
       items.forEach(it => {
-        html += `<tr class="active-item"><td>${it.label}</td><td style="text-align:center;">-</td><td style="text-align:center;">${p.bulan}</td><td class="amount-cell">${it.paidPrice}</td></tr>`;
+        html += `<tr class="active-item"><td>${it.label}</td><td style="text-align:center;">${it.group || '-'}</td><td style="text-align:center;">${p.bulan}</td><td class="amount-cell">${it.paidPrice}</td></tr>`;
       });
     } else {
-      html = `<tr><td colspan="4" style="text-align:center;">Jumlah Yuran Dibayar: RM ${p.jumlah}</td></tr>`;
+      html = `<tr class="active-item"><td>Yuran Pengajian ${p.bulan}</td><td style="text-align:center;">Umum</td><td style="text-align:center;">${p.bulan}</td><td class="amount-cell">${p.jumlah}</td></tr>`;
     }
     tableBody.innerHTML = html;
   }
@@ -749,6 +965,127 @@ function cetakResitRekod(idx) {
   if (document.getElementById("rc-total-amount")) document.getElementById("rc-total-amount").innerText = `RM${p.jumlah}`;
   switchView('bayaran');
   showToast(`Melihat Resit ${p.noResit}`, "info");
+}
+
+// Student Table & CRUD View
+function renderStudentTable() {
+  const tbody = document.getElementById("student-table-body");
+  if (!tbody) return;
+
+  let html = "";
+  appState.students.forEach((s, idx) => {
+    const categoryBadges = getCategoryBadgesHtml(s);
+    html += `
+      <tr>
+        <td>${s.id || (idx + 1)}</td>
+        <td><strong>${s.nama}</strong></td>
+        <td>${s.parent || '-'}</td>
+        <td>${s.phone || '-'}</td>
+        <td>${categoryBadges}</td>
+        <td><span class="${s.status === 'AKTIF' ? 'badge-paid' : 'badge-unpaid'}">${s.status}</span></td>
+        <td>
+          <button class="btn btn-outline" style="padding:4px 8px; font-size:0.75rem;" onclick="openEditStudentModal(${idx})"><i class="fa-solid fa-pen"></i> Edit</button>
+        </td>
+      </tr>
+    `;
+  });
+  tbody.innerHTML = html;
+}
+
+function openAddStudentModal() {
+  document.getElementById("modal-student-title").innerText = "Tambah Murid Baharu";
+  document.getElementById("modal-student-id").value = "";
+  document.getElementById("modal-student-nama").value = "";
+  document.getElementById("modal-student-parent").value = "";
+  document.getElementById("modal-student-phone").value = "";
+  document.getElementById("modal-student-status").value = "AKTIF";
+
+  document.getElementById("modal-chk-mengaji").checked = true;
+  document.getElementById("modal-chk-transit").checked = false;
+  document.getElementById("modal-chk-jawi").checked = false;
+  document.getElementById("modal-chk-kafa").checked = false;
+  document.getElementById("modal-chk-upkk").checked = false;
+  document.getElementById("modal-chk-psra").checked = false;
+  document.getElementById("modal-chk-akademik").checked = false;
+  document.getElementById("modal-chk-online").checked = false;
+
+  document.getElementById("student-modal-backdrop")?.classList.add("show");
+}
+
+function openEditStudentModal(idx) {
+  const s = appState.students[idx];
+  if (!s) return;
+
+  document.getElementById("modal-student-title").innerText = "Kemaskini Profil Murid";
+  document.getElementById("modal-student-id").value = s.id || (idx + 1);
+  document.getElementById("modal-student-nama").value = s.nama;
+  document.getElementById("modal-student-parent").value = s.parent || "";
+  document.getElementById("modal-student-phone").value = s.phone || "";
+  document.getElementById("modal-student-status").value = s.status || "AKTIF";
+
+  document.getElementById("modal-chk-mengaji").checked = s.mengaji === "YA";
+  document.getElementById("modal-chk-transit").checked = s.transit === "YA";
+  document.getElementById("modal-chk-jawi").checked = s.jawi === "YA";
+  document.getElementById("modal-chk-kafa").checked = s.kafa === "YA";
+  document.getElementById("modal-chk-upkk").checked = s.upkk === "YA";
+  document.getElementById("modal-chk-psra").checked = s.psra === "YA";
+  document.getElementById("modal-chk-akademik").checked = s.akademik === "YA";
+  document.getElementById("modal-chk-online").checked = s.online === "YA";
+
+  document.getElementById("student-modal-backdrop")?.classList.add("show");
+}
+
+function closeStudentModal() {
+  document.getElementById("student-modal-backdrop")?.classList.remove("show");
+}
+
+async function saveStudentFromModal() {
+  const nama = document.getElementById("modal-student-nama").value.trim();
+  if (!nama) { showToast("Sila masukkan nama murid.", "warning"); return; }
+
+  const id = document.getElementById("modal-student-id").value;
+  const parent = document.getElementById("modal-student-parent").value.trim();
+  const phone = document.getElementById("modal-student-phone").value.trim();
+  const status = document.getElementById("modal-student-status").value;
+
+  const studentObj = {
+    id: id || (appState.students.length + 1),
+    nama: nama,
+    parent: parent,
+    phone: phone,
+    status: status,
+    mengaji: document.getElementById("modal-chk-mengaji").checked ? "YA" : "TIDAK",
+    transit: document.getElementById("modal-chk-transit").checked ? "YA" : "TIDAK",
+    jawi: document.getElementById("modal-chk-jawi").checked ? "YA" : "TIDAK",
+    kafa: document.getElementById("modal-chk-kafa").checked ? "YA" : "TIDAK",
+    upkk: document.getElementById("modal-chk-upkk").checked ? "YA" : "TIDAK",
+    psra: document.getElementById("modal-chk-psra").checked ? "YA" : "TIDAK",
+    akademik: document.getElementById("modal-chk-akademik").checked ? "YA" : "TIDAK",
+    online: document.getElementById("modal-chk-online").checked ? "YA" : "TIDAK",
+    hargaMengaji: 100, hargaAkademik: 40, hargaTransit: 260, catatan: ""
+  };
+
+  const existingIdx = appState.students.findIndex(s => s.id == studentObj.id || s.nama.toLowerCase() === nama.toLowerCase());
+  if (existingIdx !== -1) appState.students[existingIdx] = studentObj;
+  else appState.students.push(studentObj);
+
+  saveLocalStorageStudents();
+  closeStudentModal();
+  renderStudentTable();
+  renderDashboard();
+
+  if (typeof google !== "undefined" && google.script && google.script.run) {
+    google.script.run.saveStudent(studentObj);
+  } else if (appState.appsScriptUrl) {
+    try {
+      fetch(appState.appsScriptUrl, {
+        method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "saveStudent", payload: studentObj })
+      });
+    } catch(e) {}
+  }
+
+  showToast("Profil murid berjaya disimpan!", "success");
 }
 
 async function fetchStudentsFromBackend(showToastMsg = false) {
@@ -760,9 +1097,10 @@ async function fetchStudentsFromBackend(showToastMsg = false) {
         if (showToastMsg) showLoading(false);
         if (Array.isArray(studentsData) && studentsData.length > 0) {
           appState.students = studentsData;
-          initStudentSearch();
+          saveLocalStorageStudents();
           renderDashboard();
-          if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik dari Google Sheets!`, "success");
+          renderStudentTable();
+          if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik!`, "success");
         }
       })
       .withFailureHandler(function(err) {
@@ -779,9 +1117,10 @@ async function fetchStudentsFromBackend(showToastMsg = false) {
     if (showToastMsg) showLoading(false);
     if (data.success && Array.isArray(data.data) && data.data.length > 0) {
       appState.students = data.data;
-      initStudentSearch();
+      saveLocalStorageStudents();
       renderDashboard();
-      if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik dari Google Sheets!`, "success");
+      renderStudentTable();
+      if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik!`, "success");
     }
   } catch (err) {
     if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid.", "error"); }

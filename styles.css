@@ -197,6 +197,16 @@ body {
   gap: 0.4rem;
 }
 
+.last-updated-badge {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
 .content-body {
   padding: 1.75rem 2rem;
   flex-grow: 1;
@@ -219,7 +229,7 @@ body {
 /* Dashboard Cards Grid */
 .dashboard-metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   gap: 1.25rem;
   margin-bottom: 1.75rem;
 }
@@ -242,8 +252,8 @@ body {
 }
 
 .metric-info h3 {
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -275,9 +285,23 @@ body {
   gap: 1.75rem;
 }
 
+.receipt-column {
+  order: 1;
+}
+
+.form-column {
+  order: 2;
+}
+
 @media (max-width: 1024px) {
   .payment-grid {
     grid-template-columns: 1fr;
+  }
+  .receipt-column {
+    order: 2;
+  }
+  .form-column {
+    order: 1;
   }
 }
 
@@ -361,7 +385,7 @@ body {
   background: #ffffff;
   border: 1.5px solid var(--primary-main);
   border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-  max-height: 200px;
+  max-height: 220px;
   overflow-y: auto;
   z-index: 50;
   display: none;
@@ -373,10 +397,11 @@ body {
 }
 
 .option-item {
-  padding: 0.6rem 0.85rem;
+  padding: 0.65rem 0.85rem;
   font-size: 0.88rem;
   cursor: pointer;
   transition: background 0.15s ease;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .option-item:hover {
@@ -466,7 +491,6 @@ body {
   border: 1.5px solid #cbd5e1;
   border-radius: 6px;
   padding: 2px 6px;
-  width: 105px;
 }
 
 .fee-checkbox-card.checked .fee-card-price-group {
@@ -481,7 +505,7 @@ body {
 }
 
 .fee-card-price-input {
-  width: 100%;
+  width: 65px;
   border: none;
   background: transparent;
   text-align: right;
@@ -490,6 +514,16 @@ body {
   color: #1e293b;
   padding: 3px 2px;
   outline: none;
+}
+
+.fee-card-price-select {
+  border: none;
+  background: transparent;
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: #1e293b;
+  outline: none;
+  cursor: pointer;
 }
 
 .total-summary-card {
@@ -540,7 +574,7 @@ body {
 /* Payment Method Radios */
 .payment-method-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   gap: 0.6rem;
   margin-top: 0.5rem;
 }
@@ -575,10 +609,10 @@ body {
   color: var(--primary-dark);
 }
 
-/* Receipt Preview Styling (Exact A4 Printable Format) */
+/* Receipt Preview Styling (Exact Box Printable Format) */
 .receipt-paper {
   background: #ffffff;
-  border: 1px solid #cbd5e1;
+  border: 2px solid #1b4d2e;
   border-radius: var(--radius-md);
   padding: 2rem;
   box-shadow: var(--shadow-md);
@@ -652,6 +686,7 @@ body {
   padding: 0.85rem 1rem;
   border-radius: var(--radius-sm);
   font-size: 0.85rem;
+  border: 1px solid var(--border-color);
 }
 
 .receipt-meta-item {
@@ -675,6 +710,7 @@ body {
   border-collapse: collapse;
   margin-bottom: 1.5rem;
   font-size: 0.85rem;
+  border: 1px solid var(--border-color);
 }
 
 .receipt-table th {
@@ -745,6 +781,7 @@ body {
 /* Action Toolbar */
 .action-toolbar {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 1.25rem;
 }
@@ -784,6 +821,36 @@ body {
   box-shadow: 0 4px 12px rgba(37,211,102,0.3);
 }
 
+.btn-pdf {
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.btn-pdf:hover {
+  background: #b91c1c;
+  box-shadow: 0 4px 12px rgba(220,38,38,0.3);
+}
+
+.btn-image {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+.btn-image:hover {
+  background: #0369a1;
+  box-shadow: 0 4px 12px rgba(2,132,199,0.3);
+}
+
+.btn-excel {
+  background: #15803d;
+  color: #ffffff;
+}
+
+.btn-excel:hover {
+  background: #166534;
+  box-shadow: 0 4px 12px rgba(21,128,61,0.3);
+}
+
 .btn-outline {
   background: transparent;
   border: 1.5px solid var(--border-color);
@@ -795,23 +862,32 @@ body {
   background: var(--surface-subtle);
 }
 
-.btn-refresh-students {
-  background: transparent;
-  border: none;
-  color: var(--primary-main);
-  font-size: 0.78rem;
+/* Category Badges */
+.cat-tag {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
   font-weight: 700;
-  cursor: pointer;
-  margin-left: 6px;
+  margin-right: 4px;
+  margin-bottom: 4px;
 }
 
-.btn-refresh-students:hover {
-  text-decoration: underline;
-}
+.cat-mengaji { background: #dcfce7; color: #15803d; }
+.cat-transit { background: #fef3c7; color: #b45309; }
+.cat-jawi { background: #e0e7ff; color: #4338ca; }
+.cat-upkk { background: #fce7f3; color: #be185d; }
+.cat-psra { background: #fae8ff; color: #86198f; }
+.cat-kafa { background: #ccfbf1; color: #0f766e; }
+.cat-akademik { background: #dbeafe; color: #1d4ed8; }
+.cat-online { background: #ffedd5; color: #c2410c; }
 
 /* Data Table */
 .data-table-container {
   overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: #ffffff;
 }
 
 .data-table {
@@ -836,6 +912,60 @@ body {
 
 .data-table tr:hover {
   background: var(--primary-soft);
+}
+
+/* Modal Dialog */
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1500;
+  opacity: 0;
+  pointer-events: none;
+  transition: var(--transition);
+}
+
+.modal-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  width: 90%;
+  max-width: 650px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  padding: 1.5rem;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 1rem;
+}
+
+.modal-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: var(--text-muted);
 }
 
 /* Toast Notification & Loading Overlay */
@@ -932,6 +1062,9 @@ body {
   }
   .payment-method-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .action-toolbar .btn {
+    width: 100%;
   }
 }
 

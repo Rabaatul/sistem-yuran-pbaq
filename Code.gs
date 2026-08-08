@@ -4,12 +4,15 @@
  * ==============================================================================
  * Backend Google Apps Script (Code.gs)
  * Spreadsheet ID: 1DsLcgM7PHMpgVd1MkPCtzCuKDWk0g007SgrDvBv3MTk
+ * AppSheet Database Compatible Architecture
  */
 
 const CONFIG = {
   spreadsheetId: "1DsLcgM7PHMpgVd1MkPCtzCuKDWk0g007SgrDvBv3MTk",
   studentSheet: "MURID",
   paymentSheet: "PEMBAYARAN",
+  paymentDetailSheet: "BUTIRAN_PEMBAYARAN",
+  feeSettingsSheet: "TETAPAN_YURAN",
   specialRatesSheet: "HARGA_KHAS",
   centreName: "Fathul Quranic Centre (FQC) (NS0326067-A)",
   receiptPrefix: "FQC-",
@@ -18,34 +21,34 @@ const CONFIG = {
 
 // Master Data 28 Murid FQC Terbaharu
 const MASTER_STUDENTS = [
-  { id: 1, nama: "Syed Mohd Alwi Bin Syed Mohamed", phone: "0145366009", status: "AKTIF" },
-  { id: 2, nama: "Faid Fareed Bin Mohd Shah Fitri", phone: "01481810192", status: "AKTIF" },
-  { id: 3, nama: "Mohd Fadzli Bin Ab Wahab", phone: "01133323707", status: "AKTIF" },
-  { id: 4, nama: "Nur Aliyah Binti Muhammad A'fifi", phone: "0133447681", status: "AKTIF" },
-  { id: 5, nama: "Nur Inas Tihani Binti Muhammed Nasri", phone: "0179378264", status: "AKTIF" },
-  { id: 6, nama: "Fidatul Fitriah Binti Fazli", phone: "0176826787", status: "AKTIF" },
-  { id: 7, nama: "Nur Damia Arissa Bt Faizol Azimi", phone: "0132955402", status: "AKTIF" },
-  { id: 8, nama: "Alya Sofia Binti Aris", phone: "0173235786", status: "AKTIF" },
-  { id: 9, nama: "Tengku Aqill Hafy Bin Tengku Shahrizal", phone: "0133440896", status: "AKTIF" },
-  { id: 10, nama: "Muhammad Aathif Adhwa Bin Mohd Fazli", phone: "0123209953", status: "AKTIF" },
-  { id: 11, nama: "Nur Aimy Safiy Binti Shaiful Azmi", phone: "0108901030", status: "AKTIF" },
-  { id: 12, nama: "Muhammad Harith Bin Muhamad Hosni", phone: "0173409430", status: "AKTIF" },
-  { id: 13, nama: "Nur Ayesha Zahira Binti Abdullah Zawawie", phone: "0132410737", status: "AKTIF" },
-  { id: 14, nama: "Wan Nadzrin Afeef Bin Wan Ibrahim Jefri", phone: "01110081660", status: "AKTIF" },
-  { id: 15, nama: "Hilal Sufi Bin Hasrull Nizam", phone: "0193593693", status: "AKTIF" },
-  { id: 16, nama: "Maira Yusreena Binti Muhamad Yazid", phone: "0129878510", status: "AKTIF" },
-  { id: 17, nama: "Izz Zara Sofia Binti Mohd Safarudin", phone: "0162710027", status: "AKTIF" },
-  { id: 18, nama: "Ammar Luqman Bin Shamsudin", phone: "0172382980", status: "AKTIF" },
-  { id: 19, nama: "Ainan Salsabila Binti Hafiz Anuar", phone: "0139311818", status: "AKTIF" },
-  { id: 20, nama: "Arissa Medina Bt Ahmad Fauzi", phone: "0129425926", status: "AKTIF" },
-  { id: 21, nama: "Ammar Ramadhan Bin Ahmad Fauzi", phone: "0129425926", status: "AKTIF" },
-  { id: 22, nama: "Muhammad Rizal Arshad Bin Mohd Rosmizam", phone: "0129343676", status: "AKTIF" },
-  { id: 23, nama: "Nur Raisha Adawiyah Binti Mohd Rosmizam", phone: "0129343676", status: "AKTIF" },
-  { id: 24, nama: "Aisyah Humaira Bt Lukman", phone: "0196550670", status: "AKTIF" },
-  { id: 25, nama: "Izarra Khaiyrra Bt Mohd Aris", phone: "0199872971", status: "AKTIF" },
-  { id: 26, nama: "Ahmad Aariz Dayyan B. Mohd Kamalludin", phone: "0132315660", status: "AKTIF" },
-  { id: 27, nama: "Nur Aisya' Qaseh Bt Aziman", phone: "0179890260", status: "AKTIF" },
-  { id: 28, nama: "NAJIHAH", phone: "0134565245", status: "AKTIF" }
+  { id: 1, nama: "Syed Mohd Alwi Bin Syed Mohamed", parent: "Syed Mohamed", phone: "0145366009", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 2, nama: "Faid Fareed Bin Mohd Shah Fitri", parent: "Mohd Shah Fitri", phone: "01481810192", status: "AKTIF", mengaji: "YA", transit: "YA", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 260, catatan: "" },
+  { id: 3, nama: "Mohd Fadzli Bin Ab Wahab", parent: "Ab Wahab", phone: "01133323707", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 4, nama: "Nur Aliyah Binti Muhammad A'fifi", parent: "Muhammad A'fifi", phone: "0133447681", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 5, nama: "Nur Inas Tihani Binti Muhammed Nasri", parent: "Muhammed Nasri", phone: "0179378264", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 6, nama: "Fidatul Fitriah Binti Fazli", parent: "Fazli", phone: "0176826787", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 7, nama: "Nur Damia Arissa Bt Faizol Azimi", parent: "Faizol Azimi", phone: "0132955402", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 8, nama: "Alya Sofia Binti Aris", parent: "Aris", phone: "0173235786", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 9, nama: "Tengku Aqill Hafy Bin Tengku Shahrizal", parent: "Tengku Shahrizal", phone: "0133440896", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 10, nama: "Muhammad Aathif Adhwa Bin Mohd Fazli", parent: "Mohd Fazli", phone: "0123209953", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 11, nama: "Nur Aimy Safiy Binti Shaiful Azmi", parent: "Shaiful Azmi", phone: "0108901030", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 12, nama: "Muhammad Harith Bin Muhamad Hosni", parent: "Muhamad Hosni", phone: "0173409430", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 13, nama: "Nur Ayesha Zahira Binti Abdullah Zawawie", parent: "Abdullah Zawawie", phone: "0132410737", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 14, nama: "Wan Nadzrin Afeef Bin Wan Ibrahim Jefri", parent: "Wan Ibrahim Jefri", phone: "01110081660", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 15, nama: "Hilal Sufi Bin Hasrull Nizam", parent: "Hasrull Nizam", phone: "0193593693", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 16, nama: "Maira Yusreena Binti Muhamad Yazid", parent: "Muhamad Yazid", phone: "0129878510", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 17, nama: "Izz Zara Sofia Binti Mohd Safarudin", parent: "Mohd Safarudin", phone: "0162710027", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 18, nama: "Ammar Luqman Bin Shamsudin", parent: "Shamsudin", phone: "0172382980", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 19, nama: "Ainan Salsabila Binti Hafiz Anuar", parent: "Hafiz Anuar", phone: "0139311818", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 20, nama: "Arissa Medina Bt Ahmad Fauzi", parent: "Ahmad Fauzi", phone: "0129425926", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 21, nama: "Ammar Ramadhan Bin Ahmad Fauzi", parent: "Ahmad Fauzi", phone: "0129425926", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 22, nama: "Muhammad Rizal Arshad Bin Mohd Rosmizam", parent: "Mohd Rosmizam", phone: "0129343676", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 23, nama: "Nur Raisha Adawiyah Binti Mohd Rosmizam", parent: "Mohd Rosmizam", phone: "0129343676", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 24, nama: "Aisyah Humaira Bt Lukman", parent: "Lukman", phone: "0196550670", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 25, nama: "Izarra Khaiyrra Bt Mohd Aris", parent: "Mohd Aris", phone: "0199872971", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 26, nama: "Ahmad Aariz Dayyan B. Mohd Kamalludin", parent: "Mohd Kamalludin", phone: "0132315660", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 27, nama: "Nur Aisya' Qaseh Bt Aziman", parent: "Aziman", phone: "0179890260", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" },
+  { id: 28, nama: "NAJIHAH", parent: "Ibu / Bapa Najihah", phone: "0134565245", status: "AKTIF", mengaji: "YA", transit: "TIDAK", jawi: "TIDAK", kafa: "TIDAK", upkk: "TIDAK", psra: "TIDAK", akademik: "TIDAK", online: "TIDAK", hargaMengaji: 100, hargaAkademik: 0, hargaTransit: 0, catatan: "" }
 ];
 
 /**
@@ -78,8 +81,8 @@ function doGet(e) {
     return createJsonResponse({ success: true, data: getStudents() });
   } else if (action === "getPayments" || action === "getPaymentHistory") {
     return createJsonResponse({ success: true, data: getPaymentHistory() });
-  } else if (action === "getSpecialRates") {
-    return createJsonResponse({ success: true, data: getSpecialRates() });
+  } else if (action === "getFeeSettings") {
+    return createJsonResponse({ success: true, data: getFeeSettings() });
   } else if (action === "getNextReceiptNumber") {
     return createJsonResponse({ success: true, data: getNextReceiptNumber() });
   } else if (action === "getDashboardData") {
@@ -129,12 +132,18 @@ function doPost(e) {
 
     if (action === "getStudents") {
       result = { success: true, data: getStudents() };
+    } else if (action === "saveStudent") {
+      result = saveStudent(payload);
     } else if (action === "savePayment") {
       result = savePayment(payload);
     } else if (action === "getNextReceiptNumber") {
       result = { success: true, data: getNextReceiptNumber() };
     } else if (action === "getPaymentHistory") {
       result = { success: true, data: getPaymentHistory() };
+    } else if (action === "getFeeSettings") {
+      result = { success: true, data: getFeeSettings() };
+    } else if (action === "saveFeeSettings") {
+      result = saveFeeSettings(payload);
     } else if (action === "getDashboardData") {
       result = { success: true, data: getDashboardData() };
     } else if (action === "setupDatabase") {
@@ -157,114 +166,137 @@ function createJsonResponse(data) {
 
 /**
  * 1. setupDatabase()
- * Menyiapkan sheet MURID dan PEMBAYARAN beserta data awal murid FQC
+ * Menyiapkan 4 Sheet Rasmi (MURID, PEMBAYARAN, BUTIRAN_PEMBAYARAN, TETAPAN_YURAN)
  */
 function setupDatabase() {
   try {
     var ss = getSpreadsheet();
     if (!ss) return { success: false, message: "Spreadsheet tidak ditemui." };
 
-    // --- SETUP SHEET MURID ---
+    // --- SHEET 1: MURID ---
     var sheetMurid = ss.getSheetByName(CONFIG.studentSheet);
-    if (!sheetMurid) {
-      sheetMurid = ss.insertSheet(CONFIG.studentSheet);
-    }
+    if (!sheetMurid) sheetMurid = ss.insertSheet(CONFIG.studentSheet);
     
-    // Format semula Sheet MURID dengan susunan kolom rasmi: ID | NAMA MURID | NO WHATSAPP PARENT | STATUS
-    sheetMurid.clearContents();
-    
-    var headersMurid = ["ID", "NAMA MURID", "NO WHATSAPP PARENT", "STATUS"];
-    sheetMurid.appendRow(headersMurid);
-    
-    var headerRangeMurid = sheetMurid.getRange(1, 1, 1, 4);
-    headerRangeMurid.setBackground("#1b5e20")
-                      .setFontColor("#ffffff")
-                      .setFontWeight("bold")
-                      .setHorizontalAlignment("center");
-    sheetMurid.setFrozenRows(1);
+    var headersMurid = [
+      "ID_MURID", "NAMA_MURID", "NAMA_PARENT", "NO_WHATSAPP", "STATUS",
+      "MENGAJI", "MENGAJI_ONLINE", "AKADEMIK", "KAFA", "JAWI", "UPKK", "PSRA", "TRANSIT",
+      "HARGA_MENGAJI", "HARGA_AKADEMIK", "HARGA_TRANSIT", "CATATAN"
+    ];
 
-    // Format Kolom C (No WhatsApp) sebagai Text '@' untuk simpan 0 di hadapan
-    sheetMurid.getRange("C:C").setNumberFormat("@");
+    if (sheetMurid.getLastRow() === 0) {
+      sheetMurid.appendRow(headersMurid);
+      sheetMurid.getRange(1, 1, 1, headersMurid.length)
+                .setBackground("#1b5e20")
+                .setFontColor("#ffffff")
+                .setFontWeight("bold")
+                .setHorizontalAlignment("center");
+      sheetMurid.setFrozenRows(1);
+      sheetMurid.getRange("D:D").setNumberFormat("@");
 
-    // Masukkan data 38 murid master lengkap
-    for (var i = 0; i < MASTER_STUDENTS.length; i++) {
-      var s = MASTER_STUDENTS[i];
-      sheetMurid.appendRow([s.id, s.nama, "'" + s.phone, s.status]);
+      MASTER_STUDENTS.forEach(function(s) {
+        sheetMurid.appendRow([
+          s.id, s.nama, s.parent, "'" + s.phone, s.status,
+          s.mengaji, s.online, s.akademik, s.kafa, s.jawi, s.upkk, s.psra, s.transit,
+          s.hargaMengaji, s.hargaAkademik, s.hargaTransit, s.catatan
+        ]);
+      });
     }
 
-    // Auto Column Width Murid
-    sheetMurid.setColumnWidth(1, 60);
-    sheetMurid.setColumnWidth(2, 380);
-    sheetMurid.setColumnWidth(3, 180);
-    sheetMurid.setColumnWidth(4, 100);
+    // --- SHEET 2: PEMBAYARAN ---
+    var sheetBayar = ss.getSheetByName(CONFIG.paymentSheet);
+    if (!sheetBayar) sheetBayar = ss.insertSheet(CONFIG.paymentSheet);
 
-    // --- SETUP SHEET HARGA_KHAS ---
-    var sheetHargaKhas = ss.getSheetByName(CONFIG.specialRatesSheet);
-    if (!sheetHargaKhas) {
-      sheetHargaKhas = ss.insertSheet(CONFIG.specialRatesSheet);
+    var headersBayar = [
+      "ID_TRANSAKSI", "NO_RESIT", "ID_MURID", "NAMA_MURID", "TARIKH", "BULAN", "TAHUN",
+      "KAEDAH", "JUMLAH", "NO_WHATSAPP", "TARIKH_MASA"
+    ];
+
+    if (sheetBayar.getLastRow() === 0) {
+      sheetBayar.appendRow(headersBayar);
+      sheetBayar.getRange(1, 1, 1, headersBayar.length)
+                .setBackground("#2e7d32")
+                .setFontColor("#ffffff")
+                .setFontWeight("bold")
+                .setHorizontalAlignment("center");
+      sheetBayar.setFrozenRows(1);
+      sheetBayar.getRange("J:J").setNumberFormat("@");
     }
-    if (sheetHargaKhas.getLastRow() === 0) {
-      var headersHargaKhas = [
-        "NAMA MURID", "JENIS YURAN", "HARGA STANDARD", "HARGA KHAS", "DISKAUN", "SEBAB", "TARIKH MULA", "TARIKH TAMAT", "STATUS"
+
+    // --- SHEET 3: BUTIRAN_PEMBAYARAN ---
+    var sheetDetail = ss.getSheetByName(CONFIG.paymentDetailSheet);
+    if (!sheetDetail) sheetDetail = ss.insertSheet(CONFIG.paymentDetailSheet);
+
+    var headersDetail = [
+      "ID_DETAIL", "NO_RESIT", "ID_MURID", "KATEGORI", "JENIS_YURAN", "BULAN", "AMAUN"
+    ];
+
+    if (sheetDetail.getLastRow() === 0) {
+      sheetDetail.appendRow(headersDetail);
+      sheetDetail.getRange(1, 1, 1, headersDetail.length)
+                 .setBackground("#15803d")
+                 .setFontColor("#ffffff")
+                 .setFontWeight("bold")
+                 .setHorizontalAlignment("center");
+      sheetDetail.setFrozenRows(1);
+    }
+
+    // --- SHEET 4: TETAPAN_YURAN ---
+    var sheetYuran = ss.getSheetByName(CONFIG.feeSettingsSheet);
+    if (!sheetYuran) sheetYuran = ss.insertSheet(CONFIG.feeSettingsSheet);
+
+    var headersYuran = ["ID_YURAN", "KATEGORI", "NAMA_YURAN", "HARGA_1", "HARGA_2", "STATUS"];
+    if (sheetYuran.getLastRow() === 0) {
+      sheetYuran.appendRow(headersYuran);
+      sheetYuran.getRange(1, 1, 1, headersYuran.length)
+                .setBackground("#047857")
+                .setFontColor("#ffffff")
+                .setFontWeight("bold")
+                .setHorizontalAlignment("center");
+      sheetYuran.setFrozenRows(1);
+
+      var defaultFees = [
+        ["Y001", "Mengaji", "Pendaftaran", 100, 0, "Aktif"],
+        ["Y002", "Mengaji", "Yuran Bulanan", 100, 130, "Aktif"],
+        ["Y003", "Mengaji", "Buku", 20, 0, "Aktif"],
+        ["Y004", "Mengaji Online", "Pendaftaran", 50, 0, "Aktif"],
+        ["Y005", "Mengaji Online", "Yuran Bulanan", 150, 0, "Aktif"],
+        ["Y006", "Akademik", "Pendaftaran", 50, 0, "Aktif"],
+        ["Y007", "Akademik", "1 Subjek", 35, 40, "Aktif"],
+        ["Y008", "Akademik", "4 Subjek", 110, 0, "Aktif"],
+        ["Y009", "KAFA", "Pendaftaran", 100, 0, "Aktif"],
+        ["Y010", "KAFA", "Yuran Bulanan", 100, 0, "Aktif"],
+        ["Y011", "KAFA", "Buku", 60, 0, "Aktif"],
+        ["Y012", "Jawi", "Pendaftaran", 100, 0, "Aktif"],
+        ["Y013", "Jawi", "Yuran Bulanan", 100, 0, "Aktif"],
+        ["Y014", "Jawi", "Buku", 60, 0, "Aktif"],
+        ["Y015", "UPKK", "Pendaftaran", 100, 0, "Aktif"],
+        ["Y016", "UPKK", "Yuran Bulanan", 100, 0, "Aktif"],
+        ["Y017", "UPKK", "Buku", 64, 0, "Aktif"],
+        ["Y018", "PSRA", "Pendaftaran", 100, 0, "Aktif"],
+        ["Y019", "PSRA", "Yuran Bulanan", 100, 0, "Aktif"],
+        ["Y020", "PSRA", "Buku", 60, 0, "Aktif"],
+        ["Y021", "Transit", "Pendaftaran", 150, 0, "Aktif"],
+        ["Y022", "Transit", "Yuran Bulanan", 200, 260, "Aktif"],
+        ["Y023", "Transit", "Duduk Sampai Petang", 310, 0, "Aktif"],
+        ["Y024", "Transit", "Tambahan Mengaji", 50, 0, "Aktif"],
+        ["Y025", "Transit", "Tambahan OT 1 Bulan", 40, 0, "Aktif"]
       ];
-      sheetHargaKhas.appendRow(headersHargaKhas);
-      var headerRangeHK = sheetHargaKhas.getRange(1, 1, 1, headersHargaKhas.length);
-      headerRangeHK.setBackground("#d97706")
-                   .setFontColor("#ffffff")
-                   .setFontWeight("bold")
-                   .setHorizontalAlignment("center");
-      sheetHargaKhas.setFrozenRows(1);
 
-      // Contoh rekod awal
-      sheetHargaKhas.appendRow(["Nur A", "Kelas Mengaji", 130, 100, 30, "Harga Khas Murid", "01/08/2026", "", "AKTIF"]);
-      sheetHargaKhas.appendRow(["Nur B", "Transit FQC", 260, 200, 60, "Diskaun Pengurusan", "01/08/2026", "", "AKTIF"]);
+      defaultFees.forEach(function(f) { sheetYuran.appendRow(f); });
     }
 
     return {
       success: true,
-      message: "Database FQC & Sheet HARGA_KHAS berjaya dikemaskini!"
+      message: "Database 4-Sheet AppSheet FQC berjaya disiapkan sepenuhnya!"
     };
   } catch (err) {
-    return { success: false, message: "Ralat Setup: " + err.toString() };
-  }
-}
-
-/**
- * Dapatkan senarai harga khas murid dari Sheet HARGA_KHAS
- */
-function getSpecialRates() {
-  try {
-    var ss = getSpreadsheet();
-    var sheet = ss.getSheetByName(CONFIG.specialRatesSheet);
-    if (!sheet || sheet.getLastRow() <= 1) return [];
-
-    var values = sheet.getRange(2, 1, sheet.getLastRow() - 1, 9).getValues();
-    var list = [];
-    for (var i = 0; i < values.length; i++) {
-      var row = values[i];
-      if (row[0] && (row[8] ? row[8].toString().toUpperCase() : "AKTIF") !== "TIDAK AKTIF") {
-        list.push({
-          namaMurid: row[0].toString().trim(),
-          jenisYuran: row[1].toString().trim(),
-          hargaStandard: parseFloat(row[2]) || 0,
-          hargaKhas: parseFloat(row[3]) || 0,
-          diskaun: parseFloat(row[4]) || 0,
-          sebab: row[5] ? row[5].toString().trim() : "",
-          tarikhMula: row[6] ? row[6].toString().trim() : "",
-          tarikhTamat: row[7] ? row[7].toString().trim() : "",
-          status: row[8] ? row[8].toString().trim() : "AKTIF"
-        });
-      }
-    }
-    return list;
-  } catch (e) {
-    return [];
+    return { success: false, message: "Ralat Setup Database: " + err.toString() };
   }
 }
 
 /**
  * 2. getStudents()
- * Mengambil senarai murid dari Sheet MURID mengikut susunan asal Google Sheets
+ * Membaca senarai profil murid dari Sheet MURID
  */
 function getStudents() {
   try {
@@ -275,46 +307,56 @@ function getStudents() {
       return MASTER_STUDENTS;
     }
 
-    var lastRow = sheet.getLastRow();
-    var values = sheet.getRange(2, 1, lastRow - 1, 4).getValues();
+    var values = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn()).getValues();
     var students = [];
 
     for (var i = 0; i < values.length; i++) {
       var row = values[i];
-      var colA = row[0] ? row[0].toString().trim() : "";
-      var colB = row[1] ? row[1].toString().trim() : "";
-      var colC = row[2] ? row[2].toString().trim() : "";
-      var colD = row[3] ? row[3].toString().trim() : "";
+      var id = row[0] || (i + 1);
+      var nama = row[1] ? row[1].toString().trim() : "";
+      var parent = row[2] ? row[2].toString().trim() : "";
+      var phone = row[3] ? row[3].toString().replace(/^'/, '').trim() : "";
+      var status = row[4] ? row[4].toString().trim() : "AKTIF";
 
-      var nama = "";
-      var phone = "";
-      var status = "AKTIF";
+      // Kategori flags
+      var mengaji = row[5] ? row[5].toString().toUpperCase() : "YA";
+      var online = row[6] ? row[6].toString().toUpperCase() : "TIDAK";
+      var akademik = row[7] ? row[7].toString().toUpperCase() : "TIDAK";
+      var kafa = row[8] ? row[8].toString().toUpperCase() : "TIDAK";
+      var jawi = row[9] ? row[9].toString().toUpperCase() : "TIDAK";
+      var upkk = row[10] ? row[10].toString().toUpperCase() : "TIDAK";
+      var psra = row[11] ? row[11].toString().toUpperCase() : "TIDAK";
+      var transit = row[12] ? row[12].toString().toUpperCase() : "TIDAK";
 
-      // Tentukan Kolom Nama & Phone secara dinamik
-      if (colB && isNaN(colB)) {
-        nama = colB;
-        phone = colC;
-        status = colD || "AKTIF";
-      } else if (colA && isNaN(colA)) {
-        nama = colA;
-        phone = colB;
-        status = colC || "AKTIF";
-      }
+      var hargaMengaji = parseFloat(row[13]) || 100;
+      var hargaAkademik = parseFloat(row[14]) || 0;
+      var hargaTransit = parseFloat(row[15]) || 0;
+      var catatan = row[16] ? row[16].toString() : "";
 
-      if (nama && nama.toUpperCase() !== "NAMA MURID" && nama.toUpperCase() !== "NAMA" && status.toUpperCase() !== "TIDAK AKTIF") {
+      if (nama && nama.toUpperCase() !== "NAMA MURID" && status.toUpperCase() !== "TIDAK AKTIF") {
         students.push({
-          id: i + 1,
+          id: id,
           nama: nama,
+          parent: parent,
           phone: phone,
-          status: status
+          status: status,
+          mengaji: mengaji,
+          online: online,
+          akademik: akademik,
+          kafa: kafa,
+          jawi: jawi,
+          upkk: upkk,
+          psra: psra,
+          transit: transit,
+          hargaMengaji: hargaMengaji,
+          hargaAkademik: hargaAkademik,
+          hargaTransit: hargaTransit,
+          catatan: catatan
         });
       }
     }
 
-    if (students.length > 0) {
-      return students;
-    }
-    return MASTER_STUDENTS;
+    return students.length > 0 ? students : MASTER_STUDENTS;
   } catch (err) {
     Logger.log("Error getStudents: " + err.toString());
     return MASTER_STUDENTS;
@@ -322,8 +364,67 @@ function getStudents() {
 }
 
 /**
- * 3. getNextReceiptNumber()
- * Menjana Nombor Resit Unik Seterusnya (cth: FQC-1100, FQC-1101...)
+ * 3. saveStudent(data)
+ * Tambah atau Kemaskini Murid di Sheet MURID
+ */
+function saveStudent(data) {
+  try {
+    var ss = getSpreadsheet();
+    var sheet = ss.getSheetByName(CONFIG.studentSheet);
+    if (!sheet) {
+      setupDatabase();
+      sheet = ss.getSheetByName(CONFIG.studentSheet);
+    }
+
+    var id = data.id || (sheet.getLastRow());
+    var nama = data.nama || "";
+    var parent = data.parent || "";
+    var phone = data.phone || "";
+    var status = data.status || "AKTIF";
+    var mengaji = data.mengaji || "TIDAK";
+    var online = data.online || "TIDAK";
+    var akademik = data.akademik || "TIDAK";
+    var kafa = data.kafa || "TIDAK";
+    var jawi = data.jawi || "TIDAK";
+    var upkk = data.upkk || "TIDAK";
+    var psra = data.psra || "TIDAK";
+    var transit = data.transit || "TIDAK";
+    var hargaMengaji = parseFloat(data.hargaMengaji) || 100;
+    var hargaAkademik = parseFloat(data.hargaAkademik) || 0;
+    var hargaTransit = parseFloat(data.hargaTransit) || 0;
+    var catatan = data.catatan || "";
+
+    var values = sheet.getDataRange().getValues();
+    var rowIndex = -1;
+
+    for (var i = 1; i < values.length; i++) {
+      if (values[i][0] == id || (values[i][1] && values[i][1].toString().toLowerCase() === nama.toLowerCase())) {
+        rowIndex = i + 1;
+        break;
+      }
+    }
+
+    var rowData = [
+      id, nama, parent, "'" + phone, status,
+      mengaji, online, akademik, kafa, jawi, upkk, psra, transit,
+      hargaMengaji, hargaAkademik, hargaTransit, catatan
+    ];
+
+    if (rowIndex > 0) {
+      sheet.getRange(rowIndex, 1, 1, rowData.length).setValues([rowData]);
+    } else {
+      sheet.appendRow(rowData);
+    }
+
+    return { success: true, message: "Profil murid berjaya disimpan!" };
+  } catch (e) {
+    return { success: false, message: "Ralat saveStudent: " + e.toString() };
+  }
+}
+
+/**
+ * 4. getNextReceiptNumber()
+ * Jana Nombor Resit Unik FQC-1101, FQC-1102 ...
  */
 function getNextReceiptNumber() {
   try {
@@ -334,33 +435,26 @@ function getNextReceiptNumber() {
       return CONFIG.receiptPrefix + CONFIG.startReceiptNo;
     }
 
-    var lastRow = sheet.getLastRow();
-    var lastVal = sheet.getRange(lastRow, 2).getValue().toString().trim();
-    var numOnly = lastVal.replace(/[^0-9]/g, '');
-    
-    if (numOnly) {
-      var nextNo = parseInt(numOnly, 10) + 1;
-      if (nextNo >= CONFIG.startReceiptNo) {
-        return CONFIG.receiptPrefix + nextNo;
+    var values = sheet.getRange(2, 2, sheet.getLastRow() - 1, 1).getValues();
+    var maxNo = CONFIG.startReceiptNo - 1;
+
+    for (var i = 0; i < values.length; i++) {
+      var val = values[i][0] ? values[i][0].toString().trim() : "";
+      var num = parseInt(val.replace(/[^0-9]/g, ''), 10);
+      if (!isNaN(num) && num > maxNo) {
+        maxNo = num;
       }
     }
 
-    return CONFIG.receiptPrefix + (CONFIG.startReceiptNo + lastRow - 1);
+    return CONFIG.receiptPrefix + (maxNo + 1);
   } catch (e) {
     return CONFIG.receiptPrefix + CONFIG.startReceiptNo;
   }
 }
 
 /**
- * 4. checkDuplicateReceipt(noResit)
- */
-function checkDuplicateReceipt(noResit) {
-  return false;
-}
-
-/**
  * 5. savePayment(data)
- * Menyimpan rekod pembayaran secara kilat (pantas < 1 saat)
+ * Menyimpan rekod ke PEMBAYARAN & BUTIRAN_PEMBAYARAN
  */
 function savePayment(data) {
   var lock = LockService.getScriptLock();
@@ -368,94 +462,72 @@ function savePayment(data) {
     lock.waitLock(10000);
 
     var ss = getSpreadsheet();
-    var sheet = ss.getSheetByName(CONFIG.paymentSheet);
+    var sheetPay = ss.getSheetByName(CONFIG.paymentSheet);
+    var sheetDetail = ss.getSheetByName(CONFIG.paymentDetailSheet);
 
-    if (!sheet) {
+    if (!sheetPay || !sheetDetail) {
       setupDatabase();
-      sheet = ss.getSheetByName(CONFIG.paymentSheet);
+      sheetPay = ss.getSheetByName(CONFIG.paymentSheet);
+      sheetDetail = ss.getSheetByName(CONFIG.paymentDetailSheet);
     }
 
-    var noResit = data.noResit;
-    if (!noResit) {
-      noResit = getNextReceiptNumber();
-    }
-
+    var noResit = data.noResit || getNextReceiptNumber();
     var timestamp = new Date();
     var tarikh = data.tarikh || Utilities.formatDate(timestamp, Session.getScriptTimeZone() || "GMT+8", "dd/MM/yyyy");
-    var bulan = data.bulan || "";
+    var bulan = (data.bulan || "").toUpperCase();
+    var tahun = new Date().getFullYear();
     var namaMurid = data.namaMurid || "";
+    var idMurid = data.idMurid || "";
     var noWhatsapp = data.noWhatsapp || "";
+    var kaedah = data.kaedahBayaran || "TUNAI";
+    var jumlah = parseFloat(data.jumlah) || 0;
 
-    var pendaftaran = parseFloat(data.pendaftaran) || 0;
-    var pengajianAlquran = parseFloat(data.pengajianAlquran) || 0;
-    var kelasUpkk = parseFloat(data.kelasUpkk) || 0;
-    var kelasPsra = parseFloat(data.kelasPsra) || 0;
-    var kelasKhasJawi = parseFloat(data.kelasKhasJawi) || 0;
-    var bukuRekodModul = parseFloat(data.bukuRekodModul) || 0;
-    var sumbangan = parseFloat(data.sumbangan) || 0;
-    var kelasKafa = parseFloat(data.kelasKafa) || 0;
-    var kelasAkademik = parseFloat(data.kelasAkademik) || 0;
-    var transit = parseFloat(data.transit) || 0;
+    var txId = "TX-" + timestamp.getTime();
 
-    var jumlah = parseFloat(data.jumlah) || (
-      pendaftaran + pengajianAlquran + kelasUpkk + kelasPsra + kelasKhasJawi +
-      bukuRekodModul + sumbangan + kelasKafa + kelasAkademik + transit
-    );
-
-    var kaedahBayaran = data.kaedahBayaran || "TUNAI";
-    var catatan = data.catatan || "";
-    var status = "BERJAYA";
-    var linkResit = data.linkResit || "";
-
-    var newRow = [
-      timestamp,
+    // 1. Simpan ke PEMBAYARAN
+    sheetPay.appendRow([
+      txId,
       noResit,
+      idMurid,
+      namaMurid,
       tarikh,
       bulan,
-      namaMurid,
-      "'" + noWhatsapp,
-      pendaftaran,
-      pengajianAlquran,
-      kelasUpkk,
-      kelasPsra,
-      kelasKhasJawi,
-      bukuRekodModul,
-      sumbangan,
-      kelasKafa,
-      kelasAkademik,
-      transit,
+      tahun,
+      kaedah,
       jumlah,
-      kaedahBayaran,
-      catatan,
-      status,
-      linkResit
-    ];
+      "'" + noWhatsapp,
+      timestamp
+    ]);
 
-    sheet.appendRow(newRow);
+    // 2. Simpan item butiran ke BUTIRAN_PEMBAYARAN
+    var items = [];
+    if (data.butiranItem) {
+      try { items = typeof data.butiranItem === 'string' ? JSON.parse(data.butiranItem) : data.butiranItem; } catch(e) {}
+    }
+
+    if (Array.isArray(items) && items.length > 0) {
+      items.forEach(function(it, idx) {
+        sheetDetail.appendRow([
+          "DT-" + timestamp.getTime() + "-" + (idx + 1),
+          noResit,
+          idMurid,
+          it.group || it.kategori || "UMUM",
+          it.label || it.jenisYuran || "Yuran",
+          bulan,
+          parseFloat(it.paidPrice || it.amaun) || 0
+        ]);
+      });
+    }
 
     return {
       success: true,
-      message: "Pembayaran berjaya disimpan ke Google Sheets!",
+      message: "Pembayaran " + noResit + " berjaya disimpan!",
       noResit: noResit,
-      jumlah: jumlah,
-      data: {
-        timestamp: timestamp,
-        noResit: noResit,
-        tarikh: tarikh,
-        bulan: bulan,
-        namaMurid: namaMurid,
-        noWhatsapp: noWhatsapp,
-        jumlah: jumlah,
-        kaedahBayaran: kaedahBayaran,
-        catatan: catatan
-      }
+      jumlah: jumlah
     };
   } catch (err) {
     Logger.log("Error savePayment: " + err.toString());
-    return {
-      success: false,
-      message: "Gagal menyimpan pembayaran: " + err.toString()
-    };
+    return { success: false, message: "Gagal menyimpan: " + err.toString() };
   } finally {
     lock.releaseLock();
   }
@@ -463,7 +535,7 @@ function savePayment(data) {
 
 /**
  * 6. getPaymentHistory()
- * Mengambil senarai rekod pembayaran dari Sheet PEMBAYARAN
+ * Membaca rekod dari Sheet PEMBAYARAN
  */
 function getPaymentHistory() {
   try {
@@ -471,109 +543,148 @@ function getPaymentHistory() {
     var sheet = ss.getSheetByName(CONFIG.paymentSheet);
     if (!sheet || sheet.getLastRow() <= 1) return [];
 
-    var values = sheet.getRange(2, 1, sheet.getLastRow() - 1, 21).getValues();
+    var values = sheet.getRange(2, 1, sheet.getLastRow() - 1, 11).getValues();
     var history = [];
 
-    for (var i = values.length - 1; i >= 0; i--) { // Susun terkini di atas
+    for (var i = values.length - 1; i >= 0; i--) {
       var row = values[i];
-      if (row[1]) { // Jika ada No Resit
-        var dateFormatted = row[2];
-        if (row[0] instanceof Date && !row[2]) {
-          dateFormatted = Utilities.formatDate(row[0], Session.getScriptTimeZone() || "GMT+8", "dd/MM/yyyy");
+      if (row[1]) {
+        var dateFormatted = row[4];
+        if (row[10] instanceof Date && !row[4]) {
+          dateFormatted = Utilities.formatDate(row[10], Session.getScriptTimeZone() || "GMT+8", "dd/MM/yyyy");
         }
 
         history.push({
-          timestamp: row[0],
+          idTransaksi: row[0] ? row[0].toString() : "",
           noResit: row[1] ? row[1].toString().trim() : "",
+          idMurid: row[2] ? row[2].toString() : "",
+          namaMurid: row[3] ? row[3].toString() : "",
           tarikh: dateFormatted ? dateFormatted.toString() : "",
-          bulan: row[3] ? row[3].toString() : "",
-          namaMurid: row[4] ? row[4].toString() : "",
-          noWhatsapp: row[5] ? row[5].toString().replace(/^'/, '') : "",
-          pendaftaran: parseFloat(row[6]) || 0,
-          pengajianAlquran: parseFloat(row[7]) || 0,
-          kelasUpkk: parseFloat(row[8]) || 0,
-          kelasPsra: parseFloat(row[9]) || 0,
-          kelasKhasJawi: parseFloat(row[10]) || 0,
-          bukuRekodModul: parseFloat(row[11]) || 0,
-          sumbangan: parseFloat(row[12]) || 0,
-          kelasKafa: parseFloat(row[13]) || 0,
-          kelasAkademik: parseFloat(row[14]) || 0,
-          transit: parseFloat(row[15]) || 0,
-          jumlah: parseFloat(row[16]) || 0,
-          kaedahBayaran: row[17] ? row[17].toString() : "TUNAI",
-          catatan: row[18] ? row[18].toString() : "",
-          status: row[19] ? row[19].toString() : "BERJAYA",
-          linkResit: row[20] ? row[20].toString() : ""
+          bulan: row[5] ? row[5].toString() : "",
+          tahun: row[6] ? row[6].toString() : "",
+          kaedahBayaran: row[7] ? row[7].toString() : "TUNAI",
+          jumlah: parseFloat(row[8]) || 0,
+          noWhatsapp: row[9] ? row[9].toString().replace(/^'/, '') : "",
+          timestamp: row[10]
         });
       }
     }
 
     return history;
   } catch (err) {
-    Logger.log("Error getPaymentHistory: " + err.toString());
     return [];
   }
 }
 
 /**
- * 7. getPaymentByReceipt(noResit)
+ * 7. getFeeSettings()
+ * Membaca jadual tetapan yuran dari Sheet TETAPAN_YURAN
  */
-function getPaymentByReceipt(noResit) {
-  var history = getPaymentHistory();
-  for (var i = 0; i < history.length; i++) {
-    if (history[i].noResit.toUpperCase() === noResit.toUpperCase()) {
-      return history[i];
+function getFeeSettings() {
+  try {
+    var ss = getSpreadsheet();
+    var sheet = ss.getSheetByName(CONFIG.feeSettingsSheet);
+    if (!sheet || sheet.getLastRow() <= 1) return [];
+
+    var values = sheet.getRange(2, 1, sheet.getLastRow() - 1, 6).getValues();
+    var fees = [];
+
+    for (var i = 0; i < values.length; i++) {
+      var row = values[i];
+      if (row[0]) {
+        fees.push({
+          idYuran: row[0].toString(),
+          kategori: row[1] ? row[1].toString() : "",
+          namaYuran: row[2] ? row[2].toString() : "",
+          harga1: parseFloat(row[3]) || 0,
+          harga2: parseFloat(row[4]) || 0,
+          status: row[5] ? row[5].toString() : "Aktif"
+        });
+      }
     }
+    return fees;
+  } catch (e) {
+    return [];
   }
-  return null;
 }
 
 /**
- * 8. getDashboardData()
- * Mengira statistik untuk Dashboard Utama
+ * 8. saveFeeSettings(data)
+ */
+function saveFeeSettings(feeList) {
+  try {
+    var ss = getSpreadsheet();
+    var sheet = ss.getSheetByName(CONFIG.feeSettingsSheet);
+    if (!sheet) { setupDatabase(); sheet = ss.getSheetByName(CONFIG.feeSettingsSheet); }
+
+    sheet.clearContents();
+    sheet.appendRow(["ID_YURAN", "KATEGORI", "NAMA_YURAN", "HARGA_1", "HARGA_2", "STATUS"]);
+    
+    feeList.forEach(function(f) {
+      sheet.appendRow([f.idYuran, f.kategori, f.namaYuran, f.harga1, f.harga2, f.status]);
+    });
+
+    return { success: true, message: "Tetapan yuran berjaya dikemaskini!" };
+  } catch (e) {
+    return { success: false, message: "Ralat saveFeeSettings: " + e.toString() };
+  }
+}
+
+/**
+ * 9. getDashboardData()
+ * Mengira statistik untuk Dashboard Utama (Cumulative Jan - Current Month)
  */
 function getDashboardData() {
   try {
     var history = getPaymentHistory();
     var students = getStudents();
 
-    var todayStr = Utilities.formatDate(new Date(), Session.getScriptTimeZone() || "GMT+8", "dd/MM/yyyy");
-    var currentMonthIdx = new Date().getMonth();
     var monthsMalay = ["JANUARI", "FEBRUARI", "MAC", "APRIL", "MEI", "JUN", "JULAI", "OGOS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DISEMBER"];
-    var currentMonthMalay = monthsMalay[currentMonthIdx];
+    var currentMonthIdx = new Date().getMonth();
 
-    var totalToday = 0;
-    var totalMonth = 0;
-    var totalTransactions = history.length;
-    var totalStudents = students.length;
+    var totalOverallJanToNow = 0;
+    var monthlyKutipan = {};
+    monthsMalay.forEach(function(m) { monthlyKutipan[m] = 0; });
 
-    for (var i = 0; i < history.length; i++) {
-      var item = history[i];
-      
-      // Kira Hari Ini
-      if (item.tarikh === todayStr) {
-        totalToday += item.jumlah;
+    var categoryKutipan = {
+      "Mengaji": 0,
+      "Mengaji Online": 0,
+      "Transit": 0,
+      "Jawi": 0,
+      "UPKK": 0,
+      "PSRA": 0,
+      "KAFA": 0,
+      "Akademik": 0,
+      "Lain-lain": 0
+    };
+
+    history.forEach(function(item) {
+      var itemMonth = item.bulan ? item.bulan.toUpperCase() : "";
+      var monthIdx = monthsMalay.indexOf(itemMonth);
+
+      // Kutipan kumulatif Jan sehingga bulan semasa
+      if (monthIdx !== -1 && monthIdx <= currentMonthIdx) {
+        totalOverallJanToNow += item.jumlah;
       }
 
-      // Kira Bulan Ini
-      if (item.bulan && item.bulan.toUpperCase() === currentMonthMalay) {
-        totalMonth += item.jumlah;
+      if (monthlyKutipan[itemMonth] !== undefined) {
+        monthlyKutipan[itemMonth] += item.jumlah;
       }
-    }
+    });
 
     return {
-      totalToday: totalToday,
-      totalMonth: totalMonth,
-      totalTransactions: totalTransactions,
-      totalStudents: totalStudents,
+      totalOverallCollection: totalOverallJanToNow,
+      totalStudents: students.length,
+      totalTransactions: history.length,
+      monthlyKutipan: monthlyKutipan,
       recentPayments: history.slice(0, 5)
     };
   } catch (err) {
     return {
-      totalToday: 0,
-      totalMonth: 0,
-      totalTransactions: 0,
+      totalOverallCollection: 0,
       totalStudents: 38,
+      totalTransactions: 0,
+      monthlyKutipan: {},
       recentPayments: []
     };
   }
