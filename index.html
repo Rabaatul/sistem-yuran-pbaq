@@ -1609,12 +1609,12 @@ function safeSetStorage(key, val) {
 // Master 26 Fee Items Array
 const FEE_CHECKBOX_ITEMS = [
   { id: "mengaji_pendaftaran", group: "1. KELAS MENGAJI", label: "Pendaftaran Mengaji", stdPrice: 100, field: "pendaftaran", icon: "fa-book-quran" },
-  { id: "mengaji_bulanan", group: "1. KELAS MENGAJI", label: "Yuran Bulanan Mengaji", stdPrice: 100, field: "pengajianAlquran", icon: "fa-book-quran" },
+  { id: "mengaji_bulanan", group: "1. KELAS MENGAJI", label: "Yuran Bulanan Mengaji", stdPrice: 100, priceOptions: [100, 130], field: "pengajianAlquran", icon: "fa-book-quran" },
   { id: "mengaji_buku", group: "1. KELAS MENGAJI", label: "Buku Mengaji", stdPrice: 20, field: "bukuRekodModul", icon: "fa-book-open" },
   { id: "online_pendaftaran", group: "2. KELAS MENGAJI ONLINE", label: "Pendaftaran Online", stdPrice: 50, field: "pendaftaran", icon: "fa-laptop" },
   { id: "online_bulanan", group: "2. KELAS MENGAJI ONLINE", label: "Yuran Bulanan Online", stdPrice: 150, field: "pengajianAlquran", icon: "fa-laptop" },
   { id: "akademik_pendaftaran", group: "3. TUISYEN AKADEMIK", label: "Pendaftaran Akademik", stdPrice: 50, field: "pendaftaran", icon: "fa-graduation-cap" },
-  { id: "akademik_1", group: "3. TUISYEN AKADEMIK", label: "Tuisyen Akademik 1 Subjek", stdPrice: 35, field: "kelasAkademik", icon: "fa-book" },
+  { id: "akademik_1", group: "3. TUISYEN AKADEMIK", label: "Tuisyen Akademik 1 Subjek", stdPrice: 35, priceOptions: [35, 40], field: "kelasAkademik", icon: "fa-book" },
   { id: "akademik_4", group: "3. TUISYEN AKADEMIK", label: "Tuisyen Akademik 4 Subjek", stdPrice: 110, field: "kelasAkademik", icon: "fa-layer-group" },
   { id: "kafa_pendaftaran", group: "4. TUISYEN KAFA (THN 2-6)", label: "Pendaftaran KAFA", stdPrice: 100, field: "pendaftaran", icon: "fa-mosque" },
   { id: "kafa_bulanan", group: "4. TUISYEN KAFA (THN 2-6)", label: "Yuran Bulanan KAFA", stdPrice: 100, field: "kelasKafa", icon: "fa-mosque" },
@@ -1827,6 +1827,14 @@ function renderCheckboxFeeGroups() {
     const groupIcon = items[0]?.icon || "fa-list";
     html += `<div class="fee-group-block"><div class="fee-group-header"><i class="fa-solid ${groupIcon}"></i> ${groupName}</div><div class="fee-checkbox-grid">`;
     items.forEach(item => {
+      let priceInputHtml = "";
+      if (Array.isArray(item.priceOptions) && item.priceOptions.length > 0) {
+        let optionsHtml = item.priceOptions.map(p => `<option value="${p}">${p}</option>`).join('');
+        priceInputHtml = `<select id="price-${item.id}" class="fee-card-price-input" style="font-weight:800; cursor:pointer; background:transparent;" onchange="onFeePriceInput('${item.id}')" onclick="event.stopPropagation()">${optionsHtml}</select>`;
+      } else {
+        priceInputHtml = `<input type="number" id="price-${item.id}" class="fee-card-price-input" min="0" value="${item.stdPrice}" oninput="onFeePriceInput('${item.id}')" onclick="event.stopPropagation()">`;
+      }
+
       html += `
         <div class="fee-checkbox-card" id="card-${item.id}" onclick="toggleFeeCard('${item.id}', event)">
           <div class="fee-card-left">
@@ -1835,7 +1843,7 @@ function renderCheckboxFeeGroups() {
           </div>
           <div class="fee-card-price-group" onclick="event.stopPropagation()">
             <span class="fee-card-price-prefix">RM</span>
-            <input type="number" id="price-${item.id}" class="fee-card-price-input" min="0" value="${item.stdPrice}" oninput="onFeePriceInput('${item.id}')" onclick="event.stopPropagation()">
+            ${priceInputHtml}
           </div>
         </div>
       `;
