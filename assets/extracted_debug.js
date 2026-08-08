@@ -1,17 +1,6 @@
 ﻿
 
-// --- EXPORT TO EXCEL (CSV) SENARAI MURID BELUM BAYAR (BULLETPROOF GAS & IFRAME COMPATIBLE) ---
-function exportUnpaidToExcel() {
-  try {
-    const filterMonth = document.getElementById("dash-month-filter")?.value || "OGOS";
-    const paidNamesSet = new Set();
-    
-    if (Array.isArray(appState.payments)) {
-      appState.payments.forEach(p => {
-        if (p.bulan && p.bulan.toUpperCase() === filterMonth.toUpperCase() && p.namaMurid) {
-          paidNamesSet.add(p.namaMurid.trim().toLowerCase());
-        }
-      });
+);
     }
 
     const unpaidStudents = (appState.students || []).filter(s => !paidNamesSet.has((s.nama || '').trim().toLowerCase()));
