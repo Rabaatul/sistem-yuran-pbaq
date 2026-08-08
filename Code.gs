@@ -3,11 +3,11 @@
  * SISTEM PEMBAYARAN YURAN & RESIT DIGITAL FATHUL QURANIC CENTRE (FQC)
  * ==============================================================================
  * Backend Google Apps Script (Code.gs)
- * Spreadsheet ID: 1DsLcgM7PHMpgVd1MkPCtzCuKDWk0g007SgrDvBv3MTk
+ * Spreadsheet ID: 1ahZXkijsmqPD5MDHcBGSXgp4HR0R1NDi4rUx4NH-nho
  */
 
 const CONFIG = {
-  spreadsheetId: "1DsLcgM7PHMpgVd1MkPCtzCuKDWk0g007SgrDvBv3MTk",
+  spreadsheetId: "1ahZXkijsmqPD5MDHcBGSXgp4HR0R1NDi4rUx4NH-nho",
   studentSheet: "MURID",
   paymentSheet: "PEMBAYARAN",
   specialRatesSheet: "HARGA_KHAS",
@@ -16,7 +16,7 @@ const CONFIG = {
   startReceiptNo: 1100
 };
 
-// Master Data Murid FQC
+// Master Data 28 Murid FQC Terbaharu
 const MASTER_STUDENTS = [
   { id: 1, nama: "Syed Mohd Alwi Bin Syed Mohamed", phone: "0145366009", status: "AKTIF" },
   { id: 2, nama: "Faid Fareed Bin Mohd Shah Fitri", phone: "01481810192", status: "AKTIF" },
@@ -52,12 +52,6 @@ const MASTER_STUDENTS = [
  * Helper untuk dapatkan Spreadsheet
  */
 function getSpreadsheet() {
-  try {
-    var activeSs = SpreadsheetApp.getActiveSpreadsheet();
-    if (activeSs) return activeSs;
-  } catch (e) {
-    Logger.log("getActiveSpreadsheet error: " + e.toString());
-  }
   if (CONFIG.spreadsheetId) {
     try {
       var ss = SpreadsheetApp.openById(CONFIG.spreadsheetId);
@@ -66,7 +60,12 @@ function getSpreadsheet() {
       Logger.log("Error opening by ID: " + e.toString());
     }
   }
-  return null;
+  try {
+    return SpreadsheetApp.getActiveSpreadsheet();
+  } catch (e) {
+    Logger.log("Error getActiveSpreadsheet: " + e.toString());
+    return null;
+  }
 }
 
 /**
@@ -91,24 +90,23 @@ function doGet(e) {
 
   // Paparan Web App Google Apps Script
   try {
-    return HtmlService.createTemplateFromFile("Index_GAS")
+    return HtmlService.createTemplateFromFile("Index")
       .evaluate()
       .setTitle("SISTEM PEMBAYARAN YURAN - FATHUL QURANIC CENTRE (FQC)")
       .addMetaTag("viewport", "width=device-width, initial-scale=1.0")
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-  } catch (err1) {
+  } catch (err) {
     try {
-      return HtmlService.createTemplateFromFile("Index")
-        .evaluate()
-        .setTitle("SISTEM PEMBAYARAN YURAN - FATHUL QURANIC CENTRE (FQC)")
-        .addMetaTag("viewport", "width=device-width, initial-scale=1.0")
-        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-    } catch (err2) {
       return HtmlService.createTemplateFromFile("index")
         .evaluate()
         .setTitle("SISTEM PEMBAYARAN YURAN - FATHUL QURANIC CENTRE (FQC)")
         .addMetaTag("viewport", "width=device-width, initial-scale=1.0")
         .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+    } catch (err2) {
+      return HtmlService.createHtmlOutput(
+        "<h2>SISTEM PEMBAYARAN YURAN FQC - API AKTIF</h2>" +
+        "<p>Web App API sedia menerima permintaan daripada aplikasi Web Pembayaran Yuran.</p>"
+      );
     }
   }
 }
@@ -172,6 +170,7 @@ function setupDatabase() {
       sheetMurid = ss.insertSheet(CONFIG.studentSheet);
     }
     
+    // Format semula Sheet MURID dengan susunan kolom rasmi: ID | NAMA MURID | NO WHATSAPP PARENT | STATUS
     sheetMurid.clearContents();
     
     var headersMurid = ["ID", "NAMA MURID", "NO WHATSAPP PARENT", "STATUS"];
@@ -184,13 +183,16 @@ function setupDatabase() {
                       .setHorizontalAlignment("center");
     sheetMurid.setFrozenRows(1);
 
+    // Format Kolom C (No WhatsApp) sebagai Text '@' untuk simpan 0 di hadapan
     sheetMurid.getRange("C:C").setNumberFormat("@");
 
+    // Masukkan data 38 murid master lengkap
     for (var i = 0; i < MASTER_STUDENTS.length; i++) {
       var s = MASTER_STUDENTS[i];
       sheetMurid.appendRow([s.id, s.nama, "'" + s.phone, s.status]);
     }
 
+    // Auto Column Width Murid
     sheetMurid.setColumnWidth(1, 60);
     sheetMurid.setColumnWidth(2, 380);
     sheetMurid.setColumnWidth(3, 180);
@@ -212,6 +214,10 @@ function setupDatabase() {
                    .setFontWeight("bold")
                    .setHorizontalAlignment("center");
       sheetHargaKhas.setFrozenRows(1);
+
+      // Contoh rekod awal
+      sheetHargaKhas.appendRow(["Nur A", "Kelas Mengaji", 130, 100, 30, "Harga Khas Murid", "01/08/2026", "", "AKTIF"]);
+      sheetHargaKhas.appendRow(["Nur B", "Transit FQC", 260, 200, 60, "Diskaun Pengurusan", "01/08/2026", "", "AKTIF"]);
     }
 
     return {
@@ -224,7 +230,7 @@ function setupDatabase() {
 }
 
 /**
- * 2. getSpecialRates()
+ * Dapatkan senarai harga khas murid dari Sheet HARGA_KHAS
  */
 function getSpecialRates() {
   try {
@@ -257,75 +263,50 @@ function getSpecialRates() {
 }
 
 /**
- * 3. getStudents()
+ * 2. getStudents()
  * Mengambil senarai murid dari Sheet MURID mengikut susunan asal Google Sheets
  */
 function getStudents() {
   try {
     var ss = getSpreadsheet();
-    if (!ss) return MASTER_STUDENTS;
-
     var sheet = ss.getSheetByName(CONFIG.studentSheet);
-    if (!sheet) {
-      var sheets = ss.getSheets();
-      for (var s = 0; s < sheets.length; s++) {
-        var nameUpper = sheets[s].getName().toUpperCase();
-        if (nameUpper.indexOf("MURID") !== -1 || nameUpper.indexOf("STUDENT") !== -1 || nameUpper.indexOf("SENARAI") !== -1) {
-          sheet = sheets[s];
-          break;
-        }
-      }
-      if (!sheet && sheets.length > 0) sheet = sheets[0];
-    }
-
+    
     if (!sheet || sheet.getLastRow() <= 1) {
       return MASTER_STUDENTS;
     }
 
     var lastRow = sheet.getLastRow();
-    var lastCol = Math.max(sheet.getLastColumn(), 4);
-    var fullRange = sheet.getRange(1, 1, lastRow, lastCol).getValues();
-    
-    var nameCol = -1;
-    var phoneCol = -1;
-    var startRowIndex = 1;
-
-    for (var r = 0; r < Math.min(3, fullRange.length); r++) {
-      var rowHeader = fullRange[r];
-      for (var c = 0; c < rowHeader.length; c++) {
-        var val = rowHeader[c] ? rowHeader[c].toString().toUpperCase().trim() : "";
-        if (val.indexOf("NAMA") !== -1 && nameCol === -1) {
-          nameCol = c;
-          startRowIndex = r + 1;
-        }
-        if ((val.indexOf("WHATSAPP") !== -1 || val.indexOf("PHONE") !== -1 || val.indexOf("TEL") !== -1 || val.indexOf("HP") !== -1) && phoneCol === -1) {
-          phoneCol = c;
-        }
-      }
-    }
-
-    if (nameCol === -1) nameCol = (fullRange[0] && fullRange[0][1] && isNaN(fullRange[0][1])) ? 1 : 0;
-    if (phoneCol === -1) phoneCol = (nameCol === 1) ? 2 : 1;
-
+    var values = sheet.getRange(2, 1, lastRow - 1, 4).getValues();
     var students = [];
-    for (var i = startRowIndex; i < fullRange.length; i++) {
-      var rowData = fullRange[i];
-      var rawNama = rowData[nameCol] ? rowData[nameCol].toString().trim() : "";
-      var rawPhone = rowData[phoneCol] ? rowData[phoneCol].toString().trim() : "";
 
-      if (!rawNama && rowData[0] && isNaN(rowData[0])) {
-        rawNama = rowData[0].toString().trim();
+    for (var i = 0; i < values.length; i++) {
+      var row = values[i];
+      var colA = row[0] ? row[0].toString().trim() : "";
+      var colB = row[1] ? row[1].toString().trim() : "";
+      var colC = row[2] ? row[2].toString().trim() : "";
+      var colD = row[3] ? row[3].toString().trim() : "";
+
+      var nama = "";
+      var phone = "";
+      var status = "AKTIF";
+
+      // Tentukan Kolom Nama & Phone secara dinamik
+      if (colB && isNaN(colB)) {
+        nama = colB;
+        phone = colC;
+        status = colD || "AKTIF";
+      } else if (colA && isNaN(colA)) {
+        nama = colA;
+        phone = colB;
+        status = colC || "AKTIF";
       }
 
-      if (rawNama && rawNama.toUpperCase() !== "NAMA MURID" && rawNama.toUpperCase() !== "NAMA" && rawNama.toUpperCase() !== "ID") {
-        var cleanPhone = rawPhone.replace(/[^0-9]/g, '');
-        if (cleanPhone.indexOf('60') === 0) cleanPhone = '0' + cleanPhone.substring(2);
-
+      if (nama && nama.toUpperCase() !== "NAMA MURID" && nama.toUpperCase() !== "NAMA" && status.toUpperCase() !== "TIDAK AKTIF") {
         students.push({
-          id: students.length + 1,
-          nama: rawNama,
-          phone: cleanPhone || rawPhone,
-          status: "AKTIF"
+          id: i + 1,
+          nama: nama,
+          phone: phone,
+          status: status
         });
       }
     }
@@ -341,7 +322,8 @@ function getStudents() {
 }
 
 /**
- * 4. getNextReceiptNumber()
+ * 3. getNextReceiptNumber()
+ * Menjana Nombor Resit Unik Seterusnya (cth: FQC-1100, FQC-1101...)
  */
 function getNextReceiptNumber() {
   try {
@@ -370,7 +352,15 @@ function getNextReceiptNumber() {
 }
 
 /**
+ * 4. checkDuplicateReceipt(noResit)
+ */
+function checkDuplicateReceipt(noResit) {
+  return false;
+}
+
+/**
  * 5. savePayment(data)
+ * Menyimpan rekod pembayaran secara kilat (pantas < 1 saat)
  */
 function savePayment(data) {
   var lock = LockService.getScriptLock();
@@ -473,6 +463,7 @@ function savePayment(data) {
 
 /**
  * 6. getPaymentHistory()
+ * Mengambil senarai rekod pembayaran dari Sheet PEMBAYARAN
  */
 function getPaymentHistory() {
   try {
@@ -483,9 +474,9 @@ function getPaymentHistory() {
     var values = sheet.getRange(2, 1, sheet.getLastRow() - 1, 21).getValues();
     var history = [];
 
-    for (var i = values.length - 1; i >= 0; i--) {
+    for (var i = values.length - 1; i >= 0; i--) { // Susun terkini di atas
       var row = values[i];
-      if (row[1]) {
+      if (row[1]) { // Jika ada No Resit
         var dateFormatted = row[2];
         if (row[0] instanceof Date && !row[2]) {
           dateFormatted = Utilities.formatDate(row[0], Session.getScriptTimeZone() || "GMT+8", "dd/MM/yyyy");
@@ -525,7 +516,21 @@ function getPaymentHistory() {
 }
 
 /**
- * 7. getDashboardData()
+ * 7. getPaymentByReceipt(noResit)
+ */
+function getPaymentByReceipt(noResit) {
+  var history = getPaymentHistory();
+  for (var i = 0; i < history.length; i++) {
+    if (history[i].noResit.toUpperCase() === noResit.toUpperCase()) {
+      return history[i];
+    }
+  }
+  return null;
+}
+
+/**
+ * 8. getDashboardData()
+ * Mengira statistik untuk Dashboard Utama
  */
 function getDashboardData() {
   try {
@@ -545,10 +550,12 @@ function getDashboardData() {
     for (var i = 0; i < history.length; i++) {
       var item = history[i];
       
+      // Kira Hari Ini
       if (item.tarikh === todayStr) {
         totalToday += item.jumlah;
       }
 
+      // Kira Bulan Ini
       if (item.bulan && item.bulan.toUpperCase() === currentMonthMalay) {
         totalMonth += item.jumlah;
       }

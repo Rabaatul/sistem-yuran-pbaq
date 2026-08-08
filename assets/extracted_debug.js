@@ -1,4 +1,151 @@
 ﻿
+
+// --- FUNGSI JANA PDF SENARAI MURID BELUM BAYAR ---
+function exportUnpaidToPdf() {
+  try {
+    const filterMonth = document.getElementById("dash-month-filter")?.value || "OGOS";
+    const paidNamesSet = new Set();
+    
+    if (Array.isArray(appState.payments)) {
+      appState.payments.forEach(p => {
+        if (p.bulan && p.bulan.toUpperCase() === filterMonth.toUpperCase() && p.namaMurid) {
+          paidNamesSet.add(p.namaMurid.trim().toLowerCase());
+        }
+      });
+    }
+
+    const unpaidStudents = (appState.students || []).filter(s => !paidNamesSet.has((s.nama || '').trim().toLowerCase()));
+
+    if (unpaidStudents.length === 0) {
+      showToast(`Tahniah! Tiada murid yang belum bayar bagi bulan ${filterMonth}.`, "info");
+      return;
+    }
+
+    let rowsHtml = "";
+    unpaidStudents.forEach((student, idx) => {
+      rowsHtml += `
+        <tr>
+          <td style="text-align:center; padding:8px; border-bottom:1px solid #cbd5e1;">${idx + 1}</td>
+          <td style="padding:8px; border-bottom:1px solid #cbd5e1; font-weight:bold;">${student.nama}</td>
+          <td style="padding:8px; border-bottom:1px solid #cbd5e1;">${student.phone || '-'}</td>
+          <td style="text-align:center; padding:8px; border-bottom:1px solid #cbd5e1; color:#b91c1c; font-weight:bold;">BELUM BAYAR (${filterMonth})</td>
+        </tr>
+      `;
+    });
+
+    const printWin = window.open("", "_blank");
+    const docContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Senarai Murid Belum Bayar Yuran - ${filterMonth}</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; color: #0f172a; }
+          .header { text-align: center; border-bottom: 2px solid #1b4d2e; padding-bottom: 12px; margin-bottom: 16px; }
+          .title { font-size: 18px; font-weight: bold; color: #1b4d2e; margin-bottom: 4px; }
+          .subtitle { font-size: 12px; color: #475569; }
+          .meta-box { background: #f8fafc; border: 1px solid #cbd5e1; padding: 10px; border-radius: 6px; margin-bottom: 16px; font-size: 13px; display: flex; justify-content: space-between; }
+          table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+          th { background: #1b4d2e; color: #ffffff; padding: 8px; text-align: left; font-weight: bold; }
+          tr:nth-child(even) { background: #f8fafc; }
+          .footer { margin-top: 24px; text-align: right; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 8px; }
+          @media print { body { padding: 0; } }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="title">FATHUL QURANIC CENTRE (NS0326067-A)</div>
+          <div class="subtitle">5-2, 2ND FLOOR, JLN PPS-1, PUSAT PERDAGANGAN SELASEH, 68100 BATU CAVES, SELANGOR | TEL: 014-5366009</div>
+        </div>
+        <div class="meta-box">
+          <div><strong>SENARAI MURID BELUM BAYAR YURAN</strong></div>
+          <div>Bulan: <strong>${filterMonth}</strong> | Jumlah Murid: <strong>${unpaidStudents.length} Orang</strong></div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:40px; text-align:center;">#</th>
+              <th>NAMA MURID</th>
+              <th>NO. WHATSAPP IBU BAPA</th>
+              <th style="text-align:center;">STATUS PEMBAYARAN</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+        </table>
+        <div class="footer">
+          Dicetak secara automatik daripada Sistem Yuran Digital FQC pada ${new Date().toLocaleDateString('ms-MY')}
+        </div>
+        <` + `script>
+          window.onload = function() {
+            setTimeout(function() {
+              window.print();
+            }, 300);
+          };
+        <` + `/script>
+      </body>
+      </html>
+    `;
+
+    printWin.document.write(docContent);
+    printWin.document.close();
+    showToast(`Dokumen PDF bagi bulan ${filterMonth} sedia untuk diprint / disimpan!`, "success");
+  } catch (err) {
+    showToast("Gagal menjana PDF: " + err.message, "error");
+  }
+}
+if (typeof window !== "undefined") window.exportUnpaidToPdf = exportUnpaidToPdf;
+
+
+// --- FUNGSI EXPORT TO EXCEL (CSV) SENARAI MURID BELUM BAYAR ---
+function exportUnpaidToExcel() {
+  try {
+    const filterMonth = document.getElementById("dash-month-filter")?.value || "OGOS";
+    const paidNamesSet = new Set();
+    
+    if (Array.isArray(appState.payments)) {
+      appState.payments.forEach(p => {
+        if (p.bulan && p.bulan.toUpperCase() === filterMonth.toUpperCase() && p.namaMurid) {
+          paidNamesSet.add(p.namaMurid.trim().toLowerCase());
+        }
+      });
+    }
+
+    const unpaidStudents = (appState.students || []).filter(s => !paidNamesSet.has((s.nama || '').trim().toLowerCase()));
+
+    if (unpaidStudents.length === 0) {
+      showToast(`Tahniah! Tiada murid yang belum bayar bagi bulan ${filterMonth}.`, "info");
+      return;
+    }
+
+    let csvContent = "\uFEFF";
+    csvContent += "Bil,Nama Murid,No. WhatsApp,Bulan,Status Pembayaran\n";
+
+    unpaidStudents.forEach((student, idx) => {
+      const cleanName = `"${(student.nama || '').replace(/"/g, '""')}"`;
+      const cleanPhone = `"${(student.phone || '-').replace(/"/g, '""')}"`;
+      csvContent += `${idx + 1},${cleanName},${cleanPhone},${filterMonth},BELUM BAYAR\n`;
+    });
+
+    const fileName = `Senarai_Murid_Belum_Bayar_${filterMonth}_FQC.csv`;
+    const encodedUri = "data:text/csv;charset=utf-8," + encodeURIComponent(csvContent);
+
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", fileName);
+    link.setAttribute("target", "_blank");
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => { if (document.body.contains(link)) document.body.removeChild(link); }, 1000);
+
+    showToast(`Fail Excel (${fileName}) berjaya dimuat turun!`, "success");
+  } catch (err) {
+    showToast("Gagal memuat turun Excel: " + err.message, "error");
+  }
+}
+if (typeof window !== "undefined") window.exportUnpaidToExcel = exportUnpaidToExcel;
 /**
  * ==============================================================================
  * SISTEM PEMBAYARAN YURAN & RESIT DIGITAL - FATHUL QURANIC CENTRE (FQC)
@@ -55,12 +202,12 @@ function safeSetStorage(key, val) {
 // Master 26 Fee Items Array
 const FEE_CHECKBOX_ITEMS = [
   { id: "mengaji_pendaftaran", group: "1. KELAS MENGAJI", label: "Pendaftaran Mengaji", stdPrice: 100, field: "pendaftaran", icon: "fa-book-quran" },
-  { id: "mengaji_bulanan", group: "1. KELAS MENGAJI", label: "Yuran Bulanan Mengaji", stdPrice: 100, field: "pengajianAlquran", icon: "fa-book-quran" },
+  { id: "mengaji_bulanan", group: "1. KELAS MENGAJI", label: "Yuran Bulanan Mengaji", stdPrice: 100, priceOptions: [100, 130], field: "pengajianAlquran", icon: "fa-book-quran" },
   { id: "mengaji_buku", group: "1. KELAS MENGAJI", label: "Buku Mengaji", stdPrice: 20, field: "bukuRekodModul", icon: "fa-book-open" },
   { id: "online_pendaftaran", group: "2. KELAS MENGAJI ONLINE", label: "Pendaftaran Online", stdPrice: 50, field: "pendaftaran", icon: "fa-laptop" },
   { id: "online_bulanan", group: "2. KELAS MENGAJI ONLINE", label: "Yuran Bulanan Online", stdPrice: 150, field: "pengajianAlquran", icon: "fa-laptop" },
   { id: "akademik_pendaftaran", group: "3. TUISYEN AKADEMIK", label: "Pendaftaran Akademik", stdPrice: 50, field: "pendaftaran", icon: "fa-graduation-cap" },
-  { id: "akademik_1", group: "3. TUISYEN AKADEMIK", label: "Tuisyen Akademik 1 Subjek", stdPrice: 35, field: "kelasAkademik", icon: "fa-book" },
+  { id: "akademik_1", group: "3. TUISYEN AKADEMIK", label: "Tuisyen Akademik 1 Subjek", stdPrice: 35, priceOptions: [35, 40], field: "kelasAkademik", icon: "fa-book" },
   { id: "akademik_4", group: "3. TUISYEN AKADEMIK", label: "Tuisyen Akademik 4 Subjek", stdPrice: 110, field: "kelasAkademik", icon: "fa-layer-group" },
   { id: "kafa_pendaftaran", group: "4. TUISYEN KAFA (THN 2-6)", label: "Pendaftaran KAFA", stdPrice: 100, field: "pendaftaran", icon: "fa-mosque" },
   { id: "kafa_bulanan", group: "4. TUISYEN KAFA (THN 2-6)", label: "Yuran Bulanan KAFA", stdPrice: 100, field: "kelasKafa", icon: "fa-mosque" },
@@ -273,6 +420,14 @@ function renderCheckboxFeeGroups() {
     const groupIcon = items[0]?.icon || "fa-list";
     html += `<div class="fee-group-block"><div class="fee-group-header"><i class="fa-solid ${groupIcon}"></i> ${groupName}</div><div class="fee-checkbox-grid">`;
     items.forEach(item => {
+      let priceInputHtml = "";
+      if (Array.isArray(item.priceOptions) && item.priceOptions.length > 0) {
+        let optionsHtml = item.priceOptions.map(p => `<option value="${p}">${p}</option>`).join('');
+        priceInputHtml = `<select id="price-${item.id}" class="fee-card-price-input" style="font-weight:800; cursor:pointer; background:transparent;" onchange="onFeePriceInput('${item.id}')" onclick="event.stopPropagation()">${optionsHtml}</select>`;
+      } else {
+        priceInputHtml = `<input type="number" id="price-${item.id}" class="fee-card-price-input" min="0" value="${item.stdPrice}" oninput="onFeePriceInput('${item.id}')" onclick="event.stopPropagation()">`;
+      }
+
       html += `
         <div class="fee-checkbox-card" id="card-${item.id}" onclick="toggleFeeCard('${item.id}', event)">
           <div class="fee-card-left">
@@ -281,7 +436,7 @@ function renderCheckboxFeeGroups() {
           </div>
           <div class="fee-card-price-group" onclick="event.stopPropagation()">
             <span class="fee-card-price-prefix">RM</span>
-            <input type="number" id="price-${item.id}" class="fee-card-price-input" min="0" value="${item.stdPrice}" oninput="onFeePriceInput('${item.id}')" onclick="event.stopPropagation()">
+            ${priceInputHtml}
           </div>
         </div>
       `;
@@ -572,15 +727,106 @@ async function actionHantarWhatsapp() {
   }
 
   const itemsListText = JSON.parse(saved.butiranItem || "[]").map(i => `• ${i.label}: RM${i.paidPrice}`).join("\n");
-  const msg = `*RESIT PEMBAYARAN YURAN FATHUL QURANIC CENTRE (FQC)*\n\nNo. Resit: ${saved.noResit}\nNama Murid: ${saved.namaMurid}\nTarikh: ${saved.tarikh}\nBulan: ${saved.bulan}\nKaedah: ${saved.kaedahBayaran}\n\n*BUTIRAN YURAN:*\n${itemsListText}\n\n*JUMLAH KESELURUHAN: RM${saved.jumlah}*\n\nTerima kasih atas pembayaran yuran anak anda. Semoga dipertambahkan rezeki dan diberkati. Barokallahufik.`;
+  const msg = `*RESIT PEMBAYARAN YURAN FATHUL QURANIC CENTRE (NS0326067-A)*\n\nNo. Resit: ${saved.noResit}\nNama Murid: ${saved.namaMurid}\nTarikh: ${saved.tarikh}\nBulan: ${saved.bulan}\nKaedah: ${saved.kaedahBayaran}\n\n*BUTIRAN YURAN:*\n${itemsListText}\n\n*JUMLAH KESELURUHAN: RM${saved.jumlah}*\n\nTerima kasih atas pembayaran yuran anak anda. Semoga dipertambahkan rezeki dan diberkati. Barokallahufik.`;
   window.open(`https://wa.me/${phoneFormatted}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
+// --- FUNGSI CETAK RESIT (BULLETPROOF 1 MUKA SURAT A4 RESIT SAHAJA) ---
 function actionCetakResit() {
-  window.print();
-}
+  try {
+    if (typeof switchView === "function") {
+      switchView('bayaran');
+    }
 
-function actionResetBorang() {
+    document.body.classList.add("printing-receipt-only");
+
+    setTimeout(() => {
+      window.print();
+      setTimeout(() => {
+        document.body.classList.remove("printing-receipt-only");
+      }, 1000);
+    }, 200);
+  } catch (err) {
+    window.print();
+  }
+}
+if (typeof window !== "undefined") window.actionCetakResit = actionCetakResit;const printWin = window.open("", "_blank", "width=800,height=900");
+    if (!printWin) {
+      window.print();
+      return;
+    }
+
+    const receiptHtml = receiptEl.outerHTML;
+
+    const docContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Resit Pembayaran - Fathul Quranic Centre</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+          @page { size: A4 portrait; margin: 12mm; }
+          body {
+            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+            background: #ffffff;
+            color: #0f172a;
+            margin: 0;
+            padding: 0;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+          .receipt-paper {
+            width: 100%;
+            max-width: 100%;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+          .receipt-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #2e7d32; padding-bottom: 0.85rem; margin-bottom: 0.85rem; }
+          .receipt-header-left { display: flex; align-items: center; gap: 0.85rem; }
+          .receipt-logo { width: 56px; height: 56px; object-fit: contain; }
+          .receipt-centre-title { font-size: 1.1rem; font-weight: 800; color: #1b4d2e; line-height: 1.2; }
+          .receipt-centre-address { font-size: 0.7rem; color: #64748b; margin-top: 3px; max-width: 320px; }
+          .receipt-title-badge { text-align: right; }
+          .receipt-title-badge h2 { font-size: 1.2rem; font-weight: 800; color: #1b4d2e; margin: 0; }
+          .receipt-no-tag { font-size: 0.8rem; font-weight: 700; color: #2e7d32; background: #e8f5e9; padding: 0.15rem 0.5rem; border-radius: 4px; display: inline-block; margin-top: 4px; }
+          .receipt-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem; background: #f8fafc; padding: 0.75rem; border-radius: 6px; font-size: 0.82rem; }
+          .receipt-meta-item { display: flex; gap: 0.4rem; }
+          .receipt-meta-label { font-weight: 700; color: #64748b; }
+          .receipt-meta-value { font-weight: 700; color: #0f172a; }
+          .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; font-size: 0.82rem; }
+          .receipt-table th { background: #1b4d2e; color: #ffffff; padding: 0.55rem 0.75rem; font-weight: 700; text-align: left; }
+          .receipt-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid #e2e8f0; }
+          .receipt-footer-section { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 1rem; padding-top: 0.85rem; border-top: 1px solid #e2e8f0; }
+          .receipt-signature-box { text-align: center; }
+          .receipt-signature-img { height: 44px; object-fit: contain; margin-bottom: 2px; }
+          .receipt-signature-title { font-size: 0.7rem; font-weight: 700; color: #64748b; border-top: 1px dashed #64748b; padding-top: 3px; }
+          .receipt-total-box { text-align: right; }
+          .receipt-total-label { font-size: 0.8rem; font-weight: 700; color: #64748b; }
+          .receipt-total-value { font-size: 1.45rem; font-weight: 800; color: #1b4d2e; }
+        </style>
+      </head>
+      <body>
+        ${receiptHtml}
+        <` + `script>
+          window.onload = function() {
+            setTimeout(function() {
+              window.print();
+            }, 300);
+          };
+        <` + `/script>
+      </body>
+      </html>
+    `;
+
+    printWin.document.write(docContent);
+    printWin.document.close();
+  } catch (e) {
+    window.print();
+  }
+}
+if (typeof window !== "undefined") window.actionCetakResit = actionCetakResit;function actionResetBorang() {
   appState.selectedStudent = null;
   const searchInput = document.getElementById("student-search-input");
   if (searchInput) searchInput.value = "";
@@ -677,7 +923,7 @@ function sendWaReminder(studentName, phone, month) {
     showToast("Nombor WhatsApp tidak sah untuk murid ini.", "warning");
     return;
   }
-  const msg = `*PERINGATAN MESRA BAYARAN YURAN FATHUL QURANIC CENTRE (FQC)*\n\nAssalamu'alaikum / Salam Sejahtera Ibu/Bapa ${studentName},\n\nIni adalah peringatan mesra berkenaan yuran pengajian bulan *${month}* bagi murid *${studentName}* yang belum dijelaskan.\n\nMohon ibu/bapa membuat makluman atau pembayaran yuran. Terima kasih atas kerjasama dan keprihatinan ibu/bapa.\n\nBarakallahufik,\n*Fathul Quranic Centre (FQC)*`;
+  const msg = `*PERINGATAN MESRA BAYARAN YURAN FATHUL QURANIC CENTRE (FQC)*\n\nAssalamu'alaikum / Salam Sejahtera Ibu/Bapa ${studentName},\n\nIni adalah peringatan mesra berkenaan yuran pengajian bulan *${month}* bagi murid *${studentName}* yang belum dijelaskan.\n\nMohon ibu/bapa membuat makluman atau pembayaran yuran. Terima kasih atas kerjasama dan keprihatinan ibu/bapa.\n\nBarakallahufik,\n*Fathul Quranic Centre (NS0326067-A)*`;
   window.open(`https://wa.me/${phoneFormatted}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
@@ -752,71 +998,118 @@ function cetakResitRekod(idx) {
   showToast(`Melihat Resit ${p.noResit}`, "info");
 }
 
-async function fetchStudentsFromBackend(showToastMsg = false) {
+
+
+
+
+// --- FUNGSI PROMISE-BASED BACKEND FETCHING (GUARANTEED 1-CLICK REFRESH) ---
+function fetchStudentsFromBackend(showToastMsg = false) {
   if (showToastMsg) showLoading(true, "Memuat turun data murid terkini dari Google Sheets...");
 
-  if (typeof google !== "undefined" && google.script && google.script.run) {
-    google.script.run
-      .withSuccessHandler(function(studentsData) {
+  return new Promise((resolve) => {
+    if (typeof google !== "undefined" && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(function(studentsData) {
+          if (showToastMsg) showLoading(false);
+          if (Array.isArray(studentsData) && studentsData.length > 0) {
+            appState.students = studentsData;
+            if (typeof initStudentSearch === "function") initStudentSearch();
+            if (typeof renderStudentSelectOptions === "function") renderStudentSelectOptions();
+            if (typeof renderDashboard === "function") renderDashboard();
+            if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik dari Google Sheets!`, "success");
+          }
+          resolve(appState.students);
+        })
+        .withFailureHandler(function(err) {
+          if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid: " + err, "error"); }
+          resolve(appState.students);
+        })
+        .getStudents();
+      return;
+    }
+
+    if (!appState.appsScriptUrl) {
+      if (showToastMsg) showLoading(false);
+      resolve(appState.students);
+      return;
+    }
+
+    fetch(`${appState.appsScriptUrl}?action=getStudents`)
+      .then(res => res.json())
+      .then(data => {
         if (showToastMsg) showLoading(false);
-        if (Array.isArray(studentsData) && studentsData.length > 0) {
-          appState.students = studentsData;
-          initStudentSearch();
-          renderDashboard();
+        if (data && data.success && Array.isArray(data.data) && data.data.length > 0) {
+          appState.students = data.data;
+          if (typeof initStudentSearch === "function") initStudentSearch();
+          if (typeof renderStudentSelectOptions === "function") renderStudentSelectOptions();
+          if (typeof renderDashboard === "function") renderDashboard();
           if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik dari Google Sheets!`, "success");
         }
+        resolve(appState.students);
       })
-      .withFailureHandler(function(err) {
-        if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid: " + err, "error"); }
-      })
-      .getStudents();
-    return;
-  }
-
-  if (!appState.appsScriptUrl) return;
-  try {
-    const res = await fetch(`${appState.appsScriptUrl}?action=getStudents`);
-    const data = await res.json();
-    if (showToastMsg) showLoading(false);
-    if (data.success && Array.isArray(data.data) && data.data.length > 0) {
-      appState.students = data.data;
-      initStudentSearch();
-      renderDashboard();
-      if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik dari Google Sheets!`, "success");
-    }
-  } catch (err) {
-    if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid.", "error"); }
-  }
+      .catch(err => {
+        if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid.", "error"); }
+        resolve(appState.students);
+      });
+  });
 }
 
-async function fetchPaymentHistoryFromBackend() {
-  if (typeof google !== "undefined" && google.script && google.script.run) {
-    google.script.run
-      .withSuccessHandler(function(historyData) {
-        if (Array.isArray(historyData) && historyData.length > 0) {
-          appState.payments = historyData;
-          saveLocalStoragePayments();
-          calculateNextReceiptNo();
-          renderDashboard();
-          renderHistoryTable();
+function fetchPaymentHistoryFromBackend() {
+  return new Promise((resolve) => {
+    if (typeof google !== "undefined" && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(function(historyData) {
+          if (Array.isArray(historyData) && historyData.length > 0) {
+            appState.payments = historyData;
+            if (typeof saveLocalStoragePayments === "function") saveLocalStoragePayments();
+            if (typeof calculateNextReceiptNo === "function") calculateNextReceiptNo();
+            if (typeof renderDashboard === "function") renderDashboard();
+            if (typeof renderHistoryTable === "function") renderHistoryTable();
+          }
+          resolve(appState.payments);
+        })
+        .withFailureHandler(function() { resolve(appState.payments); })
+        .getPaymentHistory();
+      return;
+    }
+
+    if (!appState.appsScriptUrl) {
+      resolve(appState.payments);
+      return;
+    }
+
+    fetch(`${appState.appsScriptUrl}?action=getPaymentHistory`)
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.success && Array.isArray(data.data) && data.data.length > 0) {
+          appState.payments = data.data;
+          if (typeof saveLocalStoragePayments === "function") saveLocalStoragePayments();
+          if (typeof calculateNextReceiptNo === "function") calculateNextReceiptNo();
+          if (typeof renderDashboard === "function") renderDashboard();
+          if (typeof renderHistoryTable === "function") renderHistoryTable();
         }
+        resolve(appState.payments);
       })
-      .getPaymentHistory();
-    return;
-  }
-
-  if (!appState.appsScriptUrl) return;
-  try {
-    const res = await fetch(`${appState.appsScriptUrl}?action=getPaymentHistory`);
-    const data = await res.json();
-    if (data.success && Array.isArray(data.data) && data.data.length > 0) {
-      appState.payments = data.data;
-      saveLocalStoragePayments();
-      calculateNextReceiptNo();
-      renderDashboard();
-      renderHistoryTable();
-    }
-  } catch (err) {}
+      .catch(() => { resolve(appState.payments); });
+  });
 }
 
+async function actionRefreshDashboardData() {
+  showLoading(true, "Mengemaskini pangkalan data Google Sheets...");
+  try {
+    await Promise.all([
+      fetchStudentsFromBackend(false),
+      fetchPaymentHistoryFromBackend()
+    ]);
+    renderDashboard();
+    renderHistoryTable();
+    if (typeof renderStudentSelectOptions === "function") renderStudentSelectOptions();
+    showToast(`Berjaya! Data Dashboard & ${appState.students.length} murid dikemaskini dari Google Sheets!`, "success");
+  } catch (err) {
+    showToast("Mengemaskini data.", "info");
+  } finally {
+    showLoading(false);
+  }
+}
+if (typeof window !== "undefined") window.actionRefreshDashboardData = actionRefreshDashboardData;
 
