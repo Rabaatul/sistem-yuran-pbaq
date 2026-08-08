@@ -47,41 +47,7 @@ async function actionRefreshDashboardData() {
     showLoading(false);
   }
 }
-if (typeof window !== "undefined") window.actionRefreshDashboardData = actionRefreshDashboardData;if (typeof window !== "undefined") window.exportUnpaidToExcel = exportUnpaidToExcel;);
-
-    const unpaidStudents = appState.students.filter(s => !paidNamesSet.has(s.nama.trim().toLowerCase()));
-
-    if (unpaidStudents.length === 0) {
-      showToast(`Tahniah! Tiada murid yang belum bayar bagi bulan ${filterMonth}.`, "info");
-      return;
-    }
-
-    let csvContent = "\uFEFF";
-    csvContent += "Bil,Nama Murid,No. WhatsApp,Bulan,Status Pembayaran\n";
-
-    unpaidStudents.forEach((student, idx) => {
-      const cleanName = `"${(student.nama || '').replace(/"/g, '""')}"`;
-      const cleanPhone = `"${(student.phone || '-').replace(/"/g, '""')}"`;
-      csvContent += `${idx + 1},${cleanName},${cleanPhone},${filterMonth},BELUM BAYAR\n`;
-    });
-
-    const fileName = `Senarai_Murid_Belum_Bayar_${filterMonth}_FQC.csv`;
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", fileName);
-    link.style.display = "none";
-    document.body.appendChild(link);
-    link.click();
-    setTimeout(() => { if (document.body.contains(link)) document.body.removeChild(link); }, 1000);
-
-    showToast(`Fail Excel (${fileName}) berjaya dimuat turun!`, "success");
-  } catch (err) {
-    showToast("Gagal memuat turun Excel: " + err.message, "error");
-  }
-}
+if (typeof window !== "undefined") window.actionRefreshDashboardData = actionRefreshDashboardData;
 
 /**
  * ==============================================================================

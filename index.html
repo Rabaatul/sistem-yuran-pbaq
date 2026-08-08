@@ -7,7 +7,991 @@
   
   <!-- FontAwesome & Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css">
+  <style>
+/* Embedded Stylesheet for Google Apps Script */
+/* ==============================================================================
+   SISTEM PEMBAYARAN YURAN & RESIT DIGITAL - FATHUL QURANIC CENTRE (FQC)
+   Aesthetic Design System & Stylesheet (styles.css)
+   ============================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --primary-main: #2e7d32;
+  --primary-dark: #1b4d2e;
+  --primary-light: #4caf50;
+  --primary-soft: #e8f5e9;
+  --accent-gold: #d4af37;
+  --accent-gold-light: #fff9e6;
+  
+  --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  --surface-card: #ffffff;
+  --surface-subtle: #f8fafc;
+  
+  --text-dark: #0f172a;
+  --text-medium: #334155;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 10px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg-gradient);
+  color: var(--text-dark);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Layout Shell */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 280px;
+  background: linear-gradient(180deg, #1b4d2e 0%, #143b23 100%);
+  color: #ffffff;
+  padding: 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-shrink: 0;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  transition: var(--transition);
+}
+
+.brand-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  margin-bottom: 1.5rem;
+}
+
+.brand-logo-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  padding: 3px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.brand-title-text {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.brand-subtitle-text {
+  font-size: 0.72rem;
+  color: var(--accent-gold);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex-grow: 1;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.8rem 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: var(--transition);
+  border: none;
+  background: transparent;
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  transform: translateX(4px);
+}
+
+.nav-link.active {
+  background: var(--primary-light);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.nav-link i {
+  font-size: 1.1rem;
+  width: 24px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+}
+
+/* Main Content Area */
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.top-header {
+  background: var(--surface-card);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.header-title-box h1 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+}
+
+.header-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.header-badge {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  border: 1px solid rgba(46, 125, 50, 0.2);
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.content-body {
+  padding: 1.75rem 2rem;
+  flex-grow: 1;
+}
+
+.tab-view {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.tab-view.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Dashboard Cards Grid */
+.dashboard-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.metric-card {
+  background: var(--surface-card);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: var(--transition);
+}
+
+.metric-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.metric-info h3 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-top: 0.25rem;
+}
+
+.metric-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--primary-soft);
+  color: var(--primary-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+}
+
+/* Form Cards & Grid */
+.payment-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.75rem;
+}
+
+@media (max-width: 1024px) {
+  .payment-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: var(--surface-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.card-header {
+  padding: 1rem 1.25rem;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-body {
+  padding: 1.25rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-medium);
+  margin-bottom: 0.4rem;
+}
+
+.form-control, .form-select {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  color: var(--text-dark);
+  outline: none;
+  transition: var(--transition);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary-main);
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+/* Searchable Select Dropdown */
+.searchable-select {
+  position: relative;
+}
+
+.dropdown-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1.5px solid var(--primary-main);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 50;
+  display: none;
+  box-shadow: var(--shadow-lg);
+}
+
+.dropdown-options.show {
+  display: block;
+}
+
+.option-item {
+  padding: 0.6rem 0.85rem;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.option-item:hover {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+}
+
+/* Fee Checkbox Cards Container */
+.fee-group-block {
+  margin-bottom: 1.1rem;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.fee-group-header {
+  background: linear-gradient(135deg, #1b4d2e, #2e7d32);
+  color: #ffffff;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fee-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.6rem;
+  padding: 0.75rem;
+}
+
+.fee-checkbox-card {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.fee-checkbox-card:hover {
+  border-color: #2e7d32;
+  box-shadow: 0 2px 8px rgba(46,125,50,0.12);
+}
+
+.fee-checkbox-card.checked {
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9) !important;
+  border: 2px solid #2e7d32 !important;
+  box-shadow: 0 3px 10px rgba(46,125,50,0.18);
+}
+
+.fee-card-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-grow: 1;
+}
+
+.fee-card-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #2e7d32;
+  cursor: pointer;
+}
+
+.fee-card-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.fee-card-price-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 2px 6px;
+  width: 105px;
+}
+
+.fee-checkbox-card.checked .fee-card-price-group {
+  border-color: #2e7d32;
+  background: #ffffff;
+}
+
+.fee-card-price-prefix {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #2e7d32;
+}
+
+.fee-card-price-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: right;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #1e293b;
+  padding: 3px 2px;
+  outline: none;
+}
+
+.total-summary-card {
+  background: linear-gradient(135deg, #1b4d2e 0%, #2e7d32 100%);
+  color: #ffffff;
+  padding: 1.25rem;
+  border-radius: var(--radius-md);
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-md);
+}
+
+.total-summary-label {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.total-summary-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid var(--accent-gold);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.75rem;
+}
+
+.total-summary-prefix {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+}
+
+.total-summary-input {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 1.35rem;
+  font-weight: 800;
+  width: 120px;
+  text-align: right;
+  outline: none;
+}
+
+/* Payment Method Radios */
+.payment-method-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.method-radio-label {
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.4rem;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.method-radio-label input {
+  display: none;
+}
+
+.method-radio-label:hover {
+  border-color: var(--primary-main);
+  background: var(--primary-soft);
+}
+
+.method-radio-label.selected {
+  border-color: var(--primary-main);
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+}
+
+/* Receipt Preview Styling (Exact A4 Printable Format) */
+.receipt-paper {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.receipt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--primary-main);
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.receipt-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.receipt-logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.receipt-centre-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  line-height: 1.2;
+}
+
+.receipt-centre-address {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 3px;
+  max-width: 320px;
+}
+
+.receipt-title-badge {
+  text-align: right;
+}
+
+.receipt-title-badge h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  letter-spacing: 1px;
+}
+
+.receipt-no-tag {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary-main);
+  background: var(--primary-soft);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.receipt-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  background: var(--surface-subtle);
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+.receipt-meta-item {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.receipt-meta-label {
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.receipt-meta-value {
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+/* Receipt Table */
+.receipt-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+}
+
+.receipt-table th {
+  background: var(--primary-dark);
+  color: #ffffff;
+  padding: 0.65rem 0.85rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.receipt-table td {
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.receipt-table tr.active-item {
+  font-weight: 600;
+}
+
+.receipt-table .amount-cell {
+  text-align: right;
+  font-weight: 700;
+}
+
+.receipt-footer-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.receipt-signature-box {
+  text-align: center;
+}
+
+.receipt-signature-img {
+  height: 50px;
+  object-fit: contain;
+  margin-bottom: 4px;
+}
+
+.receipt-signature-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  border-top: 1px dashed var(--text-muted);
+  padding-top: 4px;
+}
+
+.receipt-total-box {
+  text-align: right;
+}
+
+.receipt-total-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.receipt-total-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+}
+
+/* Action Toolbar */
+.action-toolbar {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.btn {
+  padding: 0.65rem 1.25rem;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+}
+
+.btn-primary {
+  background: var(--primary-main);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  box-shadow: 0 4px 12px rgba(46,125,50,0.3);
+}
+
+.btn-whatsapp {
+  background: #25d366;
+  color: #ffffff;
+}
+
+.btn-whatsapp:hover {
+  background: #1da851;
+  box-shadow: 0 4px 12px rgba(37,211,102,0.3);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--border-color);
+  color: var(--text-medium);
+}
+
+.btn-outline:hover {
+  border-color: var(--text-dark);
+  background: var(--surface-subtle);
+}
+
+.btn-refresh-students {
+  background: transparent;
+  border: none;
+  color: var(--primary-main);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 6px;
+}
+
+.btn-refresh-students:hover {
+  text-decoration: underline;
+}
+
+/* Data Table */
+.data-table-container {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.data-table th {
+  background: var(--surface-subtle);
+  color: var(--text-medium);
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.data-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.data-table tr:hover {
+  background: var(--primary-soft);
+}
+
+/* Toast Notification & Loading Overlay */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #0f172a;
+  color: #ffffff;
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.toast.success { background: #15803d; }
+.toast.warning { background: #b45309; }
+.toast.error { background: #b91c1c; }
+
+.loading-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: var(--transition);
+}
+
+.loading-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.spinner {
+  width: 44px;
+  height: 44px;
+  border: 4px solid var(--primary-soft);
+  border-top-color: var(--primary-main);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Mobile Media Queries */
+.mobile-nav-bar {
+  display: none;
+  background: var(--primary-dark);
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0; left: -280px; bottom: 0;
+    z-index: 999;
+  }
+  .sidebar.mobile-open {
+    left: 0;
+  }
+  .mobile-nav-bar {
+    display: flex;
+  }
+  .top-header {
+    display: none;
+  }
+  .content-body {
+    padding: 1rem;
+  }
+  .payment-method-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Printable Clean Styles */
+@media print {
+  .sidebar, .top-header, .mobile-nav-bar, .action-toolbar, .no-print {
+    display: none !important;
+  }
+  body {
+    background: #ffffff;
+  }
+  .main-content, .content-body, .card {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  .receipt-paper {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+}
+
+.badge-paid {
+  background: #dcfce7;
+  color: #15803d;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.badge-unpaid {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+</style>
 </head>
 <body>
 
@@ -421,6 +1405,877 @@
     </main>
   </div>
 
-  <script src="js/app.js"></script>
+  <script>
+
+// --- FUNGSI KEMASKINI DATA DASHBOARD (BULLETPROOF ASYNC) ---
+async function actionRefreshDashboardData() {
+  showToast("Mengemaskini pangkalan data Google Sheets...", "info");
+  showLoading(true, "Mengemaskini data terkini dari Google Sheets...");
+  
+  try {
+    if (typeof google !== "undefined" && google.script && google.script.run) {
+      await new Promise((resolve) => {
+        google.script.run
+          .withSuccessHandler(function(data) {
+            if (Array.isArray(data) && data.length > 0) {
+              appState.students = data;
+              if (typeof renderStudentSelectOptions === "function") renderStudentSelectOptions();
+            }
+            resolve();
+          })
+          .withFailureHandler(function() { resolve(); })
+          .getStudents();
+      });
+
+      await new Promise((resolve) => {
+        google.script.run
+          .withSuccessHandler(function(history) {
+            if (Array.isArray(history)) {
+              appState.payments = history;
+              if (typeof saveLocalStoragePayments === "function") saveLocalStoragePayments();
+            }
+            resolve();
+          })
+          .withFailureHandler(function() { resolve(); })
+          .getPaymentHistory();
+      });
+    } else {
+      if (typeof fetchStudentsFromBackend === "function") fetchStudentsFromBackend();
+      if (typeof fetchPaymentHistoryFromBackend === "function") fetchPaymentHistoryFromBackend();
+      await new Promise(r => setTimeout(r, 600));
+    }
+
+    if (typeof renderDashboard === "function") renderDashboard();
+    if (typeof renderHistoryTable === "function") renderHistoryTable();
+    showToast("Semua Data Dashboard berjaya dikemaskini!", "success");
+  } catch (err) {
+    showToast("Data Dashboard dikemaskini.", "info");
+  } finally {
+    showLoading(false);
+  }
+}
+if (typeof window !== "undefined") window.actionRefreshDashboardData = actionRefreshDashboardData;
+
+/**
+ * ==============================================================================
+ * SISTEM PEMBAYARAN YURAN & RESIT DIGITAL - FATHUL QURANIC CENTRE (FQC)
+ * Clean Modular Application Logic (app.js)
+ * ==============================================================================
+ */
+
+// Master List 28 Murid FQC Default Terbaharu
+const MASTER_STUDENTS_DEFAULT = [
+  { id: 1, nama: "Syed Mohd Alwi Bin Syed Mohamed", phone: "0145366009" },
+  { id: 2, nama: "Faid Fareed Bin Mohd Shah Fitri", phone: "01481810192" },
+  { id: 3, nama: "Mohd Fadzli Bin Ab Wahab", phone: "01133323707" },
+  { id: 4, nama: "Nur Aliyah Binti Muhammad A'fifi", phone: "0133447681" },
+  { id: 5, nama: "Nur Inas Tihani Binti Muhammed Nasri", phone: "0179378264" },
+  { id: 6, nama: "Fidatul Fitriah Binti Fazli", phone: "0176826787" },
+  { id: 7, nama: "Nur Damia Arissa Bt Faizol Azimi", phone: "0132955402" },
+  { id: 8, nama: "Alya Sofia Binti Aris", phone: "0173235786" },
+  { id: 9, nama: "Tengku Aqill Hafy Bin Tengku Shahrizal", phone: "0133440896" },
+  { id: 10, nama: "Muhammad Aathif Adhwa Bin Mohd Fazli", phone: "0123209953" },
+  { id: 11, nama: "Nur Aimy Safiy Binti Shaiful Azmi", phone: "0108901030" },
+  { id: 12, nama: "Muhammad Harith Bin Muhamad Hosni", phone: "0173409430" },
+  { id: 13, nama: "Nur Ayesha Zahira Binti Abdullah Zawawie", phone: "0132410737" },
+  { id: 14, nama: "Wan Nadzrin Afeef Bin Wan Ibrahim Jefri", phone: "01110081660" },
+  { id: 15, nama: "Hilal Sufi Bin Hasrull Nizam", phone: "0193593693" },
+  { id: 16, nama: "Maira Yusreena Binti Muhamad Yazid", phone: "0129878510" },
+  { id: 17, nama: "Izz Zara Sofia Binti Mohd Safarudin", phone: "0162710027" },
+  { id: 18, nama: "Ammar Luqman Bin Shamsudin", phone: "0172382980" },
+  { id: 19, nama: "Ainan Salsabila Binti Hafiz Anuar", phone: "0139311818" },
+  { id: 20, nama: "Arissa Medina Bt Ahmad Fauzi", phone: "0129425926" },
+  { id: 21, nama: "Ammar Ramadhan Bin Ahmad Fauzi", phone: "0129425926" },
+  { id: 22, nama: "Muhammad Rizal Arshad Bin Mohd Rosmizam", phone: "0129343676" },
+  { id: 23, nama: "Nur Raisha Adawiyah Binti Mohd Rosmizam", phone: "0129343676" },
+  { id: 24, nama: "Aisyah Humaira Bt Lukman", phone: "0196550670" },
+  { id: 25, nama: "Izarra Khaiyrra Bt Mohd Aris", phone: "0199872971" },
+  { id: 26, nama: "Ahmad Aariz Dayyan B. Mohd Kamalludin", phone: "0132315660" },
+  { id: 27, nama: "Nur Aisya' Qaseh Bt Aziman", phone: "0179890260" },
+  { id: 28, nama: "NAJIHAH", phone: "0134565245" }
+];
+
+// Helper Safe Storage
+function safeGetStorage(key, defaultVal = "") {
+  try {
+    if (typeof localStorage !== "undefined") return localStorage.getItem(key) || defaultVal;
+  } catch (e) {}
+  return defaultVal;
+}
+
+function safeSetStorage(key, val) {
+  try {
+    if (typeof localStorage !== "undefined") localStorage.setItem(key, val);
+  } catch (e) {}
+}
+
+// Master 26 Fee Items Array
+const FEE_CHECKBOX_ITEMS = [
+  { id: "mengaji_pendaftaran", group: "1. KELAS MENGAJI", label: "Pendaftaran Mengaji", stdPrice: 100, field: "pendaftaran", icon: "fa-book-quran" },
+  { id: "mengaji_bulanan", group: "1. KELAS MENGAJI", label: "Yuran Bulanan Mengaji", stdPrice: 100, field: "pengajianAlquran", icon: "fa-book-quran" },
+  { id: "mengaji_buku", group: "1. KELAS MENGAJI", label: "Buku Mengaji", stdPrice: 20, field: "bukuRekodModul", icon: "fa-book-open" },
+  { id: "online_pendaftaran", group: "2. KELAS MENGAJI ONLINE", label: "Pendaftaran Online", stdPrice: 50, field: "pendaftaran", icon: "fa-laptop" },
+  { id: "online_bulanan", group: "2. KELAS MENGAJI ONLINE", label: "Yuran Bulanan Online", stdPrice: 150, field: "pengajianAlquran", icon: "fa-laptop" },
+  { id: "akademik_pendaftaran", group: "3. TUISYEN AKADEMIK", label: "Pendaftaran Akademik", stdPrice: 50, field: "pendaftaran", icon: "fa-graduation-cap" },
+  { id: "akademik_1", group: "3. TUISYEN AKADEMIK", label: "Tuisyen Akademik 1 Subjek", stdPrice: 35, field: "kelasAkademik", icon: "fa-book" },
+  { id: "akademik_4", group: "3. TUISYEN AKADEMIK", label: "Tuisyen Akademik 4 Subjek", stdPrice: 110, field: "kelasAkademik", icon: "fa-layer-group" },
+  { id: "kafa_pendaftaran", group: "4. TUISYEN KAFA (THN 2-6)", label: "Pendaftaran KAFA", stdPrice: 100, field: "pendaftaran", icon: "fa-mosque" },
+  { id: "kafa_bulanan", group: "4. TUISYEN KAFA (THN 2-6)", label: "Yuran Bulanan KAFA", stdPrice: 100, field: "kelasKafa", icon: "fa-mosque" },
+  { id: "kafa_buku", group: "4. TUISYEN KAFA (THN 2-6)", label: "Buku KAFA", stdPrice: 60, field: "bukuRekodModul", icon: "fa-book-open" },
+  { id: "jawi_pendaftaran", group: "5. KELAS KHAS JAWI", label: "Pendaftaran Jawi", stdPrice: 100, field: "pendaftaran", icon: "fa-pen-nib" },
+  { id: "jawi_bulanan", group: "5. KELAS KHAS JAWI", label: "Yuran Bulanan Jawi", stdPrice: 100, field: "kelasKhasJawi", icon: "fa-pen-nib" },
+  { id: "jawi_buku", group: "5. KELAS KHAS JAWI", label: "Buku Jawi", stdPrice: 60, field: "bukuRekodModul", icon: "fa-book-open" },
+  { id: "upkk_pendaftaran", group: "6. KELAS UPKK", label: "Pendaftaran UPKK", stdPrice: 100, field: "pendaftaran", icon: "fa-award" },
+  { id: "upkk_bulanan", group: "6. KELAS UPKK", label: "Yuran Bulanan UPKK", stdPrice: 100, field: "kelasUpkk", icon: "fa-award" },
+  { id: "upkk_buku", group: "6. KELAS UPKK", label: "Buku UPKK", stdPrice: 64, field: "bukuRekodModul", icon: "fa-book-open" },
+  { id: "psra_pendaftaran", group: "7. KELAS PSRA", label: "Pendaftaran PSRA", stdPrice: 100, field: "pendaftaran", icon: "fa-certificate" },
+  { id: "psra_bulanan", group: "7. KELAS PSRA", label: "Yuran Bulanan PSRA", stdPrice: 100, field: "kelasPsra", icon: "fa-certificate" },
+  { id: "psra_buku", group: "7. KELAS PSRA", label: "Buku PSRA", stdPrice: 60, field: "bukuRekodModul", icon: "fa-book-open" },
+  { id: "transit_pendaftaran", group: "8. TRANSIT FQC", label: "Pendaftaran Transit", stdPrice: 150, field: "pendaftaran", icon: "fa-bus" },
+  { id: "transit_biasa", group: "8. TRANSIT FQC", label: "Transit Biasa", stdPrice: 260, field: "transit", icon: "fa-bus" },
+  { id: "transit_petang", group: "8. TRANSIT FQC", label: "Transit Sampai Petang", stdPrice: 310, field: "transit", icon: "fa-clock" },
+  { id: "transit_diskaun", group: "8. TRANSIT FQC", label: "Transit Diskaun", stdPrice: 200, field: "transit", icon: "fa-tags" },
+  { id: "transit_mengaji", group: "8. TRANSIT FQC", label: "Tambahan Mengaji", stdPrice: 50, field: "transit", icon: "fa-plus-circle" },
+  { id: "transit_ot", group: "8. TRANSIT FQC", label: "Tambahan OT Sebulan", stdPrice: 40, field: "transit", icon: "fa-user-clock" },
+  { id: "sumbangan", group: "9. SUMBANGAN & LAIN-LAIN", label: "Sumbangan / Modul / Lain-lain", stdPrice: 50, field: "sumbangan", icon: "fa-hand-holding-heart" }
+];
+
+// App State
+let appState = {
+  students: [...MASTER_STUDENTS_DEFAULT],
+  payments: [],
+  selectedStudent: null,
+  currentReceiptNo: "FQC-1100",
+  appsScriptUrl: safeGetStorage("fqc_apps_script_url", "https://script.google.com/macros/s/AKfycbx5Tc9OJfzfMRWx_nTpSDPAGWUwuZfwimJCrCxVwzmuQv4o02hu60xzEv2v0v6A32yf-w/exec"),
+  config: {
+    logoUrl: safeGetStorage("fqc_logo_url", "assets/logo.png"),
+    signatureUrl: safeGetStorage("fqc_signature_url", "assets/signature.png"),
+    backgroundUrl: safeGetStorage("fqc_background_url", "assets/pbaq-bg.png")
+  }
+};
+
+const DEFAULT_PLACEHOLDERS = {
+  logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231b4d2e'/><text x='50' y='55' font-size='30' font-family='sans-serif' font-weight='bold' fill='%23d4af37' text-anchor='middle'>FQC</text></svg>",
+  signature: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='60' viewBox='0 0 150 60'><path d='M10 40 Q 40 10, 70 40 T 130 20' stroke='%231b4d2e' stroke-width='3' fill='none'/><text x='75' y='55' font-size='10' font-family='sans-serif' fill='%2364748b' text-anchor='middle'>Pentadbir FQC</text></svg>",
+  background: ""
+};
+
+// Application Initialization
+document.addEventListener("DOMContentLoaded", () => {
+  initDateAndMonth();
+  initStudentSearch();
+  initFeeCalculations();
+  loadLocalStoragePayments();
+  loadAssetUrls();
+  calculateNextReceiptNo();
+  fetchStudentsFromBackend();
+  fetchPaymentHistoryFromBackend();
+  renderDashboard();
+  renderHistoryTable();
+  renderReceiptPreview();
+});
+
+// Toast & Loading Helpers
+function showToast(message, type = "success") {
+  const toast = document.getElementById("toast");
+  const msgEl = document.getElementById("toast-msg");
+  if (!toast || !msgEl) return;
+  
+  msgEl.innerText = message;
+  toast.className = `toast ${type} show`;
+  setTimeout(() => {
+    toast.className = `toast ${type}`;
+  }, 3500);
+}
+
+function showLoading(show, text = "Memproses data...") {
+  const loading = document.getElementById("loading");
+  const textEl = document.getElementById("loading-text");
+  if (!loading) return;
+  
+  if (textEl) textEl.innerText = text;
+  if (show) loading.classList.add("show");
+  else loading.classList.remove("show");
+}
+
+// Navigation Switcher
+function switchView(viewId) {
+  try {
+    document.querySelectorAll(".tab-view").forEach(el => el.classList.remove("active"));
+    document.querySelectorAll(".nav-link").forEach(el => el.classList.remove("active"));
+    
+    const targetView = document.getElementById(`view-${viewId}`);
+    const targetNav = document.getElementById(`nav-${viewId}`);
+
+    if (targetView) targetView.classList.add("active");
+    if (targetNav) targetNav.classList.add("active");
+
+    document.querySelector(".sidebar")?.classList.remove("mobile-open");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    if (viewId === "dashboard") renderDashboard();
+    if (viewId === "rekod") renderHistoryTable();
+    if (viewId === "bayaran") {
+      renderCheckboxFeeGroups();
+      updateTotalAmount();
+      renderReceiptPreview();
+    }
+  } catch (e) {
+    console.error("Ralat switchView:", e);
+  }
+}
+
+function toggleMobileSidebar() {
+  document.querySelector(".sidebar")?.classList.toggle("mobile-open");
+}
+
+function initDateAndMonth() {
+  const dateInput = document.getElementById("pay-date");
+  if (dateInput) dateInput.value = new Date().toISOString().split("T")[0];
+  
+  const monthSelect = document.getElementById("pay-month");
+  if (monthSelect) {
+    const monthsMalay = ["JANUARI", "FEBRUARI", "MAC", "APRIL", "MEI", "JUN", "JULAI", "OGOS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DISEMBER"];
+    monthSelect.value = monthsMalay[new Date().getMonth()];
+  }
+}
+
+function renderStudentSelectOptions() {
+  const selectEl = document.getElementById("student-native-select");
+  if (!selectEl) return;
+  let html = `<option value="">-- Tekan Di Sini Untuk Pilih Murid (${appState.students.length} Murid) --</option>`;
+  appState.students.forEach((student, idx) => {
+    html += `<option value="${idx}">${idx + 1}. ${student.nama} (${student.phone || 'Tiada No.'})</option>`;
+  });
+  selectEl.innerHTML = html;
+}
+
+function onNativeStudentSelect(idxVal) {
+  const phoneDisplay = document.getElementById("parent-phone-display");
+  const searchInput = document.getElementById("student-search-input");
+  if (idxVal === "") {
+    appState.selectedStudent = null;
+    if (phoneDisplay) phoneDisplay.value = "";
+    if (searchInput) searchInput.value = "";
+  } else {
+    const student = appState.students[parseInt(idxVal, 10)];
+    if (student) {
+      appState.selectedStudent = student;
+      if (phoneDisplay) phoneDisplay.value = student.phone || "";
+      if (searchInput) searchInput.value = student.nama;
+    }
+  }
+  renderReceiptPreview();
+}
+
+function initStudentSearch() {
+  renderStudentSelectOptions();
+  const searchInput = document.getElementById("student-search-input");
+  const dropdown = document.getElementById("student-dropdown-options");
+  const phoneDisplay = document.getElementById("parent-phone-display");
+
+  if (!searchInput || !dropdown) return;
+
+  function renderOptions(filterText = "") {
+    dropdown.innerHTML = "";
+    const filtered = appState.students.filter(s => 
+      s.nama.toLowerCase().includes(filterText.toLowerCase()) ||
+      (s.phone && s.phone.includes(filterText))
+    );
+
+    if (filtered.length === 0) {
+      dropdown.innerHTML = `<div class="option-item" style="color:var(--text-muted);">Tiada murid ditemui</div>`;
+      return;
+    }
+
+    filtered.forEach(student => {
+      const item = document.createElement("div");
+      item.className = "option-item";
+      item.innerHTML = `<span style="font-weight:600;">${student.nama}</span>`;
+      item.onclick = () => {
+        appState.selectedStudent = student;
+        searchInput.value = student.nama;
+        if (phoneDisplay) phoneDisplay.value = student.phone || '';
+        const selectEl = document.getElementById("student-native-select");
+        if (selectEl) {
+          const foundIdx = appState.students.findIndex(s => s.nama === student.nama);
+          if (foundIdx !== -1) selectEl.value = foundIdx.toString();
+        }
+        dropdown.classList.remove("show");
+        renderReceiptPreview();
+      };
+      dropdown.appendChild(item);
+    });
+  }
+
+  searchInput.addEventListener("focus", () => { renderOptions(searchInput.value); dropdown.classList.add("show"); });
+  searchInput.addEventListener("input", (e) => { renderOptions(e.target.value); dropdown.classList.add("show"); });
+  document.addEventListener("click", (e) => { if (!e.target.closest(".searchable-select")) dropdown.classList.remove("show"); });
+}
+
+// Fee Checkbox Render & Events
+function renderCheckboxFeeGroups() {
+  const container = document.getElementById("fee-checkbox-groups-container");
+  if (!container) return;
+
+  const groupsMap = {};
+  FEE_CHECKBOX_ITEMS.forEach(item => {
+    if (!groupsMap[item.group]) groupsMap[item.group] = [];
+    groupsMap[item.group].push(item);
+  });
+
+  let html = "";
+  Object.keys(groupsMap).forEach(groupName => {
+    const items = groupsMap[groupName];
+    const groupIcon = items[0]?.icon || "fa-list";
+    html += `<div class="fee-group-block"><div class="fee-group-header"><i class="fa-solid ${groupIcon}"></i> ${groupName}</div><div class="fee-checkbox-grid">`;
+    items.forEach(item => {
+      html += `
+        <div class="fee-checkbox-card" id="card-${item.id}" onclick="toggleFeeCard('${item.id}', event)">
+          <div class="fee-card-left">
+            <input type="checkbox" id="chk-${item.id}" class="fee-card-checkbox" onchange="onFeeCheckChange('${item.id}', this.checked, event)">
+            <span class="fee-card-label">${item.label}</span>
+          </div>
+          <div class="fee-card-price-group" onclick="event.stopPropagation()">
+            <span class="fee-card-price-prefix">RM</span>
+            <input type="number" id="price-${item.id}" class="fee-card-price-input" min="0" value="${item.stdPrice}" oninput="onFeePriceInput('${item.id}')" onclick="event.stopPropagation()">
+          </div>
+        </div>
+      `;
+    });
+    html += `</div></div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function toggleFeeCard(itemId, event) {
+  if (event && event.target && (event.target.tagName === 'INPUT' || event.target.classList.contains('fee-card-checkbox'))) {
+    return;
+  }
+  const chk = document.getElementById(`chk-${itemId}`);
+  if (!chk) return;
+  chk.checked = !chk.checked;
+  onFeeCheckChange(itemId, chk.checked, event);
+}
+
+function onFeeCheckChange(itemId, isChecked, event) {
+  if (event && event.stopPropagation) event.stopPropagation();
+  const card = document.getElementById(`card-${itemId}`);
+  if (card) {
+    if (isChecked) card.classList.add("checked");
+    else card.classList.remove("checked");
+  }
+  updateTotalAmount();
+}
+
+function onFeePriceInput(itemId) {
+  const chk = document.getElementById(`chk-${itemId}`);
+  const card = document.getElementById(`card-${itemId}`);
+  if (chk && !chk.checked) {
+    chk.checked = true;
+    if (card) card.classList.add("checked");
+  }
+  updateTotalAmount();
+}
+
+function initFeeCalculations() {
+  renderCheckboxFeeGroups();
+  document.getElementById("pay-date")?.addEventListener("change", renderReceiptPreview);
+  document.getElementById("pay-month")?.addEventListener("change", renderReceiptPreview);
+  document.querySelectorAll('input[name="kaedahBayaran"]').forEach(radio => {
+    radio.addEventListener("change", (e) => {
+      document.querySelectorAll('.method-radio-label').forEach(lbl => lbl.classList.remove('selected'));
+      e.target.closest('.method-radio-label')?.classList.add('selected');
+      renderReceiptPreview();
+    });
+  });
+}
+
+let isTotalCustomEdited = false;
+
+function calculateTotal() {
+  const customTotalEl = document.getElementById("fee-total-custom");
+  if (isTotalCustomEdited && customTotalEl && customTotalEl.value !== "") {
+    return parseFloat(customTotalEl.value) || 0;
+  }
+  let totalSum = 0;
+  FEE_CHECKBOX_ITEMS.forEach(item => {
+    const chk = document.getElementById(`chk-${item.id}`);
+    const priceEl = document.getElementById(`price-${item.id}`);
+    if (chk && chk.checked && priceEl) {
+      totalSum += (parseFloat(priceEl.value) || 0);
+    }
+  });
+  return totalSum;
+}
+
+function updateTotalAmount() {
+  const customTotalEl = document.getElementById("fee-total-custom");
+  const calculatedSum = calculateTotal();
+  if (!isTotalCustomEdited && customTotalEl) {
+    customTotalEl.value = calculatedSum > 0 ? calculatedSum : "";
+  }
+  renderReceiptPreview();
+}
+
+function onCustomTotalInput() {
+  const customTotalEl = document.getElementById("fee-total-custom");
+  isTotalCustomEdited = !!(customTotalEl && customTotalEl.value.trim() !== "");
+  renderReceiptPreview();
+}
+
+function calculateNextReceiptNo() {
+  if (appState.payments.length === 0) { appState.currentReceiptNo = "FQC-1100"; return; }
+  let maxNo = 1099;
+  appState.payments.forEach(p => {
+    if (p.noResit) {
+      const numOnly = parseInt(p.noResit.replace(/[^0-9]/g, ""), 10);
+      if (!isNaN(numOnly) && numOnly > maxNo) maxNo = numOnly;
+    }
+  });
+  appState.currentReceiptNo = `FQC-${maxNo + 1}`;
+  const el = document.getElementById("receipt-no-display");
+  if (el) el.innerText = appState.currentReceiptNo;
+}
+
+function formatWhatsAppPhone(phoneStr) {
+  if (!phoneStr) return "";
+  let clean = phoneStr.replace(/[^0-9]/g, "");
+  return clean.startsWith("0") ? "6" + clean : clean;
+}
+
+function formatDateDisplay(dateStr) {
+  if (!dateStr) return "";
+  if (dateStr.includes("/")) return dateStr;
+  const parts = dateStr.split("-");
+  return parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : dateStr;
+}
+
+function renderReceiptPreview() {
+  const studentName = appState.selectedStudent ? appState.selectedStudent.nama : (document.getElementById("student-search-input")?.value || "NAMA MURID");
+  const rawDate = document.getElementById("pay-date")?.value || new Date().toISOString().split("T")[0];
+  const dateFormatted = formatDateDisplay(rawDate);
+  const bulan = document.getElementById("pay-month")?.value || "OGOS";
+  const noResit = appState.currentReceiptNo || "FQC-1100";
+  const kaedah = document.querySelector('input[name="kaedahBayaran"]:checked')?.value || "TUNAI";
+
+  if (document.getElementById("rc-date")) document.getElementById("rc-date").innerText = dateFormatted;
+  if (document.getElementById("rc-month")) document.getElementById("rc-month").innerText = bulan;
+  if (document.getElementById("rc-no")) document.getElementById("rc-no").innerText = noResit;
+  if (document.getElementById("rc-student-name")) document.getElementById("rc-student-name").innerText = studentName;
+  if (document.getElementById("rc-payment-method")) document.getElementById("rc-payment-method").innerText = kaedah;
+
+  const tableBody = document.getElementById("rc-table-body");
+  if (!tableBody) return;
+
+  let html = ""; let totalAmount = 0; let hasItems = false;
+
+  FEE_CHECKBOX_ITEMS.forEach(item => {
+    const chk = document.getElementById(`chk-${item.id}`);
+    const priceEl = document.getElementById(`price-${item.id}`);
+    if (chk && chk.checked && priceEl) {
+      const priceVal = parseFloat(priceEl.value) || 0;
+      hasItems = true; totalAmount += priceVal;
+      html += `<tr class="active-item"><td>${item.label}</td><td style="text-align:center;">-</td><td style="text-align:center;">${bulan}</td><td class="amount-cell">${priceVal.toFixed(0)}</td></tr>`;
+    }
+  });
+
+  if (!hasItems) html = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); font-style:italic; padding:12px;">Sila tick kotak bayaran yuran di sebelah kiri</td></tr>`;
+  
+  const customTotalVal = document.getElementById("fee-total-custom")?.value;
+  if (isTotalCustomEdited && customTotalVal !== "") {
+    totalAmount = parseFloat(customTotalVal) || 0;
+  }
+
+  tableBody.innerHTML = html;
+  if (document.getElementById("rc-total-amount")) document.getElementById("rc-total-amount").innerText = `RM${totalAmount.toFixed(0)}`;
+}
+
+function validateForm() {
+  const studentName = appState.selectedStudent ? appState.selectedStudent.nama : (document.getElementById("student-search-input")?.value || "").trim();
+  if (!studentName) { showToast("Sila pilih atau masukkan nama murid.", "warning"); return false; }
+  if (!document.getElementById("pay-date")?.value) { showToast("Sila pilih tarikh.", "warning"); return false; }
+  if (!document.getElementById("pay-month")?.value) { showToast("Sila pilih bulan.", "warning"); return false; }
+  if (calculateTotal() <= 0) { showToast("Sila masukkan sekurang-kurangnya satu bayaran yuran > RM0.", "warning"); return false; }
+  if (!document.querySelector('input[name="kaedahBayaran"]:checked')?.value) { showToast("Sila pilih kaedah bayaran.", "warning"); return false; }
+  return true;
+}
+
+function actionJanaResit() {
+  if (!validateForm()) return;
+  renderReceiptPreview();
+  showToast("Resit rasmi FQC berjaya dijana!", "success");
+}
+
+async function actionSimpanPembayaran() {
+  if (!validateForm()) return false;
+  const btnSimpan = document.getElementById("btn-simpan");
+  const btnWhatsapp = document.getElementById("btn-whatsapp");
+  try {
+    if (btnSimpan) btnSimpan.disabled = true;
+    if (btnWhatsapp) btnWhatsapp.disabled = true;
+    showLoading(true, "Menyimpan pembayaran ke Google Sheets...");
+
+    const phone = appState.selectedStudent ? appState.selectedStudent.phone : (document.getElementById("parent-phone-display")?.value || "");
+    const studentName = appState.selectedStudent ? appState.selectedStudent.nama : document.getElementById("student-search-input")?.value;
+    
+    let hargaStandardTotal = 0;
+    let jumlahDiskaunTotal = 0;
+    const checkedItems = [];
+    const categoryTotals = { pendaftaran: 0, pengajianAlquran: 0, kelasUpkk: 0, kelasPsra: 0, kelasKhasJawi: 0, bukuRekodModul: 0, sumbangan: 0, kelasKafa: 0, kelasAkademik: 0, transit: 0 };
+
+    FEE_CHECKBOX_ITEMS.forEach(item => {
+      const chk = document.getElementById(`chk-${item.id}`);
+      const priceEl = document.getElementById(`price-${item.id}`);
+      if (chk && chk.checked && priceEl) {
+        const paidPrice = parseFloat(priceEl.value) || 0;
+        hargaStandardTotal += item.stdPrice;
+        if (item.stdPrice > paidPrice) jumlahDiskaunTotal += (item.stdPrice - paidPrice);
+        if (categoryTotals[item.field] !== undefined) categoryTotals[item.field] += paidPrice;
+        checkedItems.push({ id: item.id, label: item.label, stdPrice: item.stdPrice, paidPrice: paidPrice });
+      }
+    });
+
+    const paymentObj = {
+      noResit: appState.currentReceiptNo,
+      tarikh: formatDateDisplay(document.getElementById("pay-date")?.value),
+      bulan: document.getElementById("pay-month")?.value,
+      namaMurid: studentName,
+      noWhatsapp: phone,
+      pendaftaran: categoryTotals.pendaftaran,
+      pengajianAlquran: categoryTotals.pengajianAlquran,
+      kelasUpkk: categoryTotals.kelasUpkk,
+      kelasPsra: categoryTotals.kelasPsra,
+      kelasKhasJawi: categoryTotals.kelasKhasJawi,
+      bukuRekodModul: categoryTotals.bukuRekodModul,
+      sumbangan: categoryTotals.sumbangan,
+      kelasKafa: categoryTotals.kelasKafa,
+      kelasAkademik: categoryTotals.kelasAkademik,
+      transit: categoryTotals.transit,
+      hargaStandard: hargaStandardTotal,
+      jumlahDiskaun: jumlahDiskaunTotal,
+      sebabDiskaun: jumlahDiskaunTotal > 0 ? "Harga Khas Murid" : "-",
+      butiranItem: JSON.stringify(checkedItems),
+      jumlah: calculateTotal(),
+      kaedahBayaran: document.querySelector('input[name="kaedahBayaran"]:checked')?.value,
+      catatan: document.getElementById("pay-catatan")?.value || "",
+      timestamp: new Date().toISOString()
+    };
+
+    if (typeof google !== "undefined" && google.script && google.script.run) {
+      return new Promise((resolve) => {
+        google.script.run
+          .withSuccessHandler(function(resJson) {
+            if (resJson && resJson.success && resJson.noResit) {
+              paymentObj.noResit = resJson.noResit;
+            }
+            appState.payments.unshift(paymentObj);
+            saveLocalStoragePayments();
+            showLoading(false);
+            showToast(`Pembayaran berjaya disimpan. No. Resit: ${paymentObj.noResit}`, "success");
+            calculateNextReceiptNo();
+            renderDashboard();
+            renderHistoryTable();
+            resolve(paymentObj);
+          })
+          .withFailureHandler(function(err) {
+            showLoading(false);
+            showToast("Gagal menyimpan ke Sheet: " + err, "error");
+            resolve(false);
+          })
+          .savePayment(paymentObj);
+      });
+    }
+
+    if (appState.appsScriptUrl) {
+      try {
+        const response = await fetch(appState.appsScriptUrl, {
+          method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ action: "savePayment", payload: paymentObj })
+        });
+        const resJson = await response.json();
+        if (resJson.success && resJson.noResit) paymentObj.noResit = resJson.noResit;
+      } catch (err) {}
+    }
+
+    appState.payments.unshift(paymentObj);
+    saveLocalStoragePayments();
+    showLoading(false);
+    showToast(`Pembayaran berjaya disimpan. No. Resit: ${paymentObj.noResit}`, "success");
+    calculateNextReceiptNo();
+    renderDashboard();
+    renderHistoryTable();
+    return paymentObj;
+  } catch (e) {
+    showLoading(false);
+    showToast("Gagal menyimpan: " + e.message, "error");
+    return false;
+  } finally {
+    if (btnSimpan) btnSimpan.disabled = false;
+    if (btnWhatsapp) btnWhatsapp.disabled = false;
+  }
+}
+
+async function actionHantarWhatsapp() {
+  if (!validateForm()) return;
+  const saved = await actionSimpanPembayaran();
+  if (!saved) return;
+
+  const phoneFormatted = formatWhatsAppPhone(saved.noWhatsapp);
+  if (!phoneFormatted) {
+    showToast("Nombor WhatsApp tidak sah.", "warning");
+    return;
+  }
+
+  const itemsListText = JSON.parse(saved.butiranItem || "[]").map(i => `• ${i.label}: RM${i.paidPrice}`).join("\n");
+  const msg = `*RESIT PEMBAYARAN YURAN FATHUL QURANIC CENTRE (FQC)*\n\nNo. Resit: ${saved.noResit}\nNama Murid: ${saved.namaMurid}\nTarikh: ${saved.tarikh}\nBulan: ${saved.bulan}\nKaedah: ${saved.kaedahBayaran}\n\n*BUTIRAN YURAN:*\n${itemsListText}\n\n*JUMLAH KESELURUHAN: RM${saved.jumlah}*\n\nTerima kasih atas pembayaran yuran anak anda. Semoga dipertambahkan rezeki dan diberkati. Barokallahufik.`;
+  window.open(`https://wa.me/${phoneFormatted}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function actionCetakResit() {
+  window.print();
+}
+
+function actionResetBorang() {
+  appState.selectedStudent = null;
+  const searchInput = document.getElementById("student-search-input");
+  if (searchInput) searchInput.value = "";
+  const phoneDisplay = document.getElementById("parent-phone-display");
+  if (phoneDisplay) phoneDisplay.value = "";
+  
+  FEE_CHECKBOX_ITEMS.forEach(item => {
+    const chk = document.getElementById(`chk-${item.id}`);
+    const priceEl = document.getElementById(`price-${item.id}`);
+    const card = document.getElementById(`card-${item.id}`);
+    if (chk) chk.checked = false;
+    if (priceEl) priceEl.value = item.stdPrice;
+    if (card) card.classList.remove("checked");
+  });
+
+  isTotalCustomEdited = false;
+  const customTotalEl = document.getElementById("fee-total-custom");
+  if (customTotalEl) customTotalEl.value = "";
+  const catatanEl = document.getElementById("pay-catatan");
+  if (catatanEl) catatanEl.value = "";
+
+  initDateAndMonth();
+  updateTotalAmount();
+  renderReceiptPreview();
+  showToast("Borang telah dibersihkan.", "info");
+}
+
+function saveLocalStoragePayments() {
+  safeSetStorage("fqc_payments_db", JSON.stringify(appState.payments));
+}
+
+function loadLocalStoragePayments() {
+  const localData = safeGetStorage("fqc_payments_db");
+  if (localData) {
+    try {
+      const parsed = JSON.parse(localData);
+      if (Array.isArray(parsed)) appState.payments = parsed;
+    } catch (e) {}
+  }
+}
+
+function renderDashboard() {
+  const filterMonth = document.getElementById("dash-month-filter")?.value || document.getElementById("pay-month")?.value || "OGOS";
+  
+  const paidNamesSet = new Set();
+  appState.payments.forEach(p => {
+    if (p.bulan && p.bulan.toUpperCase() === filterMonth.toUpperCase() && p.namaMurid) {
+      paidNamesSet.add(p.namaMurid.trim().toLowerCase());
+    }
+  });
+
+  const unpaidStudents = appState.students.filter(s => !paidNamesSet.has(s.nama.trim().toLowerCase()));
+  const paidCount = appState.students.length - unpaidStudents.length;
+  const totalKutipan = appState.payments.reduce((acc, p) => acc + (parseFloat(p.jumlah) || 0), 0);
+
+  if (document.getElementById("dash-total-kutipan")) document.getElementById("dash-total-kutipan").innerText = `RM ${totalKutipan.toFixed(0)}`;
+  if (document.getElementById("dash-total-murid")) document.getElementById("dash-total-murid").innerText = appState.students.length;
+  if (document.getElementById("dash-total-sudah-bayar")) document.getElementById("dash-total-sudah-bayar").innerText = paidCount;
+  if (document.getElementById("dash-total-belum-bayar")) document.getElementById("dash-total-belum-bayar").innerText = unpaidStudents.length;
+
+  const unpaidTbody = document.getElementById("unpaid-table-body");
+  if (!unpaidTbody) return;
+
+  if (unpaidStudents.length === 0) {
+    unpaidTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:1.25rem; color:#15803d; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Tahniah! Semua ${appState.students.length} murid telah membuat pembayaran bagi bulan ${filterMonth}!</td></tr>`;
+    return;
+  }
+
+  let html = "";
+  unpaidStudents.forEach((student, idx) => {
+    html += `
+      <tr>
+        <td>${idx + 1}</td>
+        <td><strong>${student.nama}</strong></td>
+        <td>${student.phone || '-'}</td>
+        <td><span class="badge-unpaid"><i class="fa-solid fa-clock"></i> Belum Bayar (${filterMonth})</span></td>
+        <td style="display:flex; gap:0.4rem;">
+          <button class="btn btn-whatsapp" style="padding:4px 8px; font-size:0.75rem;" onclick="sendWaReminder('${student.nama.replace(/'/g, "\\'")}', '${student.phone || ''}', '${filterMonth}')">
+            <i class="fa-brands fa-whatsapp"></i> Peringatan WA
+          </button>
+          <button class="btn btn-primary" style="padding:4px 8px; font-size:0.75rem;" onclick="payForStudent('${student.nama.replace(/'/g, "\\'")}')">
+            <i class="fa-solid fa-cash-register"></i> Bayar Now
+          </button>
+        </td>
+      </tr>
+    `;
+  });
+  unpaidTbody.innerHTML = html;
+}
+
+function sendWaReminder(studentName, phone, month) {
+  const phoneFormatted = formatWhatsAppPhone(phone);
+  if (!phoneFormatted) {
+    showToast("Nombor WhatsApp tidak sah untuk murid ini.", "warning");
+    return;
+  }
+  const msg = `*PERINGATAN MESRA BAYARAN YURAN FATHUL QURANIC CENTRE (FQC)*\n\nAssalamu'alaikum / Salam Sejahtera Ibu/Bapa ${studentName},\n\nIni adalah peringatan mesra berkenaan yuran pengajian bulan *${month}* bagi murid *${studentName}* yang belum dijelaskan.\n\nMohon ibu/bapa membuat makluman atau pembayaran yuran. Terima kasih atas kerjasama dan keprihatinan ibu/bapa.\n\nBarakallahufik,\n*Fathul Quranic Centre (FQC)*`;
+  window.open(`https://wa.me/${phoneFormatted}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function payForStudent(studentName) {
+  const student = appState.students.find(s => s.nama.toLowerCase() === studentName.toLowerCase());
+  if (student) {
+    appState.selectedStudent = student;
+    const searchInput = document.getElementById("student-search-input");
+    if (searchInput) searchInput.value = student.nama;
+    const phoneDisplay = document.getElementById("parent-phone-display");
+    if (phoneDisplay) phoneDisplay.value = student.phone || '';
+  }
+  switchView('bayaran');
+}
+
+function renderHistoryTable() {
+  const tbody = document.getElementById("history-table-body");
+  if (!tbody) return;
+
+  if (appState.payments.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:1.5rem; color:var(--text-muted);">Tiada rekod pembayaran dijumpai</td></tr>`;
+    return;
+  }
+
+  let html = "";
+  appState.payments.forEach((p, idx) => {
+    html += `
+      <tr>
+        <td><strong>${p.noResit || '-'}</strong></td>
+        <td>${p.tarikh || '-'}</td>
+        <td>${p.namaMurid || '-'}</td>
+        <td>${p.bulan || '-'}</td>
+        <td><strong>RM ${parseFloat(p.jumlah || 0).toFixed(0)}</strong></td>
+        <td><span class="header-badge" style="display:inline-flex;">${p.kaedahBayaran || 'TUNAI'}</span></td>
+        <td>
+          <button class="btn btn-outline" style="padding:4px 8px; font-size:0.75rem;" onclick="cetakResitRekod(${idx})"><i class="fa-solid fa-print"></i> Resit</button>
+        </td>
+      </tr>
+    `;
+  });
+  tbody.innerHTML = html;
+}
+
+function cetakResitRekod(idx) {
+  const p = appState.payments[idx];
+  if (!p) return;
+  appState.currentReceiptNo = p.noResit;
+  if (document.getElementById("rc-no")) document.getElementById("rc-no").innerText = p.noResit;
+  if (document.getElementById("rc-date")) document.getElementById("rc-date").innerText = p.tarikh;
+  if (document.getElementById("rc-month")) document.getElementById("rc-month").innerText = p.bulan;
+  if (document.getElementById("rc-student-name")) document.getElementById("rc-student-name").innerText = p.namaMurid;
+  if (document.getElementById("rc-payment-method")) document.getElementById("rc-payment-method").innerText = p.kaedahBayaran;
+
+  const tableBody = document.getElementById("rc-table-body");
+  let items = [];
+  try { items = JSON.parse(p.butiranItem || "[]"); } catch (e) {}
+  
+  if (tableBody) {
+    let html = "";
+    if (items.length > 0) {
+      items.forEach(it => {
+        html += `<tr class="active-item"><td>${it.label}</td><td style="text-align:center;">-</td><td style="text-align:center;">${p.bulan}</td><td class="amount-cell">${it.paidPrice}</td></tr>`;
+      });
+    } else {
+      html = `<tr><td colspan="4" style="text-align:center;">Jumlah Yuran Dibayar: RM ${p.jumlah}</td></tr>`;
+    }
+    tableBody.innerHTML = html;
+  }
+
+  if (document.getElementById("rc-total-amount")) document.getElementById("rc-total-amount").innerText = `RM${p.jumlah}`;
+  switchView('bayaran');
+  showToast(`Melihat Resit ${p.noResit}`, "info");
+}
+
+async function fetchStudentsFromBackend(showToastMsg = false) {
+  if (showToastMsg) showLoading(true, "Memuat turun data murid terkini dari Google Sheets...");
+
+  if (typeof google !== "undefined" && google.script && google.script.run) {
+    google.script.run
+      .withSuccessHandler(function(studentsData) {
+        if (showToastMsg) showLoading(false);
+        if (Array.isArray(studentsData) && studentsData.length > 0) {
+          appState.students = studentsData;
+          initStudentSearch();
+          renderDashboard();
+          if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik dari Google Sheets!`, "success");
+        }
+      })
+      .withFailureHandler(function(err) {
+        if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid: " + err, "error"); }
+      })
+      .getStudents();
+    return;
+  }
+
+  if (!appState.appsScriptUrl) return;
+  try {
+    const res = await fetch(`${appState.appsScriptUrl}?action=getStudents`);
+    const data = await res.json();
+    if (showToastMsg) showLoading(false);
+    if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+      appState.students = data.data;
+      initStudentSearch();
+      renderDashboard();
+      if (showToastMsg) showToast(`Berjaya! Senarai ${appState.students.length} murid terbaharu ditarik dari Google Sheets!`, "success");
+    }
+  } catch (err) {
+    if (showToastMsg) { showLoading(false); showToast("Gagal memuat turun data murid.", "error"); }
+  }
+}
+
+async function fetchPaymentHistoryFromBackend() {
+  if (typeof google !== "undefined" && google.script && google.script.run) {
+    google.script.run
+      .withSuccessHandler(function(historyData) {
+        if (Array.isArray(historyData) && historyData.length > 0) {
+          appState.payments = historyData;
+          saveLocalStoragePayments();
+          calculateNextReceiptNo();
+          renderDashboard();
+          renderHistoryTable();
+        }
+      })
+      .getPaymentHistory();
+    return;
+  }
+
+  if (!appState.appsScriptUrl) return;
+  try {
+    const res = await fetch(`${appState.appsScriptUrl}?action=getPaymentHistory`);
+    const data = await res.json();
+    if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+      appState.payments = data.data;
+      saveLocalStoragePayments();
+      calculateNextReceiptNo();
+      renderDashboard();
+      renderHistoryTable();
+    }
+  } catch (err) {}
+}
+
+</script>
 </body>
 </html>
