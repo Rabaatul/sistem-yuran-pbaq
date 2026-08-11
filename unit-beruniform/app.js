@@ -520,6 +520,7 @@ function renderAllViews() {
 
   // --- KEHADIRAN ---
   const kehadiranData = MASTER_SUMBER.filter(r => r.jenis === 'Kehadiran');
+  renderAnalisisKehadiran(kehadiranData);
   buildFilterBar('kehadiranFilter', kehadiranData, (filtered) => buildTable('kehadiranTable', filtered));
   buildTable('kehadiranTable', kehadiranData);
 
@@ -532,6 +533,25 @@ function renderAllViews() {
   const perancangangData = MASTER_SUMBER.filter(r => r.jenis === 'Perancangan Tahunan');
   buildFilterBar('perancangangFilter', perancangangData, (filtered) => buildTable('perancangangTable', filtered));
   buildTable('perancangangTable', perancangangData);
+}
+
+// ============================================================
+// RENDER ANALISIS KEHADIRAN
+// ============================================================
+function renderAnalisisKehadiran(kehData) {
+  const bsmmItem = kehData.find(r => r.modul === 'BSMM');
+  const tkrsItem = kehData.find(r => (r.modul || '').includes('TKRS') || (r.modul || '').includes('KRS'));
+
+  const bsmmStatus = document.getElementById('bsmm-keh-status');
+  const tkrsStatus = document.getElementById('tkrs-keh-status');
+  const btnBsmm = document.getElementById('btn-sheet-bsmm');
+  const btnTkrs = document.getElementById('btn-sheet-tkrs');
+
+  if (bsmmStatus) bsmmStatus.textContent = bsmmItem ? `Status: ${bsmmItem.status || 'Aktif'} (${bsmmItem.tahun})` : 'Tiada Rekod';
+  if (tkrsStatus) tkrsStatus.textContent = tkrsItem ? `Status: ${tkrsItem.status || 'Aktif'} (${tkrsItem.tahun})` : 'Tiada Rekod';
+
+  if (btnBsmm && bsmmItem && bsmmItem.link) btnBsmm.href = bsmmItem.link;
+  if (btnTkrs && tkrsItem && tkrsItem.link) btnTkrs.href = tkrsItem.link;
 }
 
 // ============================================================

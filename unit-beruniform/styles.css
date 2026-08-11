@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    DASHBOARD UNIT BERUNIFORM — PBAQ 2026
    styles.css — Full Design System
    ============================================================ */
@@ -1064,3 +1064,120 @@ tbody td {
   .filter-controls { flex-direction: column; }
   .filter-select, .filter-input { min-width: unset; width: 100%; }
 }
+
+/* ===================== ANALISIS KEHADIRAN STYLES ===================== */
+.analisis-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+.analisis-card {
+  background: var(--surface-card);
+  border-radius: var(--r-xl);
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: var(--ease);
+}
+.analisis-card:hover {
+  box-shadow: var(--shadow-md);
+}
+.analisis-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.analisis-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.analisis-title i {
+  color: var(--accent-teal);
+}
+.analisis-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--r-full);
+  background: var(--accent-teal-soft);
+  color: var(--accent-teal);
+}
+.analisis-progress-item {
+  margin-bottom: 1.25rem;
+}
+.analisis-progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.analisis-progress-bar-bg {
+  width: 100%;
+  height: 10px;
+  background: var(--surface-subtle);
+  border-radius: var(--r-full);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.analisis-progress-bar-fill {
+  height: 100%;
+  border-radius: var(--r-full);
+  transition: width 1s ease-in-out;
+}
+.bg-bsmm-gradient {
+  background: linear-gradient(90deg, var(--bsmm-dark), var(--bsmm-main));
+}
+.bg-tkrs-gradient {
+  background: linear-gradient(90deg, var(--tkrs-dark), var(--tkrs-main));
+}
+.analisis-quick-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.analisis-link-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--r-md);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: var(--ease);
+}
+.analisis-link-bsmm {
+  background: var(--bsmm-soft);
+  color: var(--bsmm-dark);
+  border: 1px solid var(--bsmm-mid);
+}
+.analisis-link-bsmm:hover {
+  background: var(--bsmm-main);
+  color: #fff;
+}
+.analisis-link-tkrs {
+  background: var(--tkrs-soft);
+  color: var(--tkrs-dark);
+  border: 1px solid var(--tkrs-mid);
+}
+.analisis-link-tkrs:hover {
+  background: var(--tkrs-main);
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  .analisis-container { grid-template-columns: 1fr; }
+}
+

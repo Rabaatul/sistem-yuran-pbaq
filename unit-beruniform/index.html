@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ms">
 <head>
   <meta charset="UTF-8">
@@ -259,10 +259,64 @@
         <div class="page-header">
           <div class="page-header-left">
             <div class="page-breadcrumb"><i class="fa-solid fa-clipboard-user"></i><span>Kehadiran</span></div>
-            <h1 class="page-title">Dokumen Kehadiran</h1>
-            <p class="page-subtitle">Rekod kehadiran semua unit beruniform</p>
+            <h1 class="page-title">Dokumen & Analisis Kehadiran</h1>
+            <p class="page-subtitle">Analisis penglibatan dan rekod kehadiran unit beruniform PBAQ 2026</p>
+          </div>
+          <div class="page-header-right">
+            <div class="header-year-badge"><i class="fa-solid fa-chart-pie"></i> Analisis Live</div>
           </div>
         </div>
+
+        <!-- ANALISIS KEHADIRAN WIDGET -->
+        <div class="analisis-container">
+          <div class="analisis-card">
+            <div class="analisis-header">
+              <div class="analisis-title">
+                <i class="fa-solid fa-chart-simple"></i> Status Kesediaan Dokumen Kehadiran
+              </div>
+              <span class="analisis-badge" id="analisis-status-badge">100% Aktif</span>
+            </div>
+            <div class="analisis-progress-item">
+              <div class="analisis-progress-info">
+                <span><i class="fa-solid fa-heart-pulse" style="color:var(--bsmm-main);"></i> BSMM Kehadiran</span>
+                <span id="bsmm-keh-status">1 Rekod (100%)</span>
+              </div>
+              <div class="analisis-progress-bar-bg">
+                <div class="analisis-progress-bar-fill bg-bsmm-gradient" id="bsmm-keh-bar" style="width: 100%;"></div>
+              </div>
+            </div>
+            <div class="analisis-progress-item">
+              <div class="analisis-progress-info">
+                <span><i class="fa-solid fa-person-military-to-person" style="color:var(--tkrs-main);"></i> TKRS / KRS Kehadiran</span>
+                <span id="tkrs-keh-status">1 Rekod (100%)</span>
+              </div>
+              <div class="analisis-progress-bar-bg">
+                <div class="analisis-progress-bar-fill bg-tkrs-gradient" id="tkrs-keh-bar" style="width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="analisis-card">
+            <div class="analisis-header">
+              <div class="analisis-title">
+                <i class="fa-solid fa-bolt"></i> Akses Direct Sheet Kehadiran
+              </div>
+              <span class="analisis-badge">Google Sheets</span>
+            </div>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem;">
+              Buka Google Sheet Kehadiran secara terus untuk mengemaskini atau menyemak senarai nama ahli.
+            </p>
+            <div class="analisis-quick-links">
+              <a class="analisis-link-btn analisis-link-bsmm" id="btn-sheet-bsmm" href="https://docs.google.com/spreadsheets/d/16uy4W665gZDy5EIHEF-NWc595e9WUWHr/edit?gid=1404491950#gid=1404491950" target="_blank" rel="noopener noreferrer">
+                <i class="fa-solid fa-file-excel"></i> Sheet BSMM
+              </a>
+              <a class="analisis-link-btn analisis-link-tkrs" id="btn-sheet-tkrs" href="https://docs.google.com/spreadsheets/d/1uP4vH16q8gUjP1X-x50TsdTTcDWv8Ure/edit?gid=1884993696#gid=1884993696" target="_blank" rel="noopener noreferrer">
+                <i class="fa-solid fa-file-excel"></i> Sheet TKRS
+              </a>
+            </div>
+          </div>
+        </div>
+
         <div id="kehadiranFilter"></div>
         <div id="kehadiranTable"></div>
       </div>
