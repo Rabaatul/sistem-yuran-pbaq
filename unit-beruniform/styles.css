@@ -1181,3 +1181,97 @@ tbody td {
   .analisis-container { grid-template-columns: 1fr; }
 }
 
+/* ===================== GRAF BAR KEHADIRAN STYLES ===================== */
+.chart-card {
+  background: var(--surface-card);
+  border-radius: var(--r-xl);
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.75rem;
+}
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.chart-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.chart-title i {
+  color: var(--primary-light);
+}
+.chart-stats-summary {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+}
+.chart-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.dot-hadir {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #10b981;
+}
+.dot-tidak-hadir {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ef4444;
+}
+.chart-wrapper {
+  position: relative;
+  height: 280px;
+  width: 100%;
+}
+.analisis-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+.stat-box-mini {
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1rem;
+  text-align: center;
+}
+.stat-box-mini .val {
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+.stat-box-mini .lbl {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 0.2rem;
+}
+.val-hadir { color: #059669; }
+.val-tidak-hadir { color: #dc2626; }
+.val-peratus { color: var(--primary-light); }
+
+@media (max-width: 768px) {
+  .analisis-grid-3 { grid-template-columns: 1fr; }
+  .chart-wrapper { height: 220px; }
+}
+
+

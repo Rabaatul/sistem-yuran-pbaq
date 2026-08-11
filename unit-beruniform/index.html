@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -313,6 +314,38 @@
               <a class="analisis-link-btn analisis-link-tkrs" id="btn-sheet-tkrs" href="https://docs.google.com/spreadsheets/d/1uP4vH16q8gUjP1X-x50TsdTTcDWv8Ure/edit?gid=1884993696#gid=1884993696" target="_blank" rel="noopener noreferrer">
                 <i class="fa-solid fa-file-excel"></i> Sheet TKRS
               </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- GRAF BAR KEHADIRAN: HADIR VS TIDAK HADIR -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">
+              <i class="fa-solid fa-chart-column"></i> Graf Bar Kehadiran (Hadir vs Tidak Hadir)
+            </div>
+            <div class="chart-stats-summary">
+              <div class="chart-stat-item"><span class="dot-hadir"></span> Hadir</div>
+              <div class="chart-stat-item"><span class="dot-tidak-hadir"></span> Tidak Hadir</div>
+            </div>
+          </div>
+          
+          <div class="chart-wrapper">
+            <canvas id="kehadiranBarChart"></canvas>
+          </div>
+
+          <div class="analisis-grid-3">
+            <div class="stat-box-mini">
+              <div class="val val-hadir" id="total-hadir-val">74</div>
+              <div class="lbl">Jumlah Ahli Hadir</div>
+            </div>
+            <div class="stat-box-mini">
+              <div class="val val-tidak-hadir" id="total-tidak-hadir-val">6</div>
+              <div class="lbl">Jumlah Tidak Hadir</div>
+            </div>
+            <div class="stat-box-mini">
+              <div class="val val-peratus" id="peratus-kehadiran-val">92.5%</div>
+              <div class="lbl">Peratus Kehadiran Keseluruhan</div>
             </div>
           </div>
         </div>

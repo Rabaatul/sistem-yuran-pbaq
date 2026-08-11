@@ -536,8 +536,94 @@ function renderAllViews() {
 }
 
 // ============================================================
-// RENDER ANALISIS KEHADIRAN
+// RENDER ANALISIS KEHADIRAN & GRAF BAR
 // ============================================================
+let mekehadiranChartInstance = null;
+
+function renderKehadiranBarChart() {
+  const canvas = document.getElementById('kehadiranBarChart');
+  if (!canvas || typeof Chart === 'undefined') return;
+
+  const dataBSMM = { hadir: 38, tidakHadir: 2 };
+  const dataTKRS = { hadir: 36, tidakHadir: 4 };
+
+  const totalHadir = dataBSMM.hadir + dataTKRS.hadir;
+  const totalTidakHadir = dataBSMM.tidakHadir + dataTKRS.tidakHadir;
+  const totalKeseluruhan = totalHadir + totalTidakHadir;
+  const peratus = totalKeseluruhan > 0 ? ((totalHadir / totalKeseluruhan) * 100).toFixed(1) + '%' : '0%';
+
+  const elHadir = document.getElementById('total-hadir-val');
+  const elTidakHadir = document.getElementById('total-tidak-hadir-val');
+  const elPeratus = document.getElementById('peratus-kehadiran-val');
+
+  if (elHadir) elHadir.textContent = totalHadir;
+  if (elTidakHadir) elTidakHadir.textContent = totalTidakHadir;
+  if (elPeratus) elPeratus.textContent = peratus;
+
+  if (mekehadiranChartInstance) {
+    mekehadiranChartInstance.destroy();
+  }
+
+  const ctx = canvas.getContext('2d');
+  mekehadiranChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['BSMM', 'TKRS / KRS'],
+      datasets: [
+        {
+          label: 'Hadir',
+          data: [dataBSMM.hadir, dataTKRS.hadir],
+          backgroundColor: '#10b981',
+          borderRadius: 6,
+          barPercentage: 0.55,
+          categoryPercentage: 0.55
+        },
+        {
+          label: 'Tidak Hadir',
+          data: [dataBSMM.tidakHadir, dataTKRS.tidakHadir],
+          backgroundColor: '#ef4444',
+          borderRadius: 6,
+          barPercentage: 0.55,
+          categoryPercentage: 0.55
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            font: { family: 'Plus Jakarta Sans', weight: '600', size: 12 },
+            usePointStyle: true,
+            boxWidth: 8
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return ' ' + context.dataset.label + ': ' + context.raw + ' ahli';
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { family: 'Plus Jakarta Sans', weight: '700', size: 12 } }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: 'rgba(226, 232, 240, 0.6)' },
+          ticks: { stepSize: 5, font: { family: 'Plus Jakarta Sans', size: 11 } }
+        }
+      }
+    }
+  });
+}
+
 function renderAnalisisKehadiran(kehData) {
   const bsmmItem = kehData.find(r => r.modul === 'BSMM');
   const tkrsItem = kehData.find(r => (r.modul || '').includes('TKRS') || (r.modul || '').includes('KRS'));
@@ -552,6 +638,8 @@ function renderAnalisisKehadiran(kehData) {
 
   if (btnBsmm && bsmmItem && bsmmItem.link) btnBsmm.href = bsmmItem.link;
   if (btnTkrs && tkrsItem && tkrsItem.link) btnTkrs.href = tkrsItem.link;
+
+  renderKehadiranBarChart();
 }
 
 // ============================================================
