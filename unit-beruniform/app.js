@@ -152,6 +152,7 @@ function renderStats() {
   updateBadge('badge-laporan', s.laporan);
   updateBadge('badge-perancangan', s.perancangan);
   updateBadge('badge-prestasi', MASTER_SUMBER.filter(r => r.modul === 'PRESTASI' || r.jenis === 'Prestasi' || r.nama.includes('PRESTASI')).length);
+  updateBadge('badge-antarabangsa', MASTER_SUMBER.filter(r => r.modul === 'ANTARABANGSA' || r.jenis === 'Antarabangsa' || r.nama.includes('ANTARABANGSA')).length);
 }
 
 // Update unit card badges on dashboard
@@ -188,6 +189,7 @@ function getModulClass(modul) {
   if (m.includes('BSMM')) return 'modul-bsmm';
   if (m.includes('TKRS') || m.includes('KRS')) return 'modul-tkrs';
   if (m.includes('PRESTASI')) return 'modul-prestasi';
+  if (m.includes('ANTARABANGSA')) return 'modul-antarabangsa';
   return '';
 }
 function getModulIcon(modul) {
@@ -196,6 +198,7 @@ function getModulIcon(modul) {
   if (m.includes('BSMM')) return 'fa-heart-pulse';
   if (m.includes('TKRS') || m.includes('KRS')) return 'fa-person-military-to-person';
   if (m.includes('PRESTASI')) return 'fa-trophy';
+  if (m.includes('ANTARABANGSA')) return 'fa-earth-americas';
   return 'fa-shield';
 }
 function getCatClass(jenis) {
@@ -204,6 +207,7 @@ function getCatClass(jenis) {
   if (jenis === 'Laporan Aktiviti') return 'cat-laporan';
   if (jenis === 'Perancangan Tahunan') return 'cat-perancangan';
   if (jenis === 'Prestasi' || jenis === 'PRESTASI') return 'cat-prestasi';
+  if (jenis === 'Antarabangsa' || jenis === 'ANTARABANGSA') return 'cat-antarabangsa';
   return '';
 }
 function getCatIcon(jenis) {
@@ -212,6 +216,7 @@ function getCatIcon(jenis) {
   if (jenis === 'Laporan Aktiviti') return 'fa-file-lines';
   if (jenis === 'Perancangan Tahunan') return 'fa-calendar-check';
   if (jenis === 'Prestasi' || jenis === 'PRESTASI') return 'fa-trophy';
+  if (jenis === 'Antarabangsa' || jenis === 'ANTARABANGSA') return 'fa-earth-americas';
   return 'fa-file';
 }
 function getStatusClass(status) {
@@ -227,6 +232,7 @@ function getModalIconBg(modul) {
   if (m.includes('BSMM')) return 'background:linear-gradient(135deg,#991b1b,#dc2626)';
   if (m.includes('TKRS') || m.includes('KRS')) return 'background:linear-gradient(135deg,#064e3b,#059669)';
   if (m.includes('PRESTASI')) return 'background:linear-gradient(135deg,#6d28d9,#7c3aed)';
+  if (m.includes('ANTARABANGSA')) return 'background:linear-gradient(135deg,#0284c7,#0369a1)';
   return 'background:linear-gradient(135deg,#1e3a8a,#1e40af)';
 }
 
@@ -564,6 +570,11 @@ function renderAllViews() {
   const prestasiData = MASTER_SUMBER.filter(r => r.modul === 'PRESTASI' || r.jenis === 'Prestasi' || r.nama.includes('PRESTASI'));
   buildFilterBar('prestasiFilter', prestasiData, (filtered) => buildTable('prestasiTable', filtered));
   buildTable('prestasiTable', prestasiData);
+
+  // --- ANTARABANGSA ---
+  const antarabangsaData = MASTER_SUMBER.filter(r => r.modul === 'ANTARABANGSA' || r.jenis === 'Antarabangsa' || r.nama.includes('ANTARABANGSA'));
+  buildFilterBar('antarabangsaFilter', antarabangsaData, (filtered) => buildTable('antarabangsaTable', filtered));
+  buildTable('antarabangsaTable', antarabangsaData);
 }
 
 // ============================================================

@@ -96,6 +96,12 @@
           <span class="nav-label">Prestasi</span>
           <span class="nav-badge" id="badge-prestasi">1</span>
         </button>
+
+        <button class="nav-item" id="nav-antarabangsa" onclick="navigateTo('antarabangsa')" data-view="antarabangsa">
+          <span class="nav-icon"><i class="fa-solid fa-earth-americas"></i></span>
+          <span class="nav-label">Antarabangsa</span>
+          <span class="nav-badge" id="badge-antarabangsa">1</span>
+        </button>
       </nav>
 
       <div class="sidebar-footer">
@@ -674,6 +680,66 @@
 
         <div id="prestasiFilter"></div>
         <div id="prestasiTable"></div>
+      </div>
+
+      <!-- ANTARABANGSA VIEW -->
+      <div class="view-panel" id="view-antarabangsa">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-earth-americas"></i><span>Antarabangsa</span></div>
+            <h1 class="page-title">Dokumen & Infografik Program Antarabangsa</h1>
+            <p class="page-subtitle">Penglibatan, pencapaian & fail program peringkat antarabangsa PBAQ 2026</p>
+          </div>
+          <div class="page-header-right">
+            <div class="header-year-badge"><i class="fa-solid fa-globe"></i> Global 2026</div>
+          </div>
+        </div>
+
+        <!-- INFOGRAFIK ANTARABANGSA -->
+        <div class="infographic-grid">
+          <div class="infographic-card">
+            <div class="infographic-header">
+              <div class="infographic-title">
+                <i class="fa-solid fa-earth-americas"></i> Status Fail Penglibatan Antarabangsa
+              </div>
+              <span class="milestone-badge badge-selesai">Google Docs Rasmi</span>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-medium); margin-bottom:1rem;">
+              Fail laporan dan rekod penyertaan program unit beruniform peringkat antarabangsa PBAQ 2026.
+            </p>
+            <div class="analisis-quick-links" style="grid-template-columns:1fr;">
+              <a class="analisis-link-btn" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd;" href="https://docs.google.com/document/d/1e4kBiPYrke4TpgWc-E7oikMej6PVLo6e/edit?usp=sharing&ouid=103776709571497988596&rtpof=true&sd=true" target="_blank" rel="noopener noreferrer">
+                <i class="fa-solid fa-file-word"></i> Buka Dokumen ANTARABANGSA (Google Docs)
+              </a>
+            </div>
+          </div>
+
+          <div class="infographic-card">
+            <div class="infographic-header">
+              <div class="infographic-title">
+                <i class="fa-solid fa-award"></i> Status Pengiktirafan Global
+              </div>
+              <span class="milestone-badge badge-proses">Tahun 2026</span>
+            </div>
+            <div class="analisis-grid-3" style="margin-top:0.5rem;">
+              <div class="stat-box-mini">
+                <div class="val val-hadir">100%</div>
+                <div class="lbl">Status Akses Fail</div>
+              </div>
+              <div class="stat-box-mini">
+                <div class="val val-peratus">1</div>
+                <div class="lbl">Fail Laporan Google Docs</div>
+              </div>
+              <div class="stat-box-mini">
+                <div class="val val-hadir">2026</div>
+                <div class="lbl">Sesi Penglibatan</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="antarabangsaFilter"></div>
+        <div id="antarabangsaTable"></div>
       </div>
 
     </main>
