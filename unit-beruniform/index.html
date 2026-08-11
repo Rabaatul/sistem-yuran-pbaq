@@ -1,0 +1,328 @@
+﻿<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Unit Beruniform | PBAQ 2026</title>
+  <meta name="description" content="Sistem pengurusan dokumen Unit Beruniform BSMM dan TKRS/KRS PBAQ 2026.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="mobile-topbar" id="mobileTopbar">
+    <div class="mobile-brand">
+      <div class="mobile-brand-icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <div class="mobile-brand-text">
+        <span class="mobile-brand-title">Unit Beruniform</span>
+        <span class="mobile-brand-sub">PBAQ 2026</span>
+      </div>
+    </div>
+    <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleSidebar()" aria-label="Buka Menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <div class="app-shell">
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon-wrap"><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="brand-text-wrap">
+          <span class="brand-name">Unit Beruniform</span>
+          <span class="brand-org">PBAQ 2026</span>
+        </div>
+        <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Tutup Sidebar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Navigasi Utama</div>
+
+        <button class="nav-item active" id="nav-dashboard" onclick="navigateTo('dashboard')" data-view="dashboard">
+          <span class="nav-icon"><i class="fa-solid fa-gauge-high"></i></span>
+          <span class="nav-label">Dashboard</span>
+        </button>
+
+        <button class="nav-item" id="nav-semua" onclick="navigateTo('semua')" data-view="semua">
+          <span class="nav-icon"><i class="fa-solid fa-layer-group"></i></span>
+          <span class="nav-label">Semua Dokumen</span>
+          <span class="nav-badge" id="badge-semua">6</span>
+        </button>
+
+        <div class="nav-section-label" style="margin-top:1.25rem;">Unit Beruniform</div>
+
+        <button class="nav-item" id="nav-bsmm" onclick="navigateTo('bsmm')" data-view="bsmm">
+          <span class="nav-icon"><i class="fa-solid fa-heart-pulse"></i></span>
+          <span class="nav-label">BSMM</span>
+          <span class="nav-badge" id="badge-bsmm">3</span>
+        </button>
+
+        <button class="nav-item" id="nav-tkrs" onclick="navigateTo('tkrs')" data-view="tkrs">
+          <span class="nav-icon"><i class="fa-solid fa-person-military-to-person"></i></span>
+          <span class="nav-label">TKRS / KRS</span>
+          <span class="nav-badge" id="badge-tkrs">3</span>
+        </button>
+
+        <div class="nav-section-label" style="margin-top:1.25rem;">Jenis Dokumen</div>
+
+        <button class="nav-item" id="nav-kehadiran" onclick="navigateTo('kehadiran')" data-view="kehadiran">
+          <span class="nav-icon"><i class="fa-solid fa-clipboard-user"></i></span>
+          <span class="nav-label">Kehadiran</span>
+          <span class="nav-badge" id="badge-kehadiran">2</span>
+        </button>
+
+        <button class="nav-item" id="nav-laporan" onclick="navigateTo('laporan')" data-view="laporan">
+          <span class="nav-icon"><i class="fa-solid fa-file-lines"></i></span>
+          <span class="nav-label">Laporan Aktiviti</span>
+          <span class="nav-badge" id="badge-laporan">2</span>
+        </button>
+
+        <button class="nav-item" id="nav-perancangan" onclick="navigateTo('perancangan')" data-view="perancangan">
+          <span class="nav-icon"><i class="fa-solid fa-calendar-check"></i></span>
+          <span class="nav-label">Perancangan Tahunan</span>
+          <span class="nav-badge" id="badge-perancangan">2</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="footer-status">
+          <span class="status-dot pulse"></span>
+          <span class="footer-status-text">Data Dikemaskini</span>
+        </div>
+        <div class="footer-date" id="footerDate"></div>
+      </div>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+
+      <!-- DASHBOARD VIEW -->
+      <div class="view-panel active" id="view-dashboard">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-house"></i><span>Laman Utama</span></div>
+            <h1 class="page-title">Dashboard Unit Beruniform</h1>
+            <p class="page-subtitle">Sistem pengurusan dokumen unit beruniform BSMM dan TKRS/KRS</p>
+          </div>
+          <div class="page-header-right">
+            <div class="header-year-badge"><i class="fa-solid fa-calendar-days"></i><span id="currentYear">2026</span></div>
+          </div>
+        </div>
+
+        <div class="cards-grid" id="summaryCards">
+          <div class="summary-card card-total">
+            <div class="card-icon-wrap"><i class="fa-solid fa-database"></i></div>
+            <div class="card-info">
+              <div class="card-value" id="stat-total">0</div>
+              <div class="card-label">Jumlah Sumber</div>
+            </div>
+            <div class="card-bg-icon"><i class="fa-solid fa-database"></i></div>
+          </div>
+          <div class="summary-card card-unit">
+            <div class="card-icon-wrap"><i class="fa-solid fa-people-group"></i></div>
+            <div class="card-info">
+              <div class="card-value" id="stat-unit">0</div>
+              <div class="card-label">Jumlah Unit</div>
+            </div>
+            <div class="card-bg-icon"><i class="fa-solid fa-shield"></i></div>
+          </div>
+          <div class="summary-card card-kehadiran">
+            <div class="card-icon-wrap"><i class="fa-solid fa-clipboard-user"></i></div>
+            <div class="card-info">
+              <div class="card-value" id="stat-kehadiran">0</div>
+              <div class="card-label">Dokumen Kehadiran</div>
+            </div>
+            <div class="card-bg-icon"><i class="fa-solid fa-user-check"></i></div>
+          </div>
+          <div class="summary-card card-laporan">
+            <div class="card-icon-wrap"><i class="fa-solid fa-file-lines"></i></div>
+            <div class="card-info">
+              <div class="card-value" id="stat-laporan">0</div>
+              <div class="card-label">Laporan Aktiviti</div>
+            </div>
+            <div class="card-bg-icon"><i class="fa-solid fa-chart-bar"></i></div>
+          </div>
+          <div class="summary-card card-perancangan">
+            <div class="card-icon-wrap"><i class="fa-solid fa-calendar-check"></i></div>
+            <div class="card-info">
+              <div class="card-value" id="stat-perancangan">0</div>
+              <div class="card-label">Perancangan Tahunan</div>
+            </div>
+            <div class="card-bg-icon"><i class="fa-solid fa-list-check"></i></div>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <div>
+            <h2 class="section-title"><i class="fa-solid fa-bolt"></i> Akses Pantas Unit</h2>
+            <p class="section-sub">Klik pada unit untuk melihat semua dokumen berkaitan</p>
+          </div>
+        </div>
+
+        <div class="unit-cards-row">
+          <div class="unit-quick-card bsmm-card" onclick="navigateTo('bsmm')" role="button" tabindex="0">
+            <div class="unit-card-header">
+              <div class="unit-card-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+              <div class="unit-card-badge">3 Dokumen</div>
+            </div>
+            <div class="unit-card-body">
+              <h3 class="unit-card-name">BSMM</h3>
+              <p class="unit-card-desc">Bulan Sabit Merah Malaysia</p>
+            </div>
+            <div class="unit-card-docs">
+              <div class="doc-pill"><i class="fa-solid fa-clipboard-user"></i> Kehadiran</div>
+              <div class="doc-pill"><i class="fa-solid fa-file-lines"></i> Laporan Aktiviti</div>
+              <div class="doc-pill"><i class="fa-solid fa-calendar-check"></i> Perancangan Tahunan</div>
+            </div>
+            <div class="unit-card-cta"><span>Lihat Dokumen</span><i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+
+          <div class="unit-quick-card tkrs-card" onclick="navigateTo('tkrs')" role="button" tabindex="0">
+            <div class="unit-card-header">
+              <div class="unit-card-icon"><i class="fa-solid fa-person-military-to-person"></i></div>
+              <div class="unit-card-badge">3 Dokumen</div>
+            </div>
+            <div class="unit-card-body">
+              <h3 class="unit-card-name">TKRS / KRS</h3>
+              <p class="unit-card-desc">Pengakap & Kadet Remaja Sekolah</p>
+            </div>
+            <div class="unit-card-docs">
+              <div class="doc-pill"><i class="fa-solid fa-clipboard-user"></i> Kehadiran</div>
+              <div class="doc-pill"><i class="fa-solid fa-file-lines"></i> Laporan Aktiviti</div>
+              <div class="doc-pill"><i class="fa-solid fa-calendar-check"></i> Perancangan Tahunan</div>
+            </div>
+            <div class="unit-card-cta"><span>Lihat Dokumen</span><i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top:2rem;">
+          <div>
+            <h2 class="section-title"><i class="fa-solid fa-table-list"></i> Semua Sumber Dokumen</h2>
+          </div>
+        </div>
+        <div id="dashboardTable"></div>
+      </div>
+
+      <!-- SEMUA DOKUMEN VIEW -->
+      <div class="view-panel" id="view-semua">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-layer-group"></i><span>Semua Dokumen</span></div>
+            <h1 class="page-title">Semua Sumber Dokumen</h1>
+            <p class="page-subtitle">Paparan keseluruhan semua dokumen unit beruniform</p>
+          </div>
+        </div>
+        <div id="semuaFilter"></div>
+        <div id="semuaTable"></div>
+      </div>
+
+      <!-- BSMM VIEW -->
+      <div class="view-panel" id="view-bsmm">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-heart-pulse"></i><span>Unit BSMM</span></div>
+            <h1 class="page-title">Dokumen Unit BSMM</h1>
+            <p class="page-subtitle">Bulan Sabit Merah Malaysia — Kehadiran, Laporan Aktiviti & Perancangan Tahunan</p>
+          </div>
+          <div class="page-header-right">
+            <div class="unit-header-badge bsmm-badge"><i class="fa-solid fa-heart-pulse"></i> BSMM</div>
+          </div>
+        </div>
+        <div id="bsmmFilter"></div>
+        <div id="bsmmTable"></div>
+      </div>
+
+      <!-- TKRS VIEW -->
+      <div class="view-panel" id="view-tkrs">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-person-military-to-person"></i><span>Unit TKRS/KRS</span></div>
+            <h1 class="page-title">Dokumen Unit TKRS / KRS</h1>
+            <p class="page-subtitle">Pengakap & Kadet Remaja Sekolah — Kehadiran, Laporan Aktiviti & Perancangan Tahunan</p>
+          </div>
+          <div class="page-header-right">
+            <div class="unit-header-badge tkrs-badge"><i class="fa-solid fa-person-military-to-person"></i> TKRS/KRS</div>
+          </div>
+        </div>
+        <div id="tkrsFilter"></div>
+        <div id="tkrsTable"></div>
+      </div>
+
+      <!-- KEHADIRAN VIEW -->
+      <div class="view-panel" id="view-kehadiran">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-clipboard-user"></i><span>Kehadiran</span></div>
+            <h1 class="page-title">Dokumen Kehadiran</h1>
+            <p class="page-subtitle">Rekod kehadiran semua unit beruniform</p>
+          </div>
+        </div>
+        <div id="kehadiranFilter"></div>
+        <div id="kehadiranTable"></div>
+      </div>
+
+      <!-- LAPORAN VIEW -->
+      <div class="view-panel" id="view-laporan">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-file-lines"></i><span>Laporan Aktiviti</span></div>
+            <h1 class="page-title">Laporan Aktiviti</h1>
+            <p class="page-subtitle">Laporan aktiviti semua unit beruniform</p>
+          </div>
+        </div>
+        <div id="laporanFilter"></div>
+        <div id="laporanTable"></div>
+      </div>
+
+      <!-- PERANCANGAN VIEW -->
+      <div class="view-panel" id="view-perancangan">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-calendar-check"></i><span>Perancangan Tahunan</span></div>
+            <h1 class="page-title">Perancangan Tahunan</h1>
+            <p class="page-subtitle">Dokumen perancangan tahunan semua unit beruniform</p>
+          </div>
+        </div>
+        <div id="perancangangFilter"></div>
+        <div id="perancangangTable"></div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="docModalOverlay" onclick="closeDocModal()">
+    <div class="modal-box" id="docModalBox" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-icon" id="modalIcon"></div>
+          <div>
+            <h3 class="modal-title" id="modalTitle">Nama Dokumen</h3>
+            <p class="modal-meta" id="modalMeta">Unit • Tahun</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" onclick="closeDocModal()" aria-label="Tutup">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-detail-grid" id="modalDetails"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeDocModal()"><i class="fa-solid fa-xmark"></i> Tutup</button>
+        <a class="btn-primary" id="modalOpenBtn" href="#" target="_blank" rel="noopener noreferrer">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Dokumen
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
