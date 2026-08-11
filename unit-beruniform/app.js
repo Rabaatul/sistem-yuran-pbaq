@@ -555,6 +555,7 @@ function renderAllViews() {
   renderAnalisisKehadiran(kehadiranData);
   buildFilterBar('kehadiranFilter', kehadiranData, (filtered) => buildTable('kehadiranTable', filtered));
   buildTable('kehadiranTable', kehadiranData);
+  renderKehadiranBarChart();
 
   // --- LAPORAN AKTIVITI ---
   const laporanData = MASTER_SUMBER.filter(r => r.jenis === 'Laporan Aktiviti');
@@ -570,11 +571,13 @@ function renderAllViews() {
   const prestasiData = MASTER_SUMBER.filter(r => r.modul === 'PRESTASI' || r.jenis === 'Prestasi' || r.nama.includes('PRESTASI'));
   buildFilterBar('prestasiFilter', prestasiData, (filtered) => buildTable('prestasiTable', filtered));
   buildTable('prestasiTable', prestasiData);
+  renderPrestasiBarChart();
 
   // --- ANTARABANGSA ---
   const antarabangsaData = MASTER_SUMBER.filter(r => r.modul === 'ANTARABANGSA' || r.jenis === 'Antarabangsa' || r.nama.includes('ANTARABANGSA'));
   buildFilterBar('antarabangsaFilter', antarabangsaData, (filtered) => buildTable('antarabangsaTable', filtered));
   buildTable('antarabangsaTable', antarabangsaData);
+  renderAntarabangsaBarChart();
 }
 
 // ============================================================
@@ -661,6 +664,87 @@ function renderKehadiranBarChart() {
           grid: { color: 'rgba(226, 232, 240, 0.6)' },
           ticks: { stepSize: 5, font: { family: 'Plus Jakarta Sans', size: 11 } }
         }
+      }
+    }
+  });
+}
+
+let meprestasiChartInstance = null;
+function renderPrestasiBarChart() {
+  const canvas = document.getElementById('prestasiBarChart');
+  if (!canvas || typeof Chart === 'undefined') return;
+  if (meprestasiChartInstance) meprestasiChartInstance.destroy();
+
+  const ctx = canvas.getContext('2d');
+  meprestasiChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['1. Ujian Teori & Balutan', '2. Lencana Kemahiran', '3. Disiplin & Sahsiah'],
+      datasets: [
+        {
+          label: 'BSMM (%)',
+          data: [96, 92, 95],
+          backgroundColor: '#dc2626',
+          borderRadius: 6,
+          barPercentage: 0.5,
+          categoryPercentage: 0.6
+        },
+        {
+          label: 'TKRS / KRS (%)',
+          data: [90, 94, 91],
+          backgroundColor: '#059669',
+          borderRadius: 6,
+          barPercentage: 0.5,
+          categoryPercentage: 0.6
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: true, position: 'top', labels: { usePointStyle: true, boxWidth: 8 } },
+        tooltip: { callbacks: { label: (ctx) => ` ${ctx.dataset.label}: ${ctx.raw}%` } }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { min: 0, max: 100, ticks: { stepSize: 20, callback: (v) => v + '%' } }
+      }
+    }
+  });
+}
+
+let meantarabangsaChartInstance = null;
+function renderAntarabangsaBarChart() {
+  const canvas = document.getElementById('antarabangsaBarChart');
+  if (!canvas || typeof Chart === 'undefined') return;
+  if (meantarabangsaChartInstance) meantarabangsaChartInstance.destroy();
+
+  const ctx = canvas.getContext('2d');
+  meantarabangsaChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Pendaftaran Murid', 'Persediaan Science Fair', 'Modul CyberKids', 'Dokumen MYSO'],
+      datasets: [
+        {
+          label: 'Kadar Kesediaan (%)',
+          data: [100, 100, 100, 100],
+          backgroundColor: '#0284c7',
+          borderRadius: 6,
+          barPercentage: 0.5
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: true, position: 'top', labels: { usePointStyle: true, boxWidth: 8 } },
+        tooltip: { callbacks: { label: (ctx) => ` ${ctx.dataset.label}: ${ctx.raw}%` } }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { min: 0, max: 100, ticks: { stepSize: 25, callback: (v) => v + '%' } }
       }
     }
   });
