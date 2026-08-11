@@ -94,6 +94,16 @@ let MASTER_SUMBER = [
     tahun: "2026",
     link: "https://docs.google.com/document/d/1XJ_ztUFa3yDR6W2B721OSdnXu3RYmwgN/edit",
     status: "Aktif"
+  },
+  {
+    id: "UB-007",
+    modul: "PRESTASI",
+    kategori: "GERKO A",
+    jenis: "Prestasi",
+    nama: "PRESTASI 2026",
+    tahun: "2026",
+    link: "https://drive.google.com/drive/folders/1wpvGtyd1bojQ9Eg_Tp1ZArLQ0k7l0qFJ?usp=sharing",
+    status: "Aktif"
   }
 ];
 
@@ -131,6 +141,7 @@ function renderStats() {
   updateBadge('badge-kehadiran', s.kehadiran);
   updateBadge('badge-laporan', s.laporan);
   updateBadge('badge-perancangan', s.perancangan);
+  updateBadge('badge-prestasi', MASTER_SUMBER.filter(r => r.modul === 'PRESTASI' || r.jenis === 'Prestasi' || r.nama.includes('PRESTASI')).length);
 }
 
 // Update unit card badges on dashboard
@@ -166,6 +177,7 @@ function getModulClass(modul) {
   const m = modul.toUpperCase();
   if (m.includes('BSMM')) return 'modul-bsmm';
   if (m.includes('TKRS') || m.includes('KRS')) return 'modul-tkrs';
+  if (m.includes('PRESTASI')) return 'modul-prestasi';
   return '';
 }
 function getModulIcon(modul) {
@@ -173,6 +185,7 @@ function getModulIcon(modul) {
   const m = modul.toUpperCase();
   if (m.includes('BSMM')) return 'fa-heart-pulse';
   if (m.includes('TKRS') || m.includes('KRS')) return 'fa-person-military-to-person';
+  if (m.includes('PRESTASI')) return 'fa-trophy';
   return 'fa-shield';
 }
 function getCatClass(jenis) {
@@ -180,6 +193,7 @@ function getCatClass(jenis) {
   if (jenis === 'Kehadiran') return 'cat-kehadiran';
   if (jenis === 'Laporan Aktiviti') return 'cat-laporan';
   if (jenis === 'Perancangan Tahunan') return 'cat-perancangan';
+  if (jenis === 'Prestasi' || jenis === 'PRESTASI') return 'cat-prestasi';
   return '';
 }
 function getCatIcon(jenis) {
@@ -187,6 +201,7 @@ function getCatIcon(jenis) {
   if (jenis === 'Kehadiran') return 'fa-clipboard-user';
   if (jenis === 'Laporan Aktiviti') return 'fa-file-lines';
   if (jenis === 'Perancangan Tahunan') return 'fa-calendar-check';
+  if (jenis === 'Prestasi' || jenis === 'PRESTASI') return 'fa-trophy';
   return 'fa-file';
 }
 function getStatusClass(status) {
@@ -201,6 +216,7 @@ function getModalIconBg(modul) {
   const m = modul.toUpperCase();
   if (m.includes('BSMM')) return 'background:linear-gradient(135deg,#991b1b,#dc2626)';
   if (m.includes('TKRS') || m.includes('KRS')) return 'background:linear-gradient(135deg,#064e3b,#059669)';
+  if (m.includes('PRESTASI')) return 'background:linear-gradient(135deg,#6d28d9,#7c3aed)';
   return 'background:linear-gradient(135deg,#1e3a8a,#1e40af)';
 }
 
@@ -533,6 +549,11 @@ function renderAllViews() {
   const perancangangData = MASTER_SUMBER.filter(r => r.jenis === 'Perancangan Tahunan');
   buildFilterBar('perancangangFilter', perancangangData, (filtered) => buildTable('perancangangTable', filtered));
   buildTable('perancangangTable', perancangangData);
+
+  // --- PRESTASI ---
+  const prestasiData = MASTER_SUMBER.filter(r => r.modul === 'PRESTASI' || r.jenis === 'Prestasi' || r.nama.includes('PRESTASI'));
+  buildFilterBar('prestasiFilter', prestasiData, (filtered) => buildTable('prestasiTable', filtered));
+  buildTable('prestasiTable', prestasiData);
 }
 
 // ============================================================

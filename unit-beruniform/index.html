@@ -90,6 +90,12 @@
           <span class="nav-label">Perancangan Tahunan</span>
           <span class="nav-badge" id="badge-perancangan">2</span>
         </button>
+
+        <button class="nav-item" id="nav-prestasi" onclick="navigateTo('prestasi')" data-view="prestasi">
+          <span class="nav-icon"><i class="fa-solid fa-trophy"></i></span>
+          <span class="nav-label">Prestasi</span>
+          <span class="nav-badge" id="badge-prestasi">1</span>
+        </button>
       </nav>
 
       <div class="sidebar-footer">
@@ -508,6 +514,66 @@
 
         <div id="perancangangFilter"></div>
         <div id="perancangangTable"></div>
+      </div>
+
+      <!-- PRESTASI VIEW -->
+      <div class="view-panel" id="view-prestasi">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-trophy"></i><span>Prestasi & Pencapaian</span></div>
+            <h1 class="page-title">Dokumen & Infografik Prestasi Unit</h1>
+            <p class="page-subtitle">Pencapaian, sijil & rekod prestasi unit beruniform PBAQ 2026</p>
+          </div>
+          <div class="page-header-right">
+            <div class="header-year-badge"><i class="fa-solid fa-award"></i> Prestasi 2026</div>
+          </div>
+        </div>
+
+        <!-- INFOGRAFIK PRESTASI -->
+        <div class="infographic-grid">
+          <div class="infographic-card">
+            <div class="infographic-header">
+              <div class="infographic-title">
+                <i class="fa-solid fa-trophy"></i> Status Rekod Prestasi & Pencapaian
+              </div>
+              <span class="milestone-badge badge-selesai">Aktif & Terhubung</span>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-medium); margin-bottom:1rem;">
+              Folder rekod prestasi unit beruniform mengandungi fail sijil pencapaian, keputusan pertandingan, dan laporan pengiktirafan ahli.
+            </p>
+            <div class="analisis-quick-links" style="grid-template-columns:1fr;">
+              <a class="analisis-link-btn" style="background:var(--accent-purple-soft); color:var(--accent-purple); border:1px solid #ddd6fe;" href="https://drive.google.com/drive/folders/1wpvGtyd1bojQ9Eg_Tp1ZArLQ0k7l0qFJ?usp=sharing" target="_blank" rel="noopener noreferrer">
+                <i class="fa-solid fa-folder-open"></i> Buka Folder Google Drive Prestasi 2026
+              </a>
+            </div>
+          </div>
+
+          <div class="infographic-card">
+            <div class="infographic-header">
+              <div class="infographic-title">
+                <i class="fa-solid fa-award"></i> Ringkasan Sijil & Pengiktirafan
+              </div>
+              <span class="milestone-badge badge-proses">Tahun 2026</span>
+            </div>
+            <div class="analisis-grid-3" style="margin-top:0.5rem;">
+              <div class="stat-box-mini">
+                <div class="val val-peratus">100%</div>
+                <div class="lbl">Rekod Disimpan</div>
+              </div>
+              <div class="stat-box-mini">
+                <div class="val val-hadir">1</div>
+                <div class="lbl">Folder Utama Drive</div>
+              </div>
+              <div class="stat-box-mini">
+                <div class="val val-peratus">2026</div>
+                <div class="lbl">Tahun Sesi</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="prestasiFilter"></div>
+        <div id="prestasiTable"></div>
       </div>
 
     </main>

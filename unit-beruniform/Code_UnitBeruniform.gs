@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ==============================================================================
  * DASHBOARD PENGURUSAN UNIT BERUNIFORM - PBAQ 2026
  * ==============================================================================
@@ -49,6 +49,7 @@ function detectJenis(namaSumber) {
   if (!namaSumber) return "Lain-lain";
   var n = namaSumber.toUpperCase();
   if (n.indexOf("KEHADIRAN") !== -1) return "Kehadiran";
+  if (n.indexOf("PRESTASI") !== -1)  return "Prestasi";
   if (n.indexOf("LAPORAN") !== -1)   return "Laporan Aktiviti";
   if (n.indexOf("PERANCANGAN") !== -1) return "Perancangan Tahunan";
   return "Lain-lain";

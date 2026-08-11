@@ -716,6 +716,7 @@ tbody td {
 }
 .modul-bsmm { background: var(--bsmm-mid); color: var(--bsmm-dark); }
 .modul-tkrs { background: var(--tkrs-mid); color: var(--tkrs-dark); }
+.modul-prestasi { background: var(--accent-purple-soft); color: var(--accent-purple); border: 1px solid #ddd6fe; }
 
 /* Kategori Tag */
 .cat-tag {
@@ -731,6 +732,7 @@ tbody td {
 .cat-kehadiran { background: var(--accent-teal-soft); color: var(--accent-teal); border-color: #a5f3fc; }
 .cat-laporan { background: var(--accent-amber-soft); color: var(--accent-amber); border-color: #fde68a; }
 .cat-perancangan { background: var(--tkrs-soft); color: var(--tkrs-dark); border-color: var(--tkrs-mid); }
+.cat-prestasi { background: var(--accent-purple-soft); color: var(--accent-purple); border-color: #ddd6fe; }
 
 /* Nama Sumber */
 .td-nama { font-weight: 600; color: var(--text-dark); }
