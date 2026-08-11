@@ -50,6 +50,7 @@ function detectJenis(namaSumber) {
   var n = namaSumber.toUpperCase();
   if (n.indexOf("KEHADIRAN") !== -1) return "Kehadiran";
   if (n.indexOf("PRESTASI") !== -1)  return "Prestasi";
+  if (n.indexOf("ANTARABANGSA") !== -1) return "Antarabangsa";
   if (n.indexOf("LAPORAN") !== -1)   return "Laporan Aktiviti";
   if (n.indexOf("PERANCANGAN") !== -1) return "Perancangan Tahunan";
   return "Lain-lain";

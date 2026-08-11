@@ -104,6 +104,16 @@ let MASTER_SUMBER = [
     tahun: "2026",
     link: "https://drive.google.com/drive/folders/1wpvGtyd1bojQ9Eg_Tp1ZArLQ0k7l0qFJ?usp=sharing",
     status: "Aktif"
+  },
+  {
+    id: "UB-008",
+    modul: "ANTARABANGSA",
+    kategori: "GERKO A",
+    jenis: "Antarabangsa",
+    nama: "ANTARABANGSA",
+    tahun: "2026",
+    link: "https://docs.google.com/document/d/1e4kBiPYrke4TpgWc-E7oikMej6PVLo6e/edit?usp=sharing&ouid=103776709571497988596&rtpof=true&sd=true",
+    status: "Aktif"
   }
 ];
 
