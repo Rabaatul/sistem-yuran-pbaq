@@ -1,91 +1,131 @@
-# SISTEM BAYARAN YURAN MURID 🎓💳
+# Fathul Quranic Centre (FQC) — Portal Rasmi
 
-Aplikasi web pengurusan data murid dan pembayaran yuran mesra guru yang berhubung terus dengan **Google Sheets** (Sheet `MURID` dan Sheet `BAYARAN`) menggunakan **Google Apps Script (GAS)** Web App API.
-
----
-
-## 🌟 Ciri-Ciri Utama
-
-1. **Dashboard Statistik**:
-   - Menampilkan 4 kad statistik utama: Jumlah Murid, Bayaran Hari Ini, Bayaran Bulan Ini, dan Jumlah Keseluruhan Bayaran.
-   - Transaksi terkini beserta pautan paparan resit pantas.
-
-2. **Data Murid (Sheet: MURID)**:
-   - Paparan jadual murid: `Bil`, `Nama Murid`, `Kelas`, `Nama Penjaga`, `No. WhatsApp`.
-   - Butang **+ Tambah Murid**, **Edit**, dan **Padam**.
-   - Penjanaan nombor `Bil` secara automatik (auto-increment).
-   - Nombor WhatsApp disimpan sebagai **TEKS** (mengekalkan digit `0` di hadapan, contoh `0134565245`).
-
-3. **Rekod Bayaran (Sheet: BAYARAN)**:
-   - Borang rekod bayaran mesra guru.
-   - Dropdown carian murid **LIVE** daripada sheet `MURID`.
-   - Isian automatik (Auto-fill) bagi Kelas, Nama Penjaga, dan No. WhatsApp apabila murid dipilih.
-   - Pilihan Jenis Yuran (*Yuran Bulanan*, *Yuran PIBG*, *Yuran Aktiviti*, *Yuran Buku*, *Yuran Peperiksaan*, *Yuran Program*, *Lain-lain* + ruangan taip jenis yuran sendiri).
-   - Dropdown Kaedah Bayaran (*Tunai*, *Online Transfer*, *QR*, *Lain-lain*).
-   - Penjanaan **ID Bayaran** automatik (`BYR0001`, `BYR0002`...) & **No Resit** automatik (`RESIT-2026-0001`...).
-   - Penyimpanan tepat mengikut susunan 8 kolum A..H pada sheet `BAYARAN`.
-
-4. **Resit Digital & Integrasi WhatsApp**:
-   - Paparan modal resit rasmi dengan format jumlah bayaran `RM 50.00`.
-   - Butang **CETAK RESIT** (siap sedia dengan susun atur cetakan `@media print`).
-   - Butang **HANTAR WHATSAPP**: Membuka WhatsApp secara automatik dengan menukar nombor penjaga ke format Malaysia (`60...`) dan menyediakan templat mesej Bahasa Melayu rasmi tanpa auto-send.
-
-5. **Senarai Bayaran**:
-   - Jadual penuh transaksi pembayaran daripada sheet `BAYARAN`.
-   - Kotak carian serbaguna mengikut Nama Murid, No Resit, atau Jenis Yuran.
-   - Penapis mengikut Bulan dan Jenis Yuran beserta paparan jumlah terkumpul hasil saringan.
+Website rasmi dan portal pengurusan berpusat untuk **Fathul Quranic Centre (FQC)**. Projek ini menyatukan sistem-sistem sedia ada ke dalam satu pengalaman pengguna yang moden, mesra pengguna, dan profesional.
 
 ---
 
-## 📊 Struktur Google Spreadsheet
+## 🔒 Notis Keselamatan (Security Statement)
 
-Satu Google Spreadsheet dengan 2 sheet:
-
-### **SHEET 1: MURID**
-| Kolum | Nama Kolum |
-| :---: | :--- |
-| **A** | Bil |
-| **B** | Nama Murid |
-| **C** | Kelas |
-| **D** | Nama Penjaga |
-| **E** | No. WhatsApp |
-
-### **SHEET 2: BAYARAN**
-| Kolum | Nama Kolum |
-| :---: | :--- |
-| **A** | ID Bayaran |
-| **B** | Tarikh |
-| **C** | No Resit |
-| **D** | Nama Murid |
-| **E** | Jenis Yuran |
-| **F** | Jumlah |
-| **G** | Kaedah Bayaran |
-| **H** | Catatan |
+> **PENTING**: Hiding an external URL behind a portal page does not secure the external application. Sensitive systems must enforce authentication at the application level.
+> 
+> Menyembunyikan URL luaran di dalam paparan portal iframe tidak menjadikan aplikasi luaran tersebut terlindung secara automatik. Sistem yang mengandungi maklumat sensitif mesti melaksanakan sistem pengesahan (*authentication*) pada peringkat aplikasi itu sendiri.
 
 ---
 
-## 🚀 Panduan Persediaan Google Apps Script (Backend API)
+## 🛠️ Tech Stack
 
-1. Buka Google Spreadsheet anda.
-2. Klik **Extensions > Apps Script**.
-3. Salin kandungan file `Code.gs` dan tampal ke dalam skrip editor Apps Script.
-4. Klik **Deploy > New Deployment**.
-5. Pilih **Web App**:
-   - **Execute as**: *Me (Alamat emel anda)*
-   - **Who has access**: *Anyone*
-6. Salin **Web App URL** yang dihasilkan.
-7. Buka file `index.html` dan kemaskini pembolehubah:
-   ```javascript
-   const API_URL = "TEPEK_URL_GOOGLE_APPS_SCRIPT_DI_SINI";
-   ```
-   *(Atau masukkan URL tersebut secara terus menerusi modal **Setup Google Sheets** dalam aplikasi).*
+* **Framework**: Next.js 14 (App Router)
+* **Bahasa**: TypeScript
+* **Styling**: Tailwind CSS
+* **Ikon**: Lucide React
+* **Penempatan (Deployment)**: Vercel
 
 ---
 
-## 💻 Cara Menjalankan Secara Tempatan
+## 🚀 Panduan Pemasangan & Pembangunan Lokal
 
-Jalankan skrip PowerShell berikut:
-```powershell
-powershell -ExecutionPolicy Bypass -File server.ps1
+### 1. Muat Turun Dependensi
+
+```bash
+npm install
 ```
-Kemudian layari [http://localhost:8000/](http://localhost:8000/) di pelayar anda.
+
+### 2. Jalankan Persekitaran Pembangunan (Development)
+
+```bash
+npm run dev
+```
+
+Buka pelayar anda di `http://localhost:3000`.
+
+### 3. Semak Build Produksi
+
+```bash
+npm run build
+```
+
+---
+
+## 🌐 Cara Deploy Ke Vercel
+
+1. **Push Projek ke GitHub**:
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit — Portal Rasmi FQC"
+   git branch -M main
+   git remote add origin https://github.com/USERNAME/NAMA-REPO.git
+   git push -u origin main
+   ```
+
+2. **Daftar & Import di Vercel**:
+   - Log masuk ke [Vercel](https://vercel.com).
+   - Klik **"Add New"** -> **"Project"**.
+   - Pilih repository GitHub anda.
+   - Framework Preset akan dikesan secara automatik sebagai **Next.js**.
+
+3. **Environment Variables** (Jika ada pada masa hadapan):
+   - Tambah sebarang *secret keys* di bahagian **Environment Variables** Vercel.
+   - Jangan sekali-kali *commit* `.env.local` ke dalam GitHub repository.
+
+4. **Klik Deploy**:
+   - Vercel akan membina dan menyediakan pautan domain `.vercel.app` secara automatik.
+
+---
+
+## 🖼️ Cara Menukar Logo Rasmi FQC
+
+Logo dipanggil melalui kompenen `FqcLogo.tsx`. Untuk menukar logo dengan gambar rasmi FQC:
+
+1. Sediakan fail gambar logo anda dalam format **PNG** (disyorkan latar belakang lutsinar / transparent).
+2. Namakan fail tersebut sebagai `fqc-logo.png`.
+3. Gantikan fail di lokasi berikut:
+   ```text
+   public/images/fqc-logo.png
+   ```
+4. Kompenen akan mengemas kini logo secara automatik tanpa perlu mengubah sebarang kod TypeScript.
+
+---
+
+## 📁 Struktur Projek
+
+```text
+src/
+├── app/
+│   ├── layout.tsx            # Main Root Layout dengan Sidebar & Topbar
+│   ├── globals.css           # Custom Tailwind CSS & Design Tokens
+│   ├── page.tsx              # Homepage (Laman Utama)
+│   ├── pendaftaran/          # Halaman Pendaftaran Pelajar Baru
+│   ├── pasukan-kami/         # Halaman Carta Organisasi & Pasukan
+│   ├── portal/
+│   │   ├── page.tsx          # Halaman Pilihan Direktori Portal
+│   │   ├── admin/            # Portal Admin (Pembayaran Yuran & Resit)
+│   │   └── prestasi/         # Portal Guru & Ibu Bapa (Prestasi Murid)
+│   └── contact/              # Halaman Hubungi Kami
+├── components/
+│   ├── AppSidebar.tsx        # Fixed Sidebar Desktop
+│   ├── MobileNavigation.tsx  # Topbar & Drawer Nav Mobile
+│   ├── PageHeader.tsx        # Header Bahagian Atas Content Area
+│   ├── ExternalAppFrame.tsx  # Frame Iframe Responsive & Fallback
+│   ├── FqcLogo.tsx           # Logo FQC Dinamik & Vector Fallback
+│   ├── QuickAccessCard.tsx   # Kad Akses Pantas
+│   ├── PortalCard.tsx        # Kad Direktori Portal
+│   ├── AnnouncementCard.tsx  # Kad Pengumuman
+│   └── Footer.tsx            # Footer Rasmi FQC
+├── config/
+│   └── apps.ts               # Konfigurasi Pusat URL Aplikasi Sedia Ada
+middleware.ts                 # Seni bina perlindungan laluan portal
+```
+
+---
+
+## 🔗 Pautan Aplikasi Sedia Ada
+
+* **Pendaftaran Baru**: `https://pendaftaranbarupbaq.netlify.app/`
+* **Pasukan Kami**: `https://pasukankamipbaq.netlify.app/`
+* **Portal Admin**: `https://sistembayaranpbaq.netlify.app/`
+* **Portal Guru & Ibu Bapa**: `https://pelaporandansemakan.netlify.app/`
+
+---
+
+© 2026 Fathul Quranic Centre (FQC). Hak Cipta Terpelihara.

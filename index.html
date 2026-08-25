@@ -3,646 +3,883 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Pembayaran Yuran & Resit Digital - Fathul Quranic Centre (FQC)</title>
-  
-  <!-- FontAwesome & Libraries -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
-  <!-- External Stylesheet for Local & GAS Embed -->
+  <title>Dashboard Unit Beruniform | PBAQ 2026</title>
+  <meta name="description" content="Sistem pengurusan dokumen Unit Beruniform BSMM dan TKRS/KRS PBAQ 2026.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-  <!-- Mobile Top Nav -->
-  <div class="mobile-nav-bar">
-    <div style="display:flex; align-items:center; gap:0.5rem;">
-      <i class="fa-solid fa-graduation-cap" style="color:var(--accent-gold); font-size:1.2rem;"></i>
-      <span style="font-weight:800; font-size:0.95rem;">FQC YURAN DIGITAL</span>
+  <div class="mobile-topbar" id="mobileTopbar">
+    <div class="mobile-brand">
+      <div class="mobile-brand-icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <div class="mobile-brand-text">
+        <span class="mobile-brand-title">Unit Beruniform</span>
+        <span class="mobile-brand-sub">PBAQ 2026</span>
+      </div>
     </div>
-    <button class="btn btn-outline" style="color:#fff; border-color:rgba(255,255,255,0.3); padding:4px 10px;" onclick="toggleMobileSidebar()">
+    <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleSidebar()" aria-label="Buka Menu">
       <i class="fa-solid fa-bars"></i>
     </button>
   </div>
 
-  <div class="app-container">
-    <!-- Sidebar Menu Left (Desktop & Mobile Drawer) -->
-    <aside class="sidebar">
-      <div>
-        <div class="brand-header">
-          <img src="assets/logo.png" class="brand-logo-img" alt="Logo FQC" style="width:44px; height:44px; object-fit:contain; border-radius:50%; background:#fff; padding:2px;">
-          <div>
-            <div class="brand-title-text">FATHUL QURANIC</div>
-            <div class="brand-subtitle-text">CENTRE (FQC)</div>
-          </div>
-        </div>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
-        <nav class="nav-menu">
-          <button class="nav-link active" id="nav-dashboard" onclick="switchView('dashboard')">
-            <i class="fa-solid fa-chart-pie"></i> Dashboard
-          </button>
-          <button class="nav-link" id="nav-bayaran" onclick="switchView('bayaran')">
-            <i class="fa-solid fa-cash-register"></i> Pembayaran Baru
-          </button>
-          <button class="nav-link" id="nav-rekod" onclick="switchView('rekod')">
-            <i class="fa-solid fa-file-invoice-dollar"></i> Rekod Bayaran
-          </button>
-          <button class="nav-link" id="nav-belum-bayar" onclick="switchView('belum-bayar')">
-            <i class="fa-solid fa-user-clock"></i> Murid Belum Bayar
-          </button>
-          <button class="nav-link" id="nav-murid" onclick="switchView('murid')">
-            <i class="fa-solid fa-users"></i> Data Murid
-          </button>
-          <button class="nav-link" id="nav-tetapan" onclick="switchView('tetapan')">
-            <i class="fa-solid fa-sliders"></i> Tetapan Yuran
-          </button>
-        </nav>
+  <div class="app-shell">
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon-wrap"><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="brand-text-wrap">
+          <span class="brand-name">Unit Beruniform</span>
+          <span class="brand-org">PBAQ 2026</span>
+        </div>
+        <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Tutup Sidebar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
 
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Navigasi Utama</div>
+
+        <button class="nav-item active" id="nav-dashboard" onclick="navigateTo('dashboard')" data-view="dashboard">
+          <span class="nav-icon"><i class="fa-solid fa-gauge-high"></i></span>
+          <span class="nav-label">Dashboard</span>
+        </button>
+
+        <button class="nav-item" id="nav-semua" onclick="navigateTo('semua')" data-view="semua">
+          <span class="nav-icon"><i class="fa-solid fa-layer-group"></i></span>
+          <span class="nav-label">Semua Dokumen</span>
+          <span class="nav-badge" id="badge-semua">6</span>
+        </button>
+
+        <div class="nav-section-label" style="margin-top:1.25rem;">Unit Beruniform</div>
+
+        <button class="nav-item" id="nav-bsmm" onclick="navigateTo('bsmm')" data-view="bsmm">
+          <span class="nav-icon"><i class="fa-solid fa-heart-pulse"></i></span>
+          <span class="nav-label">BSMM</span>
+          <span class="nav-badge" id="badge-bsmm">3</span>
+        </button>
+
+        <button class="nav-item" id="nav-tkrs" onclick="navigateTo('tkrs')" data-view="tkrs">
+          <span class="nav-icon"><i class="fa-solid fa-person-military-to-person"></i></span>
+          <span class="nav-label">TKRS / KRS</span>
+          <span class="nav-badge" id="badge-tkrs">3</span>
+        </button>
+
+        <div class="nav-section-label" style="margin-top:1.25rem;">Jenis Dokumen</div>
+
+        <button class="nav-item" id="nav-kehadiran" onclick="navigateTo('kehadiran')" data-view="kehadiran">
+          <span class="nav-icon"><i class="fa-solid fa-clipboard-user"></i></span>
+          <span class="nav-label">Kehadiran</span>
+          <span class="nav-badge" id="badge-kehadiran">2</span>
+        </button>
+
+        <button class="nav-item" id="nav-laporan" onclick="navigateTo('laporan')" data-view="laporan">
+          <span class="nav-icon"><i class="fa-solid fa-file-lines"></i></span>
+          <span class="nav-label">Laporan Aktiviti</span>
+          <span class="nav-badge" id="badge-laporan">2</span>
+        </button>
+
+        <button class="nav-item" id="nav-perancangan" onclick="navigateTo('perancangan')" data-view="perancangan">
+          <span class="nav-icon"><i class="fa-solid fa-calendar-check"></i></span>
+          <span class="nav-label">Perancangan Tahunan</span>
+          <span class="nav-badge" id="badge-perancangan">2</span>
+        </button>
+
+        <button class="nav-item" id="nav-prestasi" onclick="navigateTo('prestasi')" data-view="prestasi">
+          <span class="nav-icon"><i class="fa-solid fa-trophy"></i></span>
+          <span class="nav-label">Prestasi</span>
+          <span class="nav-badge" id="badge-prestasi">1</span>
+        </button>
+
+        <button class="nav-item" id="nav-antarabangsa" onclick="navigateTo('antarabangsa')" data-view="antarabangsa">
+          <span class="nav-icon"><i class="fa-solid fa-earth-americas"></i></span>
+          <span class="nav-label">Antarabangsa</span>
+          <span class="nav-badge" id="badge-antarabangsa">1</span>
+        </button>
+      </nav>
+
       <div class="sidebar-footer">
-        <div>Sistem Resit FQC v2.5</div>
-        <div style="color:var(--accent-gold); font-weight:700; margin-top:2px;">AppSheet & Sheets API</div>
+        <div class="footer-status">
+          <span class="status-dot pulse"></span>
+          <span class="footer-status-text">Data Dikemaskini</span>
+        </div>
+        <div class="footer-date" id="footerDate"></div>
       </div>
     </aside>
 
-    <!-- Main Content Area -->
-    <main class="main-content">
-      <!-- Top Header -->
-      <header class="top-header">
-        <div class="header-title-box">
-          <h1>Sistem Pembayaran Yuran & Resit Digital</h1>
-          <div class="header-subtitle">Pengurusan Pembayaran, Resit Digital, WhatsApp & Analitik Tunggakan</div>
+    <main class="main-content" id="mainContent">
+
+      <!-- DASHBOARD VIEW -->
+      <div class="view-panel active" id="view-dashboard">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-house"></i><span>Laman Utama</span></div>
+            <h1 class="page-title">Dashboard Unit Beruniform</h1>
+            <p class="page-subtitle">Sistem pengurusan dokumen unit beruniform BSMM dan TKRS/KRS</p>
+          </div>
+          <div class="page-header-right">
+            <div class="header-year-badge"><i class="fa-solid fa-calendar-days"></i><span id="currentYear">2026</span></div>
+          </div>
         </div>
 
-        <div style="display:flex; align-items:center; gap:0.75rem;">
-          <div class="last-updated-badge" id="dash-last-updated">
-            Dikemaskini terakhir: Loading...
+        <div class="cards-grid" id="summaryCards">
+          <div class="summary-card card-total">
+            <div class="card-icon-wrap"><i class="fa-solid fa-database"></i></div>
+            <div class="card-info">
+              <div class="card-value" id="stat-total">0</div>
+              <div class="card-label">Jumlah Sumber</div>
+            </div>
+            <div class="card-bg-icon"><i class="fa-solid fa-database"></i></div>
           </div>
-          <button class="btn btn-outline" style="border-color:var(--primary-main); color:var(--primary-dark);" onclick="actionRefreshAllData()">
-            <i class="fa-solid fa-rotate"></i> KEMASKINI DATA
-          </button>
+          <div class="summary-card card-unit">
+            <div class="card-icon-wrap"><i class="fa-solid fa-people-group"></i></div>
+            <div class="card-info">
+              <div class="card-value" id="stat-unit">0</div>
+              <div class="card-label">Jumlah Unit</div>
+            </div>
+            <div class="card-bg-icon"><i class="fa-solid fa-shield"></i></div>
+          </div>
+          <div class="summary-card card-kehadiran">
+            <div class="card-icon-wrap"><i class="fa-solid fa-clipboard-user"></i></div>
+            <div class="card-info">
+              <div class="card-value" id="stat-kehadiran">0</div>
+              <div class="card-label">Dokumen Kehadiran</div>
+            </div>
+            <div class="card-bg-icon"><i class="fa-solid fa-user-check"></i></div>
+          </div>
+          <div class="summary-card card-laporan">
+            <div class="card-icon-wrap"><i class="fa-solid fa-file-lines"></i></div>
+            <div class="card-info">
+              <div class="card-value" id="stat-laporan">0</div>
+              <div class="card-label">Laporan Aktiviti</div>
+            </div>
+            <div class="card-bg-icon"><i class="fa-solid fa-chart-bar"></i></div>
+          </div>
+          <div class="summary-card card-perancangan">
+            <div class="card-icon-wrap"><i class="fa-solid fa-calendar-check"></i></div>
+            <div class="card-info">
+              <div class="card-value" id="stat-perancangan">0</div>
+              <div class="card-label">Perancangan Tahunan</div>
+            </div>
+            <div class="card-bg-icon"><i class="fa-solid fa-list-check"></i></div>
+          </div>
         </div>
-      </header>
 
-      <div class="content-body">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title"><i class="fa-solid fa-bolt"></i> Akses Pantas Unit</h2>
+            <p class="section-sub">Klik pada unit untuk melihat semua dokumen berkaitan</p>
+          </div>
+        </div>
 
-        <!-- ================= VIEW 1: DASHBOARD ================= -->
-        <section id="view-dashboard" class="tab-view active">
-          <!-- KPI Metrics Cards Grid -->
-          <div class="dashboard-metrics-grid">
-            <div class="metric-card">
-              <div class="metric-info">
-                <h3>Jumlah Murid Keseluruhan</h3>
-                <div class="metric-value" id="dash-total-murid">0</div>
-              </div>
-              <div class="metric-icon"><i class="fa-solid fa-users-gear"></i></div>
+        <div class="unit-cards-row">
+          <div class="unit-quick-card bsmm-card" onclick="navigateTo('bsmm')" role="button" tabindex="0">
+            <div class="unit-card-header">
+              <div class="unit-card-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+              <div class="unit-card-badge">3 Dokumen</div>
             </div>
-
-            <div class="metric-card" style="border-left: 4px solid var(--primary-main);">
-              <div class="metric-info">
-                <h3>Jumlah Kutipan Keseluruhan</h3>
-                <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">(Januari - Bulan Semasa)</div>
-                <div class="metric-value" style="color:var(--primary-main);" id="dash-total-kutipan">RM 0</div>
-              </div>
-              <div class="metric-icon" style="background:#dcfce7; color:#15803d;"><i class="fa-solid fa-wallet"></i></div>
+            <div class="unit-card-body">
+              <h3 class="unit-card-name">BSMM</h3>
+              <p class="unit-card-desc">Bulan Sabit Merah Malaysia</p>
             </div>
-
-            <div class="metric-card">
-              <div class="metric-info">
-                <h3>Jumlah Sudah Bayar</h3>
-                <div class="metric-value" style="color:#15803d;" id="dash-total-sudah-bayar">0</div>
-              </div>
-              <div class="metric-icon" style="background:#dcfce7; color:#15803d;"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="unit-card-docs">
+              <div class="doc-pill"><i class="fa-solid fa-clipboard-user"></i> Kehadiran</div>
+              <div class="doc-pill"><i class="fa-solid fa-file-lines"></i> Laporan Aktiviti</div>
+              <div class="doc-pill"><i class="fa-solid fa-calendar-check"></i> Perancangan Tahunan</div>
             </div>
-
-            <div class="metric-card">
-              <div class="metric-info">
-                <h3>Jumlah Belum Bayar</h3>
-                <div class="metric-value" style="color:#b91c1c;" id="dash-total-belum-bayar">0</div>
-              </div>
-              <div class="metric-icon" style="background:#fee2e2; color:#b91c1c;"><i class="fa-solid fa-clock"></i></div>
-            </div>
-
-            <div class="metric-card">
-              <div class="metric-info">
-                <h3>Jumlah Transaksi</h3>
-                <div class="metric-value" id="dash-total-transaksi">0</div>
-              </div>
-              <div class="metric-icon"><i class="fa-solid fa-receipt"></i></div>
-            </div>
+            <div class="unit-card-cta"><span>Lihat Dokumen</span><i class="fa-solid fa-arrow-right"></i></div>
           </div>
 
-          <!-- Section: Senarai Murid Belum Bayar Yuran -->
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title">
-                <i class="fa-solid fa-triangle-exclamation" style="color:#b45309;"></i> Senarai Murid Belum Bayar Yuran
-              </div>
-              <div style="display:flex; align-items:center; gap:0.75rem;">
-                <label style="font-size:0.82rem; font-weight:700; color:var(--text-muted);">Pilih Bulan:</label>
-                <select id="dash-month-filter" class="form-select" style="width:140px; padding:0.35rem 0.6rem; font-weight:700;" onchange="renderDashboard()">
-                  <option value="JANUARI">JANUARI</option>
-                  <option value="FEBRUARI">FEBRUARI</option>
-                  <option value="MAC">MAC</option>
-                  <option value="APRIL">APRIL</option>
-                  <option value="MEI">MEI</option>
-                  <option value="JUN">JUN</option>
-                  <option value="JULAI">JULAI</option>
-                  <option value="OGOS" selected>OGOS</option>
-                  <option value="SEPTEMBER">SEPTEMBER</option>
-                  <option value="OKTOBER">OKTOBER</option>
-                  <option value="NOVEMBER">NOVEMBER</option>
-                  <option value="DISEMBER">DISEMBER</option>
-                </select>
-
-                <button class="btn btn-excel" onclick="exportUnpaidToExcel()">
-                  <i class="fa-solid fa-file-excel"></i> EXPORT EXCEL
-                </button>
-              </div>
+          <div class="unit-quick-card tkrs-card" onclick="navigateTo('tkrs')" role="button" tabindex="0">
+            <div class="unit-card-header">
+              <div class="unit-card-icon"><i class="fa-solid fa-person-military-to-person"></i></div>
+              <div class="unit-card-badge">3 Dokumen</div>
             </div>
-
-            <div class="card-body" style="padding:0;">
-              <div class="data-table-container">
-                <table class="data-table">
-                  <thead>
-                    <tr>
-                      <th style="width:40px;">Bil</th>
-                      <th>Nama Murid</th>
-                      <th>No. WhatsApp Parent</th>
-                      <th>Kategori / Yuran Belum Bayar</th>
-                      <th>Jumlah (RM)</th>
-                      <th>Status</th>
-                      <th style="width:170px;">Tindakan WhatsApp</th>
-                    </tr>
-                  </thead>
-                  <tbody id="unpaid-table-body">
-                    <!-- Loaded dynamically -->
-                  </tbody>
-                </table>
-              </div>
+            <div class="unit-card-body">
+              <h3 class="unit-card-name">TKRS / KRS</h3>
+              <p class="unit-card-desc">Pengakap & Kadet Remaja Sekolah</p>
             </div>
+            <div class="unit-card-docs">
+              <div class="doc-pill"><i class="fa-solid fa-clipboard-user"></i> Kehadiran</div>
+              <div class="doc-pill"><i class="fa-solid fa-file-lines"></i> Laporan Aktiviti</div>
+              <div class="doc-pill"><i class="fa-solid fa-calendar-check"></i> Perancangan Tahunan</div>
+            </div>
+            <div class="unit-card-cta"><span>Lihat Dokumen</span><i class="fa-solid fa-arrow-right"></i></div>
           </div>
+        </div>
 
-          <!-- Section: Ringkasan Kutipan Setiap Bulan -->
-          <div class="card" style="margin-top:1.5rem;">
-            <div class="card-header">
-              <div class="card-title">
-                <i class="fa-solid fa-calendar-days"></i> Ringkasan Kutipan Setiap Bulan (Januari – Disember 2026)
-              </div>
-            </div>
-            <div class="card-body">
-              <div id="monthly-summary-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:0.75rem;">
-                <!-- Loaded dynamically -->
-              </div>
-            </div>
+        <div class="section-header" style="margin-top:2rem;">
+          <div>
+            <h2 class="section-title"><i class="fa-solid fa-table-list"></i> Semua Sumber Dokumen</h2>
           </div>
-        </section>
-
-        <!-- ================= VIEW 2: PEMBAYARAN BARU ================= -->
-        <section id="view-bayaran" class="tab-view">
-          <div class="payment-grid">
-            
-            <!-- SEBELAH KIRI (Desktop): Preview Resit Live -->
-            <div class="receipt-column">
-              <div class="card">
-                <div class="card-header">
-                  <div class="card-title"><i class="fa-solid fa-file-invoice"></i> Preview Resit Rasmi FQC</div>
-                  <button class="btn btn-outline" style="padding:4px 8px; font-size:0.75rem;" onclick="actionResetBorang()">
-                    <i class="fa-solid fa-rotate-left"></i> Reset Form
-                  </button>
-                </div>
-                <div class="card-body">
-                  <!-- Box-styled Official Receipt -->
-                  <div class="receipt-paper" id="receipt-paper">
-                    <div class="receipt-header">
-                      <div class="receipt-header-left">
-                        <img src="assets/logo.png" class="receipt-logo" alt="Logo FQC" style="width:68px; height:68px; object-fit:contain; border-radius:50%; background:#fff; padding:2px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                        <div>
-                          <div class="receipt-centre-title">FATHUL QURANIC CENTRE (FQC)</div>
-                          <div style="font-size:0.75rem; font-weight:700; color:var(--primary-main);">(NS0326067-A)</div>
-                          <div class="receipt-centre-address">Pusat Pengajian Al-Quran & Bimbingan Akademik Terpadu FQC</div>
-                        </div>
-                      </div>
-                      <div class="receipt-title-badge">
-                        <h2>RESIT RASMI</h2>
-                        <div class="receipt-no-tag" id="rc-no">FQC-1100</div>
-                      </div>
-                    </div>
-
-                    <div class="receipt-meta-grid">
-                      <div class="receipt-meta-item">
-                        <span class="receipt-meta-label">Nama Murid:</span>
-                        <span class="receipt-meta-value" id="rc-student-name">NAMA MURID</span>
-                      </div>
-                      <div class="receipt-meta-item">
-                        <span class="receipt-meta-label">Tarikh:</span>
-                        <span class="receipt-meta-value" id="rc-date">DD/MM/YYYY</span>
-                      </div>
-                      <div class="receipt-meta-item">
-                        <span class="receipt-meta-label">Bulan Bayaran:</span>
-                        <span class="receipt-meta-value" id="rc-month">OGOS</span>
-                      </div>
-                      <div class="receipt-meta-item">
-                        <span class="receipt-meta-label">Kaedah Bayaran:</span>
-                        <span class="receipt-meta-value" id="rc-payment-method">TUNAI</span>
-                      </div>
-                    </div>
-
-                    <!-- Items Table -->
-                    <table class="receipt-table">
-                      <thead>
-                        <tr>
-                          <th>Butiran Yuran</th>
-                          <th style="text-align:center;">Kategori / Kelas</th>
-                          <th style="text-align:center;">Bulan</th>
-                          <th style="text-align:right;">Amaun (RM)</th>
-                        </tr>
-                      </thead>
-                      <tbody id="rc-table-body">
-                        <!-- Loaded dynamically -->
-                      </tbody>
-                    </table>
-
-                    <div class="receipt-footer-section">
-                      <div class="receipt-signature-box">
-                        <img src="assets/signature.png" class="receipt-signature-img" alt="Tandatangan Pentadbir" style="height:48px; object-fit:contain; display:block; margin:0 auto 2px auto;">
-                        <div class="receipt-signature-title">Pentadbir / Pengurusan FQC</div>
-                      </div>
-
-                      <div class="receipt-total-box">
-                        <div class="receipt-total-label">JUMLAH KESELURUHAN</div>
-                        <div class="receipt-total-value" id="rc-total-amount">RM 0</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Action Toolbar (4 Buttons) -->
-                  <div class="action-toolbar">
-                    <button class="btn btn-primary" id="btn-simpan" onclick="actionSimpanPembayaran()">
-                      <i class="fa-solid fa-floppy-disk"></i> Simpan Resit
-                    </button>
-                    <button class="btn btn-image" id="btn-image" onclick="actionJanaGambarResit()">
-                      <i class="fa-solid fa-image"></i> Jana Gambar Resit
-                    </button>
-                    <button class="btn btn-pdf" id="btn-pdf" onclick="actionPDFResit()">
-                      <i class="fa-solid fa-file-pdf"></i> PDF Resit
-                    </button>
-                    <button class="btn btn-whatsapp" id="btn-whatsapp" onclick="actionHantarWhatsapp()">
-                      <i class="fa-brands fa-whatsapp"></i> Hantar WhatsApp
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- SEBELAH KANAN (Desktop): Borang Pembayaran -->
-            <div class="form-column">
-              <div class="card">
-                <div class="card-header">
-                  <div class="card-title"><i class="fa-solid fa-user-pen"></i> Borang Pembayaran Yuran</div>
-                </div>
-                <div class="card-body">
-                  
-                  <!-- Live Student Search Input -->
-                  <div class="form-group searchable-select">
-                    <label class="form-label"><i class="fa-solid fa-magnifying-glass"></i> Cari Nama Murid / Tel Parent</label>
-                    <input type="text" id="student-search-input" class="form-control" placeholder="🔍 Taip nama murid (Ahmad, Aisyah, Nur...) atau nombor tel..." autocomplete="off">
-                    <div id="student-dropdown-options" class="dropdown-options"></div>
-                  </div>
-
-                  <div class="grid-2">
-                    <div class="form-group">
-                      <label class="form-label">No. WhatsApp Ibu/Bapa</label>
-                      <input type="text" id="parent-phone-display" class="form-control" placeholder="Contoh: 0145366009">
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label">Tarikh Pembayaran</label>
-                      <input type="date" id="pay-date" class="form-control">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label">Bulan Bayaran</label>
-                    <select id="pay-month" class="form-select" style="font-weight:700;">
-                      <option value="JANUARI">JANUARI</option>
-                      <option value="FEBRUARI">FEBRUARI</option>
-                      <option value="MAC">MAC</option>
-                      <option value="APRIL">APRIL</option>
-                      <option value="MEI">MEI</option>
-                      <option value="JUN">JUN</option>
-                      <option value="JULAI">JULAI</option>
-                      <option value="OGOS" selected>OGOS</option>
-                      <option value="SEPTEMBER">SEPTEMBER</option>
-                      <option value="OKTOBER">OKTOBER</option>
-                      <option value="NOVEMBER">NOVEMBER</option>
-                      <option value="DISEMBER">DISEMBER</option>
-                    </select>
-                  </div>
-
-                  <!-- Fee Categories & Items with Tick-boxes -->
-                  <div class="form-group">
-                    <label class="form-label" style="margin-bottom:0.75rem; font-size:0.9rem; color:var(--primary-dark);">
-                      <i class="fa-solid fa-list-check"></i> Senarai Item Yuran (Tick & Ubah Harga Jika Perlu)
-                    </label>
-                    <div id="fee-checkbox-groups-container">
-                      <!-- Loaded dynamically -->
-                    </div>
-                  </div>
-
-                  <!-- Custom Total Amount & Payment Method -->
-                  <div class="total-summary-card">
-                    <div class="total-summary-label">JUMLAH KESELURUHAN (RM)</div>
-                    <div class="total-summary-input-group">
-                      <span class="total-summary-prefix">RM</span>
-                      <input type="number" id="fee-total-custom" class="total-summary-input" placeholder="0" oninput="onCustomTotalInput()">
-                    </div>
-                  </div>
-
-                  <div class="form-group" style="margin-top:1.25rem;">
-                    <label class="form-label">Kaedah Bayaran</label>
-                    <div class="payment-method-grid">
-                      <label class="method-radio-label selected" id="lbl-tunai">
-                        <i class="fa-solid fa-money-bill-wave"></i> TUNAI
-                        <input type="radio" name="kaedahBayaran" value="TUNAI" checked>
-                      </label>
-                      <label class="method-radio-label" id="lbl-transfer">
-                        <i class="fa-solid fa-building-columns"></i> ONLINE TRANSFER
-                        <input type="radio" name="kaedahBayaran" value="ONLINE TRANSFER">
-                      </label>
-                      <label class="method-radio-label">
-                        <i class="fa-solid fa-qrcode"></i> QR
-                        <input type="radio" name="kaedahBayaran" value="QR">
-                      </label>
-                      <label class="method-radio-label">
-                        <i class="fa-solid fa-credit-card"></i> BANK TRANSFER
-                        <input type="radio" name="kaedahBayaran" value="BANK TRANSFER">
-                      </label>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label">Catatan Tambahan (Opsional)</label>
-                    <input type="text" id="pay-catatan" class="form-control" placeholder="Contoh: Bayaran ansuran / resit melalui ayah">
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        <!-- ================= VIEW 3: REKOD BAYARAN ================= -->
-        <section id="view-rekod" class="tab-view">
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> Sejarah Rekod Pembayaran Yuran</div>
-              <button class="btn btn-outline" onclick="fetchPaymentHistoryFromBackend()">
-                <i class="fa-solid fa-rotate"></i> Muat Semula
-              </button>
-            </div>
-            <div class="card-body" style="padding:0;">
-              <div class="data-table-container">
-                <table class="data-table">
-                  <thead>
-                    <tr>
-                      <th>No. Resit</th>
-                      <th>Tarikh</th>
-                      <th>Nama Murid</th>
-                      <th>Bulan</th>
-                      <th>Jumlah</th>
-                      <th>Kaedah</th>
-                      <th style="width:120px;">Tindakan</th>
-                    </tr>
-                  </thead>
-                  <tbody id="history-table-body">
-                    <!-- Loaded dynamically -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ================= VIEW 4: MURID BELUM BAYAR ================= -->
-        <section id="view-belum-bayar" class="tab-view">
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title">
-                <i class="fa-solid fa-user-xmark" style="color:#b91c1c;"></i> Senarai Murid Belum Bayar Yuran Mengikut Bulan
-              </div>
-              <div style="display:flex; align-items:center; gap:0.75rem;">
-                <select id="unpaid-month-filter" class="form-select" style="width:140px; font-weight:700;" onchange="renderUnpaidSection()">
-                  <option value="JANUARI">JANUARI</option>
-                  <option value="FEBRUARI">FEBRUARI</option>
-                  <option value="MAC">MAC</option>
-                  <option value="APRIL">APRIL</option>
-                  <option value="MEI">MEI</option>
-                  <option value="JUN">JUN</option>
-                  <option value="JULAI">JULAI</option>
-                  <option value="OGOS" selected>OGOS</option>
-                  <option value="SEPTEMBER">SEPTEMBER</option>
-                  <option value="OKTOBER">OKTOBER</option>
-                  <option value="NOVEMBER">NOVEMBER</option>
-                  <option value="DISEMBER">DISEMBER</option>
-                </select>
-                <button class="btn btn-excel" onclick="exportUnpaidToExcel()">
-                  <i class="fa-solid fa-file-excel"></i> EXPORT EXCEL
-                </button>
-              </div>
-            </div>
-            <div class="card-body" style="padding:0;">
-              <div class="data-table-container">
-                <table class="data-table">
-                  <thead>
-                    <tr>
-                      <th style="width:40px;">Bil</th>
-                      <th>Nama Murid</th>
-                      <th>No. WhatsApp Parent</th>
-                      <th>Kategori/Yuran Belum Bayar</th>
-                      <th>Jumlah (RM)</th>
-                      <th>Status</th>
-                      <th>WhatsApp Peringatan</th>
-                    </tr>
-                  </thead>
-                  <tbody id="unpaid-section-tbody">
-                    <!-- Reuses same unpaid table generator -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ================= VIEW 5: DATA MURID ================= -->
-        <section id="view-murid" class="tab-view">
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title"><i class="fa-solid fa-users"></i> Senarai Data Profil Murid FQC</div>
-              <button class="btn btn-primary" onclick="openAddStudentModal()">
-                <i class="fa-solid fa-user-plus"></i> Tambah Murid Baharu
-              </button>
-            </div>
-            <div class="card-body" style="padding:0;">
-              <div class="data-table-container">
-                <table class="data-table">
-                  <thead>
-                    <tr>
-                      <th style="width:40px;">ID</th>
-                      <th>Nama Murid</th>
-                      <th>Nama Ibu/Bapa</th>
-                      <th>No. WhatsApp</th>
-                      <th>Kategori Didaftarkan</th>
-                      <th>Status</th>
-                      <th style="width:100px;">Tindakan</th>
-                    </tr>
-                  </thead>
-                  <tbody id="student-table-body">
-                    <!-- Loaded dynamically -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ================= VIEW 6: TETAPAN YURAN ================= -->
-        <section id="view-tetapan" class="tab-view">
-
-          <!-- Database API Connection Setting Card -->
-          <div class="card" style="margin-bottom: 1.5rem; border: 2px solid var(--primary-main);">
-            <div class="card-header" style="background: var(--primary-soft);">
-              <div class="card-title" style="color: var(--primary-dark);"><i class="fa-solid fa-database"></i> Sambungan Database Google Sheets & AppSheet API</div>
-            </div>
-            <div class="card-body">
-              <p style="font-size:0.88rem; color:var(--text-medium); margin-bottom:1rem;">
-                Masukkan <strong>Google Apps Script Web App URL</strong> (berakhiran <code>/exec</code>) untuk menyambungkan aplikasi Vercel ini terus ke Google Sheets FQC:
-              </p>
-              
-              <div class="form-group">
-                <label class="form-label" style="font-weight:700;">Google Apps Script Web App URL (/exec)</label>
-                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                  <input type="url" id="setting-apps-script-url" class="form-control" style="flex:1; min-width:280px;" placeholder="https://script.google.com/macros/s/.../exec">
-                  <button class="btn btn-primary" onclick="saveAndTestDatabaseConnection()">
-                    <i class="fa-solid fa-plug-circle-check"></i> SIMPAN & UJI SAMBUNGAN
-                  </button>
-                </div>
-              </div>
-
-              <div style="background: #fff9e6; border: 1px solid #ffe599; border-radius: var(--radius-sm); padding: 0.75rem; font-size: 0.82rem; color: #7f6000;">
-                <i class="fa-solid fa-circle-info"></i> <strong>Panduan Sambungan Vercel ke Google Sheets:</strong><br>
-                1. Buka Google Sheets ➔ Extensions ➔ Apps Script (Deploy ➔ New Deployment ➔ Web App).<br>
-                2. Setkan <strong>Execute as: Me</strong> dan <strong>Who has access: Anyone</strong>.<br>
-                3. Salin Web App URL dan tampal di atas, kemudian klik <strong>Simpan & Uji Sambungan</strong>.
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title"><i class="fa-solid fa-sliders"></i> Tetapan Yuran & Kategori FQC</div>
-            </div>
-            <div class="card-body">
-              <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1rem;">
-                Tetapan yuran laluan mengikut kategori diselaraskan secara automatik dengan database Google Sheets / AppSheet.
-              </p>
-              <div class="data-table-container">
-                <table class="data-table">
-                  <thead>
-                    <tr>
-                      <th>Kategori</th>
-                      <th>Nama Yuran</th>
-                      <th>Harga Standard (RM)</th>
-                      <th>Harga Diskaun (RM)</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td>Kelas Mengaji</td><td>Yuran Bulanan</td><td>RM 130</td><td>RM 100</td><td><span class="badge-paid">Aktif</span></td></tr>
-                    <tr><td>Transit 2026</td><td>Yuran Bulanan</td><td>RM 260</td><td>RM 200</td><td><span class="badge-paid">Aktif</span></td></tr>
-                    <tr><td>Tuisyen Akademik</td><td>1 Subjek</td><td>RM 40</td><td>RM 35</td><td><span class="badge-paid">Aktif</span></td></tr>
-                    <tr><td>Kelas UPKK</td><td>Yuran Bulanan</td><td>RM 100</td><td>-</td><td><span class="badge-paid">Aktif</span></td></tr>
-                    <tr><td>Kelas PSRA</td><td>Yuran Bulanan</td><td>RM 100</td><td>-</td><td><span class="badge-paid">Aktif</span></td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </section>
-
+        </div>
+        <div id="dashboardTable"></div>
       </div>
+
+      <!-- SEMUA DOKUMEN VIEW -->
+      <div class="view-panel" id="view-semua">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-layer-group"></i><span>Semua Dokumen</span></div>
+            <h1 class="page-title">Semua Sumber Dokumen</h1>
+            <p class="page-subtitle">Paparan keseluruhan semua dokumen unit beruniform</p>
+          </div>
+        </div>
+        <div id="semuaFilter"></div>
+        <div id="semuaTable"></div>
+      </div>
+
+      <!-- BSMM VIEW -->
+      <div class="view-panel" id="view-bsmm">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-heart-pulse"></i><span>Unit BSMM</span></div>
+            <h1 class="page-title">Dokumen Unit BSMM</h1>
+            <p class="page-subtitle">Bulan Sabit Merah Malaysia — Kehadiran, Laporan Aktiviti & Perancangan Tahunan</p>
+          </div>
+          <div class="page-header-right">
+            <div class="unit-header-badge bsmm-badge"><i class="fa-solid fa-heart-pulse"></i> BSMM</div>
+          </div>
+        </div>
+        <div id="bsmmFilter"></div>
+        <div id="bsmmTable"></div>
+      </div>
+
+      <!-- TKRS VIEW -->
+      <div class="view-panel" id="view-tkrs">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-person-military-to-person"></i><span>Unit TKRS/KRS</span></div>
+            <h1 class="page-title">Dokumen Unit TKRS / KRS</h1>
+            <p class="page-subtitle">Pengakap & Kadet Remaja Sekolah — Kehadiran, Laporan Aktiviti & Perancangan Tahunan</p>
+          </div>
+          <div class="page-header-right">
+            <div class="unit-header-badge tkrs-badge"><i class="fa-solid fa-person-military-to-person"></i> TKRS/KRS</div>
+          </div>
+        </div>
+        <div id="tkrsFilter"></div>
+        <div id="tkrsTable"></div>
+      </div>
+
+      <!-- KEHADIRAN VIEW -->
+      <div class="view-panel" id="view-kehadiran">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-clipboard-user"></i><span>Kehadiran</span></div>
+            <h1 class="page-title">Dokumen & Analisis Kehadiran</h1>
+            <p class="page-subtitle">Analisis penglibatan dan rekod kehadiran unit beruniform PBAQ 2026</p>
+          </div>
+          <div class="page-header-right">
+            <div class="header-year-badge"><i class="fa-solid fa-chart-pie"></i> Analisis Live</div>
+          </div>
+        </div>
+
+        <!-- ANALISIS KEHADIRAN WIDGET -->
+        <div class="analisis-container">
+          <div class="analisis-card">
+            <div class="analisis-header">
+              <div class="analisis-title">
+                <i class="fa-solid fa-chart-simple"></i> Status Kesediaan Dokumen Kehadiran
+              </div>
+              <span class="analisis-badge" id="analisis-status-badge">100% Aktif</span>
+            </div>
+            <div class="analisis-progress-item">
+              <div class="analisis-progress-info">
+                <span><i class="fa-solid fa-heart-pulse" style="color:var(--bsmm-main);"></i> BSMM Kehadiran</span>
+                <span id="bsmm-keh-status">1 Rekod (100%)</span>
+              </div>
+              <div class="analisis-progress-bar-bg">
+                <div class="analisis-progress-bar-fill bg-bsmm-gradient" id="bsmm-keh-bar" style="width: 100%;"></div>
+              </div>
+            </div>
+            <div class="analisis-progress-item">
+              <div class="analisis-progress-info">
+                <span><i class="fa-solid fa-person-military-to-person" style="color:var(--tkrs-main);"></i> TKRS / KRS Kehadiran</span>
+                <span id="tkrs-keh-status">1 Rekod (100%)</span>
+              </div>
+              <div class="analisis-progress-bar-bg">
+                <div class="analisis-progress-bar-fill bg-tkrs-gradient" id="tkrs-keh-bar" style="width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="analisis-card">
+            <div class="analisis-header">
+              <div class="analisis-title">
+                <i class="fa-solid fa-bolt"></i> Akses Direct Sheet Kehadiran
+              </div>
+              <span class="analisis-badge">Google Sheets</span>
+            </div>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem;">
+              Buka Google Sheet Kehadiran secara terus untuk mengemaskini atau menyemak senarai nama ahli.
+            </p>
+            <div class="analisis-quick-links">
+              <a class="analisis-link-btn analisis-link-bsmm" id="btn-sheet-bsmm" href="https://docs.google.com/spreadsheets/d/16uy4W665gZDy5EIHEF-NWc595e9WUWHr/edit?gid=1404491950#gid=1404491950" target="_blank" rel="noopener noreferrer">
+                <i class="fa-solid fa-file-excel"></i> Sheet BSMM
+              </a>
+              <a class="analisis-link-btn analisis-link-tkrs" id="btn-sheet-tkrs" href="https://docs.google.com/spreadsheets/d/1uP4vH16q8gUjP1X-x50TsdTTcDWv8Ure/edit?gid=1884993696#gid=1884993696" target="_blank" rel="noopener noreferrer">
+                <i class="fa-solid fa-file-excel"></i> Sheet TKRS
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- GRAF BAR KEHADIRAN: HADIR VS TIDAK HADIR -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">
+              <i class="fa-solid fa-chart-column"></i> Graf Bar Kehadiran (Hadir vs Tidak Hadir)
+            </div>
+            <div class="chart-stats-summary">
+              <div class="chart-stat-item"><span class="dot-hadir"></span> Hadir</div>
+              <div class="chart-stat-item"><span class="dot-tidak-hadir"></span> Tidak Hadir</div>
+            </div>
+          </div>
+          
+          <div class="chart-wrapper">
+            <canvas id="kehadiranBarChart"></canvas>
+          </div>
+
+          <div class="analisis-grid-3">
+            <div class="stat-box-mini">
+              <div class="val val-hadir" id="total-hadir-val">74</div>
+              <div class="lbl">Jumlah Ahli Hadir</div>
+            </div>
+            <div class="stat-box-mini">
+              <div class="val val-tidak-hadir" id="total-tidak-hadir-val">6</div>
+              <div class="lbl">Jumlah Tidak Hadir</div>
+            </div>
+            <div class="stat-box-mini">
+              <div class="val val-peratus" id="peratus-kehadiran-val">92.5%</div>
+              <div class="lbl">Peratus Kehadiran Keseluruhan</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="kehadiranFilter"></div>
+        <div id="kehadiranTable"></div>
+      </div>
+
+      <!-- LAPORAN VIEW -->
+      <div class="view-panel" id="view-laporan">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-file-lines"></i><span>Laporan Aktiviti</span></div>
+            <h1 class="page-title">Dokumen & Infografik Laporan Aktiviti</h1>
+            <p class="page-subtitle">Ringkasan pencapaian dan status aktiviti unit beruniform PBAQ 2026</p>
+          </div>
+          <div class="page-header-right">
+            <div class="header-year-badge"><i class="fa-solid fa-chart-line"></i> Infografik 2026</div>
+          </div>
+        </div>
+
+        <!-- INFOGRAFIK LAPORAN AKTIVITI -->
+        <div class="infographic-grid">
+          <div class="infographic-card">
+            <div class="infographic-header">
+              <div class="infographic-title">
+                <i class="fa-solid fa-square-poll-vertical"></i> Status Pelaksanaan Aktiviti
+              </div>
+              <span class="milestone-badge badge-selesai">100% Selesai Diberkaskan</span>
+            </div>
+            <div class="roadmap-timeline">
+              <div class="roadmap-step">
+                <div class="step-badge complete"><i class="fa-solid fa-check"></i></div>
+                <div class="step-content">
+                  <div class="step-title">Laporan Aktiviti BSMM <span class="milestone-badge badge-selesai">Selesai</span></div>
+                  <div class="step-desc">Rekod aktiviti bulanan & laporan pertolongan cemas BSMM 2026.</div>
+                  <div class="step-progress-bar"><div class="step-progress-fill" style="width: 100%; background: linear-gradient(90deg, #991b1b, #dc2626);"></div></div>
+                </div>
+              </div>
+              <div class="roadmap-step">
+                <div class="step-badge complete"><i class="fa-solid fa-check"></i></div>
+                <div class="step-content">
+                  <div class="step-title">Laporan Aktiviti TKRS / KRS <span class="milestone-badge badge-selesai">Selesai</span></div>
+                  <div class="step-desc">Rekod latihan kawad & ikatan perkhemahan TKRS 2026.</div>
+                  <div class="step-progress-bar"><div class="step-progress-fill" style="width: 100%; background: linear-gradient(90deg, #064e3b, #059669);"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="infographic-card">
+            <div class="infographic-header">
+              <div class="infographic-title">
+                <i class="fa-solid fa-bullseye"></i> KPI & Pencapaian Aktiviti
+              </div>
+              <span class="milestone-badge badge-proses">Tahun 2026</span>
+            </div>
+            <div class="analisis-grid-3" style="margin-top:0.5rem;">
+              <div class="stat-box-mini">
+                <div class="val val-hadir">100%</div>
+                <div class="lbl">Kadar Pelaporan</div>
+              </div>
+              <div class="stat-box-mini">
+                <div class="val val-peratus">2</div>
+                <div class="lbl">Unit Aktif Melapor</div>
+              </div>
+              <div class="stat-box-mini">
+                <div class="val val-hadir">2</div>
+                <div class="lbl">Fail Laporan Master</div>
+              </div>
+            </div>
+            <p style="font-size:0.78rem; color:var(--text-muted); margin-top:1rem; text-align:center;">
+              <i class="fa-solid fa-circle-check" style="color:#10b981;"></i> Semua fail laporan aktiviti telah disahkan dan terhubung terus ke Google Sheet MASTER_SUMBER.
+            </p>
+          </div>
+        </div>
+
+        <div id="laporanFilter"></div>
+        <div id="laporanTable"></div>
+      </div>
+
+      <!-- PERANCANGAN VIEW -->
+      <div class="view-panel" id="view-perancangan">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-calendar-check"></i><span>Perancangan Tahunan</span></div>
+            <h1 class="page-title">Dokumen & Infografik Takwim Perancangan</h1>
+            <p class="page-subtitle">Takwim dan perancangan strategik tahunan unit beruniform PBAQ 2026</p>
+          </div>
+          <div class="page-header-right">
+            <div class="header-year-badge"><i class="fa-solid fa-timeline"></i> Takwim 2026</div>
+          </div>
+        </div>
+
+        <!-- INFOGRAFIK PERANCANGAN TAHUNAN -->
+        <div class="infographic-grid">
+          <div class="infographic-card">
+            <div class="infographic-header">
+              <div class="infographic-title">
+                <i class="fa-solid fa-route"></i> Fasa Takwim Perancangan 2026
+              </div>
+              <span class="milestone-badge badge-proses">4 Fasa Utama</span>
+            </div>
+            <div class="roadmap-timeline">
+              <div class="roadmap-step">
+                <div class="step-badge complete">Q1</div>
+                <div class="step-content">
+                  <div class="step-title">Fasa 1: Pendaftaran & Latihan Asas <span class="milestone-badge badge-selesai">100% Selesai</span></div>
+                  <div class="step-desc">Pendaftaran ahli baru & kemahiran asas beruniform.</div>
+                  <div class="step-progress-bar"><div class="step-progress-fill" style="width: 100%;"></div></div>
+                </div>
+              </div>
+              <div class="roadmap-step">
+                <div class="step-badge active">Q2</div>
+                <div class="step-content">
+                  <div class="step-title">Fasa 2: Ujian Kenaikan Pangkat & Perkhemahan <span class="milestone-badge badge-proses">Berjalan</span></div>
+                  <div class="step-desc">Kem perkhemahan tahunan & penilaian lencana.</div>
+                  <div class="step-progress-bar"><div class="step-progress-fill" style="width: 75%; background: linear-gradient(90deg, #d97706, #f59e0b);"></div></div>
+                </div>
+              </div>
+              <div class="roadmap-step">
+                <div class="step-badge">Q3</div>
+                <div class="step-content">
+                  <div class="step-title">Fasa 3: Pertandingan Kawad & Khidmat Masyarakat <span class="milestone-badge badge-perancangan">Akan Datang</span></div>
+                  <div class="step-desc">Pertandingan peringkat sekolah & komuniti.</div>
+                  <div class="step-progress-bar"><div class="step-progress-fill" style="width: 35%; background: #3b82f6;"></div></div>
+                </div>
+              </div>
+              <div class="roadmap-step">
+                <div class="step-badge">Q4</div>
+                <div class="step-content">
+                  <div class="step-title">Fasa 4: Anugerah & Penutupan Takwim <span class="milestone-badge badge-perancangan">Perancangan</span></div>
+                  <div class="step-desc">Majlis perasmian penutup & penyampaian sijil.</div>
+                  <div class="step-progress-bar"><div class="step-progress-fill" style="width: 10%; background: #94a3b8;"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="infographic-card">
+            <div class="infographic-header">
+              <div class="infographic-title">
+                <i class="fa-solid fa-file-contract"></i> Dokumen Perancangan Tahunan
+              </div>
+              <span class="milestone-badge badge-selesai">Google Docs</span>
+            </div>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem;">
+              Perancangan tahunan lengkap dalam format Google Docs untuk rujukan guru penasihat dan pentadbir.
+            </p>
+            <div class="analisis-quick-links" style="grid-template-columns:1fr; gap:0.75rem;">
+              <a class="analisis-link-btn analisis-link-bsmm" href="https://docs.google.com/document/d/1NlAMbI1sC8-ZTxCNaCCic7zMck1Qpi31/edit" target="_blank" rel="noopener noreferrer">
+                <i class="fa-solid fa-file-word"></i> Buka Perancangan Tahunan BSMM 2026
+              </a>
+              <a class="analisis-link-btn analisis-link-tkrs" href="https://docs.google.com/document/d/1XJ_ztUFa3yDR6W2B721OSdnXu3RYmwgN/edit" target="_blank" rel="noopener noreferrer">
+                <i class="fa-solid fa-file-word"></i> Buka Perancangan Tahunan TKRS/KRS 2026
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div id="perancangangFilter"></div>
+        <div id="perancangangTable"></div>
+      </div>
+
+      <!-- PRESTASI VIEW -->
+      <div class="view-panel" id="view-prestasi">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-trophy"></i><span>Prestasi & Pencapaian</span></div>
+            <h1 class="page-title">Dokumen & Infografik Prestasi Unit</h1>
+            <p class="page-subtitle">Pencapaian, sijil & rekod prestasi unit beruniform PBAQ 2026</p>
+          </div>
+          <div class="page-header-right">
+            <div class="header-year-badge"><i class="fa-solid fa-award"></i> Prestasi 2026</div>
+          </div>
+        </div>
+
+        <!-- INFOGRAFIK PRESTASI -->
+        <div class="infographic-grid">
+          <div class="infographic-card">
+            <div class="infographic-header">
+              <div class="infographic-title">
+                <i class="fa-solid fa-trophy"></i> Status Rekod Prestasi & Pencapaian
+              </div>
+              <span class="milestone-badge badge-selesai">Aktif & Terhubung</span>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-medium); margin-bottom:1rem;">
+              Folder rekod prestasi unit beruniform mengandungi fail sijil pencapaian, keputusan pertandingan, dan laporan pengiktirafan ahli.
+            </p>
+            <div class="analisis-quick-links" style="grid-template-columns:1fr;">
+              <a class="analisis-link-btn" style="background:var(--accent-purple-soft); color:var(--accent-purple); border:1px solid #ddd6fe;" href="https://drive.google.com/drive/folders/1wpvGtyd1bojQ9Eg_Tp1ZArLQ0k7l0qFJ?usp=sharing" target="_blank" rel="noopener noreferrer">
+                <i class="fa-solid fa-folder-open"></i> Buka Folder Google Drive Prestasi 2026
+              </a>
+            </div>
+          </div>
+
+          <div class="infographic-card">
+            <div class="infographic-header">
+              <div class="infographic-title">
+                <i class="fa-solid fa-award"></i> Ringkasan Sijil & Pengiktirafan
+              </div>
+              <span class="milestone-badge badge-proses">Tahun 2026</span>
+            </div>
+            <div class="analisis-grid-3" style="margin-top:0.5rem;">
+              <div class="stat-box-mini">
+                <div class="val val-peratus">100%</div>
+                <div class="lbl">Rekod Disimpan</div>
+              </div>
+              <div class="stat-box-mini">
+                <div class="val val-hadir">1</div>
+                <div class="lbl">Folder Utama Drive</div>
+              </div>
+              <div class="stat-box-mini">
+                <div class="val val-peratus">2026</div>
+                <div class="lbl">Tahun Sesi</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ANALISIS ITEMIZED PRESTASI WIDGET -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">
+              <i class="fa-solid fa-chart-column"></i> Graf Bar Perbandingan Prestasi Unit (BSMM vs TKRS)
+            </div>
+            <span class="analisis-badge" style="background:var(--accent-purple-soft); color:var(--accent-purple);">Penilaian 2026</span>
+          </div>
+
+          <div class="chart-wrapper" style="margin-bottom:1.5rem;">
+            <canvas id="prestasiBarChart"></canvas>
+          </div>
+
+          <div class="analisis-container" style="margin-bottom:1rem;">
+            <!-- ITEM 1: BSMM PRESTASI -->
+            <div class="analisis-card">
+              <div class="analisis-header">
+                <div class="analisis-title">
+                  <i class="fa-solid fa-heart-pulse" style="color:var(--bsmm-main);"></i> Item Prestasi BSMM
+                </div>
+                <span class="milestone-badge badge-selesai">Gred A (93.5%)</span>
+              </div>
+              <div class="roadmap-timeline">
+                <div class="roadmap-step">
+                  <div class="step-badge complete"><i class="fa-solid fa-medal"></i></div>
+                  <div class="step-content">
+                    <div class="step-title">1. Ujian Pertolongan Cemas & Balutan <span class="milestone-badge badge-selesai">96% Lulus</span></div>
+                    <div class="step-desc">Penguasaan balutan anduh & pertolongan cemas asas ahli BSMM.</div>
+                    <div class="step-progress-bar"><div class="step-progress-fill bg-bsmm-gradient" style="width: 96%;"></div></div>
+                  </div>
+                </div>
+                <div class="roadmap-step">
+                  <div class="step-badge complete"><i class="fa-solid fa-award"></i></div>
+                  <div class="step-content">
+                    <div class="step-title">2. Lencana Kemahiran Belia BSMM <span class="milestone-badge badge-selesai">92% Diperoleh</span></div>
+                    <div class="step-desc">Anugerah lencana kecekapan & rawatan kecemasan.</div>
+                    <div class="step-progress-bar"><div class="step-progress-fill bg-bsmm-gradient" style="width: 92%;"></div></div>
+                  </div>
+                </div>
+                <div class="roadmap-step">
+                  <div class="step-badge complete"><i class="fa-solid fa-star"></i></div>
+                  <div class="step-content">
+                    <div class="step-title">3. Disiplin & Penglibatan Aktiviti <span class="milestone-badge badge-selesai">95% Cemerlang</span></div>
+                    <div class="step-desc">Kehadiran konsisten & etika pemakaian seragam penuh.</div>
+                    <div class="step-progress-bar"><div class="step-progress-fill bg-bsmm-gradient" style="width: 95%;"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ITEM 2: TKRS PRESTASI -->
+            <div class="analisis-card">
+              <div class="analisis-header">
+                <div class="analisis-title">
+                  <i class="fa-solid fa-person-military-to-person" style="color:var(--tkrs-main);"></i> Item Prestasi TKRS / KRS
+                </div>
+                <span class="milestone-badge badge-selesai">Gred A (91.8%)</span>
+              </div>
+              <div class="roadmap-timeline">
+                <div class="roadmap-step">
+                  <div class="step-badge complete"><i class="fa-solid fa-medal"></i></div>
+                  <div class="step-content">
+                    <div class="step-title">1. Ujian Kenaikan Pangkat Koperal/Sertan <span class="milestone-badge badge-selesai">90% Lulus</span></div>
+                    <div class="step-desc">Penilaian kawad kaki, perintis & teori ikatan TKRS.</div>
+                    <div class="step-progress-bar"><div class="step-progress-fill bg-tkrs-gradient" style="width: 90%;"></div></div>
+                  </div>
+                </div>
+                <div class="roadmap-step">
+                  <div class="step-badge complete"><i class="fa-solid fa-award"></i></div>
+                  <div class="step-content">
+                    <div class="step-title">2. Lencana Kemahiran Perkhemahan <span class="milestone-badge badge-selesai">94% Diperoleh</span></div>
+                    <div class="step-desc">Ujian kraf perkhemahan, ikatan simbulan & ikhtiar hidup.</div>
+                    <div class="step-progress-bar"><div class="step-progress-fill bg-tkrs-gradient" style="width: 94%;"></div></div>
+                  </div>
+                </div>
+                <div class="roadmap-step">
+                  <div class="step-badge complete"><i class="fa-solid fa-star"></i></div>
+                  <div class="step-content">
+                    <div class="step-title">3. Ketrampilan & Sahsiah Beruniform <span class="milestone-badge badge-selesai">91% Cemerlang</span></div>
+                    <div class="step-desc">Disiplin kawad, ketetapan masa & kepimpinan unit.</div>
+                    <div class="step-progress-bar"><div class="step-progress-fill bg-tkrs-gradient" style="width: 91%;"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- KAD INDEKS PRESTASI KESELURUHAN -->
+          <div class="analisis-grid-3" style="margin-top:1.25rem;">
+            <div class="stat-box-mini">
+              <div class="val val-hadir">92.7%</div>
+              <div class="lbl">Purata Indeks Prestasi</div>
+            </div>
+            <div class="stat-box-mini">
+              <div class="val val-peratus">6 Item</div>
+              <div class="lbl">Komponen Penilaian</div>
+            </div>
+            <div class="stat-box-mini">
+              <div class="val val-hadir">100%</div>
+              <div class="lbl">Kadar Keberkesanan</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="prestasiFilter"></div>
+        <div id="prestasiTable"></div>
+      </div>
+
+      <!-- ANTARABANGSA VIEW -->
+      <div class="view-panel" id="view-antarabangsa">
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-breadcrumb"><i class="fa-solid fa-earth-americas"></i><span>Antarabangsa</span></div>
+            <h1 class="page-title">Dokumen & Infografik Program Antarabangsa</h1>
+            <p class="page-subtitle">Terengganu International Science Fair & CyberKids Competition 2026</p>
+          </div>
+          <div class="page-header-right">
+            <div class="header-year-badge"><i class="fa-solid fa-globe"></i> Global 2026</div>
+          </div>
+        </div>
+
+        <!-- INFOGRAFIK ANTARABANGSA -->
+        <div class="infographic-grid">
+          <div class="infographic-card">
+            <div class="infographic-header">
+              <div class="infographic-title">
+                <i class="fa-solid fa-earth-americas" style="color:#0284c7;"></i> Fail Laporan Program Antarabangsa
+              </div>
+              <span class="milestone-badge badge-selesai">MYSO 2026</span>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-medium); margin-bottom:0.75rem;">
+              <strong>Pertandingan:</strong> Terengganu International Science Fair 2026 & CyberKids Competition<br>
+              <strong>Penganjur:</strong> Malaysia Young Scientist Organization (MYSO)<br>
+              <strong>Tarikh:</strong> 15 Mac 2026 | <strong>Tempat:</strong> Online (Dalam Talian)
+            </p>
+            <div class="analisis-quick-links" style="grid-template-columns:1fr;">
+              <a class="analisis-link-btn" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd;" href="https://docs.google.com/document/d/1e4kBiPYrke4TpgWc-E7oikMej6PVLo6e/edit?usp=sharing&ouid=103776709571497988596&rtpof=true&sd=true" target="_blank" rel="noopener noreferrer">
+                <i class="fa-solid fa-file-word"></i> Buka Dokumen ANTARABANGSA (Google Docs)
+              </a>
+            </div>
+          </div>
+
+          <div class="infographic-card">
+            <div class="infographic-header">
+              <div class="infographic-title">
+                <i class="fa-solid fa-award"></i> Ringkasan Pengiktirafan MYSO
+              </div>
+              <span class="milestone-badge badge-selesai">Peringkat Antarabangsa</span>
+            </div>
+            <div class="analisis-grid-3" style="margin-top:0.5rem;">
+              <div class="stat-box-mini">
+                <div class="val val-hadir">15/03</div>
+                <div class="lbl">Tarikh Acara</div>
+              </div>
+              <div class="stat-box-mini">
+                <div class="val val-peratus">Online</div>
+                <div class="lbl">Mod Pertandingan</div>
+              </div>
+              <div class="stat-box-mini">
+                <div class="val val-hadir">MYSO</div>
+                <div class="lbl">Badan Penganjur</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GRAFIK & ANALISIS PROGRAM ANTARABANGSA WIDGET -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">
+              <i class="fa-solid fa-chart-column"></i> Graf Bar Kesediaan Pertandingan Terengganu International Science Fair & CyberKids 2026
+            </div>
+            <span class="analisis-badge" style="background:#e0f2fe; color:#0369a1;">Peringkat Antarabangsa</span>
+          </div>
+
+          <div class="chart-wrapper" style="margin-bottom:1.5rem;">
+            <canvas id="antarabangsaBarChart"></canvas>
+          </div>
+
+          <div class="analisis-container" style="margin-bottom:1rem;">
+            <!-- CARD 1: ROADMAP & MAKLUMAT ACARA -->
+            <div class="analisis-card">
+              <div class="analisis-header">
+                <div class="analisis-title">
+                  <i class="fa-solid fa-microscope" style="color:#0284c7;"></i> Butiran Acara & Penganjuran
+                </div>
+                <span class="milestone-badge badge-selesai">Disahkan</span>
+              </div>
+              <div class="roadmap-timeline">
+                <div class="roadmap-step">
+                  <div class="step-badge complete"><i class="fa-solid fa-calendar-check"></i></div>
+                  <div class="step-content">
+                    <div class="step-title">Tarikh & Mod Pelaksanaan <span class="milestone-badge badge-selesai">15 Mac 2026</span></div>
+                    <div class="step-desc">Dijalankan secara Dalam Talian (Online Platform).</div>
+                    <div class="step-progress-bar"><div class="step-progress-fill" style="width: 100%; background: linear-gradient(90deg, #0284c7, #38bdf8);"></div></div>
+                  </div>
+                </div>
+                <div class="roadmap-step">
+                  <div class="step-badge complete"><i class="fa-solid fa-building-columns"></i></div>
+                  <div class="step-content">
+                    <div class="step-title">Penganjur Utama <span class="milestone-badge badge-selesai">MYSO</span></div>
+                    <div class="step-desc">Malaysia Young Scientist Organization (MYSO).</div>
+                    <div class="step-progress-bar"><div class="step-progress-fill" style="width: 100%; background: linear-gradient(90deg, #0284c7, #38bdf8);"></div></div>
+                  </div>
+                </div>
+                <div class="roadmap-step">
+                  <div class="step-badge complete"><i class="fa-solid fa-trophy"></i></div>
+                  <div class="step-content">
+                    <div class="step-title">Tajuk Pertandingan <span class="milestone-badge badge-selesai">CyberKids & Science Fair</span></div>
+                    <div class="step-desc">Terengganu International Science Fair & CyberKids Competition 2026.</div>
+                    <div class="step-progress-bar"><div class="step-progress-fill" style="width: 100%; background: linear-gradient(90deg, #0284c7, #38bdf8);"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CARD 2: REKOD PENYERTAAN MURID -->
+            <div class="analisis-card">
+              <div class="analisis-header">
+                <div class="analisis-title">
+                  <i class="fa-solid fa-user-check" style="color:#0284c7;"></i> Status Pendaftaran & Penilaian Murid
+                </div>
+                <span class="milestone-badge badge-selesai">100% Selesai</span>
+              </div>
+              <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.75rem;">
+                Pengesahan senarai nama murid, kelas, acara pertandingan & rekod pencapaian.
+              </p>
+              <div class="analisis-progress-item">
+                <div class="analisis-progress-info">
+                  <span><i class="fa-solid fa-file-pdf" style="color:#0284c7;"></i> Senarai Nama Murid & Kelas</span>
+                  <span>Lengkap Diberkaskan</span>
+                </div>
+                <div class="analisis-progress-bar-bg"><div class="analisis-progress-bar-fill" style="width:100%; background:linear-gradient(90deg,#0284c7,#0369a1)"></div></div>
+              </div>
+              <div class="analisis-progress-item">
+                <div class="analisis-progress-info">
+                  <span><i class="fa-solid fa-laptop-code" style="color:#0284c7;"></i> Pertandingan Terengganu International Science Fair</span>
+                  <span>Peringkat Antarabangsa</span>
+                </div>
+                <div class="analisis-progress-bar-bg"><div class="analisis-progress-bar-fill" style="width:100%; background:linear-gradient(90deg,#0284c7,#0369a1)"></div></div>
+              </div>
+              <div class="analisis-progress-item">
+                <div class="analisis-progress-info">
+                  <span><i class="fa-solid fa-certificate" style="color:#0284c7;"></i> Status Dokumen Google Docs</span>
+                  <span>Terhubung Ke Sheet Master</span>
+                </div>
+                <div class="analisis-progress-bar-bg"><div class="analisis-progress-bar-fill" style="width:100%; background:linear-gradient(90deg,#0284c7,#0369a1)"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUMMARY KPS BOXES -->
+          <div class="analisis-grid-3" style="margin-top:1.25rem;">
+            <div class="stat-box-mini">
+              <div class="val val-hadir">15/03/2026</div>
+              <div class="lbl">Tarikh Program</div>
+            </div>
+            <div class="stat-box-mini">
+              <div class="val val-peratus">MYSO</div>
+              <div class="lbl">Badan Penganjur</div>
+            </div>
+            <div class="stat-box-mini">
+              <div class="val val-hadir">Online</div>
+              <div class="lbl">Lokasi Acara</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="antarabangsaFilter"></div>
+        <div id="antarabangsaTable"></div>
+      </div>
+
     </main>
   </div>
 
-  <!-- Modal Dialog: Tambah / Edit Profil Murid -->
-  <div id="student-modal-backdrop" class="modal-backdrop">
-    <div class="modal-card">
+  <!-- MODAL -->
+  <div class="modal-overlay" id="docModalOverlay" onclick="closeDocModal()">
+    <div class="modal-box" id="docModalBox" onclick="event.stopPropagation()">
       <div class="modal-header">
-        <div class="modal-title" id="modal-student-title">Tambah Murid Baharu</div>
-        <button class="modal-close-btn" onclick="closeStudentModal()">&times;</button>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Nama Murid</label>
-        <input type="hidden" id="modal-student-id">
-        <input type="text" id="modal-student-nama" class="form-control" placeholder="Nama Penuh Murid">
-      </div>
-
-      <div class="grid-2">
-        <div class="form-group">
-          <label class="form-label">Nama Ibu/Bapa</label>
-          <input type="text" id="modal-student-parent" class="form-control" placeholder="Nama Parent">
+        <div class="modal-title-wrap">
+          <div class="modal-icon" id="modalIcon"></div>
+          <div>
+            <h3 class="modal-title" id="modalTitle">Nama Dokumen</h3>
+            <p class="modal-meta" id="modalMeta">Unit • Tahun</p>
+          </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">No. WhatsApp Parent</label>
-          <input type="text" id="modal-student-phone" class="form-control" placeholder="Contoh: 0145366009">
-        </div>
+        <button class="modal-close-btn" onclick="closeDocModal()" aria-label="Tutup">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
-
-      <div class="form-group">
-        <label class="form-label">Status Murid</label>
-        <select id="modal-student-status" class="form-select">
-          <option value="AKTIF">AKTIF</option>
-          <option value="TIDAK AKTIF">TIDAK AKTIF</option>
-        </select>
+      <div class="modal-body">
+        <div class="modal-detail-grid" id="modalDetails"></div>
       </div>
-
-      <div class="form-group">
-        <label class="form-label" style="color:var(--primary-dark); font-weight:800;">Kategori Didaftarkan Murid Ini:</label>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; background:var(--surface-subtle); padding:0.75rem; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
-          <label style="font-size:0.85rem; font-weight:700;"><input type="checkbox" id="modal-chk-mengaji" checked> Kelas Mengaji</label>
-          <label style="font-size:0.85rem; font-weight:700;"><input type="checkbox" id="modal-chk-transit"> Transit 2026</label>
-          <label style="font-size:0.85rem; font-weight:700;"><input type="checkbox" id="modal-chk-jawi"> Kelas Khas Jawi</label>
-          <label style="font-size:0.85rem; font-weight:700;"><input type="checkbox" id="modal-chk-kafa"> KAFA</label>
-          <label style="font-size:0.85rem; font-weight:700;"><input type="checkbox" id="modal-chk-upkk"> UPKK</label>
-          <label style="font-size:0.85rem; font-weight:700;"><input type="checkbox" id="modal-chk-psra"> PSRA</label>
-          <label style="font-size:0.85rem; font-weight:700;"><input type="checkbox" id="modal-chk-akademik"> Tuisyen Akademik</label>
-          <label style="font-size:0.85rem; font-weight:700;"><input type="checkbox" id="modal-chk-online"> Mengaji Online</label>
-        </div>
-      </div>
-
-      <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.25rem;">
-        <button class="btn btn-outline" onclick="closeStudentModal()">Batal</button>
-        <button class="btn btn-primary" onclick="saveStudentFromModal()"><i class="fa-solid fa-check"></i> Simpan Profil</button>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeDocModal()"><i class="fa-solid fa-xmark"></i> Tutup</button>
+        <a class="btn-primary" id="modalOpenBtn" href="#" target="_blank" rel="noopener noreferrer">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Dokumen
+        </a>
       </div>
     </div>
   </div>
 
-  <!-- Toast Notification & Loading Overlay -->
-  <div id="toast" class="toast">
-    <i id="toast-icon" class="fa-solid fa-circle-check"></i>
-    <span id="toast-msg">Notifikasi</span>
-  </div>
-
-  <div id="loading" class="loading-overlay" title="Klik di mana-mana untuk tutup">
-    <div class="spinner"></div>
-    <div style="font-weight: 700; color: var(--primary-dark);" id="loading-text">Memproses data...</div>
-    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">(Klik di mana-mana untuk tutup)</div>
-  </div>
-
-  <!-- Application JavaScript -->
-  <script src="js/app.js"></script>
-
+  <script src="app.js"></script>
 </body>
 </html>
